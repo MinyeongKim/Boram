@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="org.androidtown.myapplication.RegisterActivity"
+    tools:showIn="@layout/activity_register">
+
+    <RelativeLayout
+        android:layout_width="368dp"
+        android:layout_height="506dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="2dp">
+
+        <TextView
+            android:id="@+id/habit_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="22dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="19dp"
+            android:text="제목: " />
+        <!--
+             <EditText
+                 android:id="@+id/habit_title_input"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_alignBaseline="@+id/habit_title"
+                 android:layout_alignBottom="@+id/habit_title"
+                 android:layout_toEndOf="@+id/habit_period"
+                 android:layout_toRightOf="@+id/habit_period"
+                 android:hint="습관 제목을 입력하세요" />
+
+
+                  <TextView
+                      android:id="@+id/habit_period"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignLeft="@+id/fromDate"
+                      android:layout_alignStart="@+id/fromDate"
+                      android:layout_alignTop="@+id/fromDateButton"
+                      android:layout_marginTop="12dp"
+                      android:text="목표 기간:" />
+
+
+                  <TextView
+                      android:id="@+id/fromDate"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignTop="@+id/habit_period"
+                      android:layout_marginLeft="12dp"
+                      android:layout_marginStart="12dp"
+                      android:layout_toEndOf="@+id/habit_type"
+                      android:layout_toRightOf="@+id/habit_type"
+                      android:text="시작" />
+
+                  <TextView
+                      android:id="@+id/toDate"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignBottom="@+id/toDateButton"
+                      android:layout_toLeftOf="@+id/fromDateButton"
+                      android:layout_toStartOf="@+id/fromDateButton"
+                      android:text="끝" />
+
+
+                  <ImageButton
+                      android:id="@+id/fromDateButton"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentEnd="true"
+                      android:layout_alignParentRight="true"
+                      android:layout_below="@+id/habit_title_input"
+                      android:layout_marginEnd="87dp"
+                      android:layout_marginRight="87dp"
+                      android:layout_marginTop="22dp"
+                      app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+
+
+                  <ImageButton
+                      android:id="@+id/toDateButton"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      //android:layout_alignLeft="@+id/register_button"
+                      //android:layout_alignStart="@+id/register_button"
+                      android:layout_below="@+id/fromDateButton"
+                      android:layout_marginTop="12dp"
+                      app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+          -->
+
+        <!--
+        <TextView
+            android:id="@+id/habit_frequency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/habit_period"
+            android:layout_alignStart="@+id/habit_period"
+            android:layout_below="@+id/toDate"
+            android:layout_marginTop="49dp"
+            android:text="빈도수: " />
+
+
+        <Spinner
+            android:id="@+id/num_button"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/register_button"
+            android:layout_alignLeft="@+id/fromDateButton"
+            android:layout_alignRight="@+id/register_button"
+            android:layout_alignStart="@+id/fromDateButton"
+            android:layout_alignTop="@+id/habit_frequency">
+
+        </Spinner>
+
+        <EditText
+            android:id="@+id/number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/habit_frequency"
+            android:layout_alignBottom="@+id/habit_frequency"
+            android:layout_marginLeft="25dp"
+            android:layout_marginStart="25dp"
+            android:layout_toEndOf="@+id/num_button"
+            android:layout_toRightOf="@+id/num_button"
+            android:hint="  번" />
+
+        <TextView
+            android:id="@+id/habit_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/habit_frequency"
+            android:layout_alignStart="@+id/habit_frequency"
+            android:layout_below="@+id/number"
+            android:layout_marginTop="18dp"
+            android:text="습관 종류: " />
+
+        <RadioGroup
+            android:id="@+id/habit_type_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/fromDate"
+            android:layout_alignStart="@+id/fromDate"
+            android:layout_alignTop="@+id/habit_type"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/good_habit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/habit_type"
+                android:layout_alignBottom="@+id/habit_type"
+                android:layout_alignLeft="@+id/habit_type_group"
+                android:layout_alignStart="@+id/habit_type_group"
+                android:text="좋은 습관" />
+
+            <RadioButton
+                android:id="@+id/bad_habit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/habit_type"
+                android:layout_alignBottom="@+id/habit_type"
+                android:layout_alignLeft="@+id/toDateButton"
+                android:layout_alignStart="@+id/toDateButton"
+                android:text="나쁜 습관" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/habit_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/habit_frequency"
+            android:layout_alignStart="@+id/habit_frequency"
+            android:layout_below="@+id/habit_type_group"
+            android:layout_marginTop="14dp"
+            android:text="체크 방법: " />
+
+        <RadioGroup
+            android:id="@+id/habit_check_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/habit_type_group"
+            android:layout_alignStart="@+id/habit_type_group"
+            android:layout_alignTop="@+id/habit_check">
+
+
+            <RadioButton
+                android:id="@+id/alone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="혼자하기" />
+
+            <RadioButton
+                android:id="@+id/friend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="친구랑 하기" />
+
+            <RadioButton
+                android:id="@+id/otherPerson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/habit_check_group"
+                android:layout_alignEnd="@+id/toDate"
+                android:layout_alignRight="@+id/toDate"
+                android:layout_weight="1"
+                android:text="다른 사람과 하기" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="등록하기" />
+-->
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
