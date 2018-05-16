@@ -1,6 +1,8 @@
 package org.androidtown.myapplication;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,14 +24,27 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
+/*
+2018-05-17. 02:22
+전체적인 레이아웃을 Relative layout으로 바꾸고
+달력 이미지 버튼을 눌러 달력을 띄워 사용자가 날짜를 선택할 수 있도록 구현함
+
+해결해야하는 문제: (1) 날짜 선택시 안되는 case 1.오늘보다 그 전 날짜를 선택하는 것
+                                       2.시작 날짜보다 끝 날짜가 빠르게 선택하는 것    해결해야함
+
+                 (2) 값 입력 받을 때, editText의 값을 입력 안한 것도 구별하는 부분 완성해야함
+ */
+
 public class RegisterActivity extends AppCompatActivity {
 
     //습관 이름
     EditText habit_title_input;
 
     //습관 목표 기간 설정
-    TextView fromDate;
-    TextView toDate;
+    static TextView fromDate;
+    static TextView toDate;
 
     //시작, 마지막 날짜 고르는 달력 위한 버튼
     ImageButton fromDateButton;
@@ -61,6 +76,11 @@ public class RegisterActivity extends AppCompatActivity {
     String habitType; //좋은 습관 or 나쁜 습관인데 boolean으로 해도 괜찮을 것 같음
     //근데 바꿀거면 '등록'버튼 누른 후에 값 읽는 부분도 바꿔줘야함!
     String checkType;
+
+
+    int year;
+    int month;
+    int day;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,11 +144,14 @@ public class RegisterActivity extends AppCompatActivity {
         Action Listener들
          */
 
+        //달력 이미지 버튼을 누르면 달력을 띄워서 날짜를 선택할 수 있도록 구현함
+        //그러나 오늘 날짜 이전을 선택하지 못하게 하는 것 + 끝 날짜를 시작 날짜보다 먼저 선택하는 경우 못하게 막는 것 => 구현해야함
         //시작 날짜 선택할 수 있는 달력 띄워주기
         fromDateButton.setOnClickListener(new View.OnClickListener(){
 
             public  void onClick(View view){
-
+                DatePickerFragment mDatePicker = new DatePickerFragment();
+                mDatePicker.show(getFragmentManager(), "Select date");
             }
         });
 
@@ -136,7 +159,8 @@ public class RegisterActivity extends AppCompatActivity {
         toDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                DatePickerFragment2 mDatePicker = new DatePickerFragment2();
+                mDatePicker.show(getFragmentManager(), "Select date");
             }
         });
 
@@ -178,7 +202,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 //사용자가 입력을 제대로 안했을 경우 -> 실행이 안되도록 해야함
                 //라디오 버튼을 다 누르지 않았을 경우에 잘 실행이 되나
-                //제목을 입력안하는 경우는 제대로 인식하지 못함...ㅠㅠㅠㅠㅠㅠㅠㅠ
+                //제목, 횟수를 입력안하는 경우는 제대로 인식하지 못함...ㅠㅠㅠㅠㅠㅠㅠㅠ
                 if(title=="" || startDate=="" || finishDate=="" || frequency=="" || habitType==null || checkType==null ){
                     Toast.makeText(getApplicationContext(), "모든 내용을 입력해주세요", Toast.LENGTH_LONG).show();
                 }
@@ -215,5 +239,39 @@ public class RegisterActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState){
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+            fromDate.setText(String.valueOf(year) + "년 " + String.valueOf(month) + "월 " + String.valueOf(day)+"일");
+        }
+    }
+
+    public static class DatePickerFragment2 extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState){
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+            toDate.setText(String.valueOf(year) + "년 " + String.valueOf(month) + "월 " + String.valueOf(day)+"일");
+        }
     }
 }
