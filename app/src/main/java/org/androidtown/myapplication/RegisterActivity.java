@@ -1,5 +1,6 @@
 package org.androidtown.myapplication;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -70,21 +72,21 @@ public class RegisterActivity extends AppCompatActivity {
         setupActionBar();
 
         //습관 제목 받아오는 부분
-        //habit_title_input=(EditText)findViewById(R.id.habit_title_input);
+        habit_title_input=(EditText)findViewById(R.id.habit_title_input);
 
         //사용자가 설정한 시작, 끝 날짜 보여주는 부분
         //달력에서 선택하면 보여줄 예정
-        //fromDate =(TextView)findViewById(R.id.fromDate);
-        //toDate =(TextView)findViewById(R.id.toDate);
+        fromDate =(TextView)findViewById(R.id.fromDate);
+        toDate =(TextView)findViewById(R.id.toDate);
 
         //이 버튼을 누르면 달력을 띄워서 사용자가 날짜를 고르게 하고 -> 이를 위에 텍스트 뷰에 넣어줄 예정
-        //fromDateButton=(ImageButton)findViewById(R.id.fromDateButton);
-        //toDateButton=(ImageButton)findViewById(R.id.toDateButton);
+        fromDateButton=(ImageButton)findViewById(R.id.fromDateButton);
+        toDateButton=(ImageButton)findViewById(R.id.toDateButton);
 
         //습관 빈도수를 위한 부분 -> 버튼을 누르면 달, 주, 일이 나와서 선택할 수 있도록 함
         //그러고 나서 몇 번을 실천할 것인지 사용자의 입력을 받음
-        //frequency_spinner = (Spinner) findViewById(R.id.num_button);
-        //frequency_input = (EditText)findViewById(R.id.number);
+        frequency_spinner = (Spinner) findViewById(R.id.num_button);
+        frequency_input = (EditText)findViewById(R.id.number);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, frequency_type);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -104,18 +106,18 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         //습관 종류 선택을 읽기 위한 부분
-        //habit_type_group = (RadioGroup)findViewById(R.id.habit_type_group);
-        //good = (RadioButton)findViewById(R.id.good_habit);
-        //bad=(RadioButton)findViewById(R.id.bad_habit);
+        habit_type_group = (RadioGroup)findViewById(R.id.habit_type_group);
+        good = (RadioButton)findViewById(R.id.good_habit);
+        bad=(RadioButton)findViewById(R.id.bad_habit);
 
         //습관 체크 방법을 읽기 위한 부분
-       // habit_check_group = (RadioGroup)findViewById(R.id.habit_check_group);
-       // alone = (RadioButton)findViewById(R.id.alone);
-        //friend = (RadioButton)findViewById(R.id.friend);
-        //otherPerson = (RadioButton)findViewById(R.id.otherPerson);
+        habit_check_group = (RadioGroup)findViewById(R.id.habit_check_group);
+        alone = (RadioButton)findViewById(R.id.alone);
+        friend = (RadioButton)findViewById(R.id.friend);
+        otherPerson = (RadioButton)findViewById(R.id.otherPerson);
 
         //마지막 등록 버튼
-        //register_button =(Button)findViewById(R.id.register_button);
+        register_button =(Button)findViewById(R.id.register_button);
 
 
         /*
@@ -137,42 +139,6 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
-
-        /*
-        //하루, 일주일, 한달 => 선택할 수 있는 버튼
-        //클릭시 popup 메뉴가 나옴 => 선택된 내용을 버튼에 보여주도록 만들고 싶음
-        //아직은 팝 업 메뉴가 안뜸...ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
-        frequency_spinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-
-                getMenuInflater().inflate(R.menu.option_menu, popupMenu.getMenu());
-
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.day:
-                                break;
-
-                            case R.id.week:
-                                break;
-
-                            case R.id.month:
-                                break;
-
-                            default:
-                                break;
-                        }
-
-                        return false;
-                    }
-                });
-
-            }
-        });
-*/
 
         //등록하기 버튼 눌렸을 때 -> 입력 정보들 다 디비에 저장하기
         register_button.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +179,7 @@ public class RegisterActivity extends AppCompatActivity {
                 //사용자가 입력을 제대로 안했을 경우 -> 실행이 안되도록 해야함
                 //라디오 버튼을 다 누르지 않았을 경우에 잘 실행이 되나
                 //제목을 입력안하는 경우는 제대로 인식하지 못함...ㅠㅠㅠㅠㅠㅠㅠㅠ
-                if(title==null || startDate==null || finishDate==null || frequency==null || habitType==null || checkType==null ){
+                if(title=="" || startDate=="" || finishDate=="" || frequency=="" || habitType==null || checkType==null ){
                     Toast.makeText(getApplicationContext(), "모든 내용을 입력해주세요", Toast.LENGTH_LONG).show();
                 }
 
