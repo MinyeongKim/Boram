@@ -1,6 +1,7 @@
 package org.androidtown.myapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,26 +10,32 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    EditText id;
-    EditText pw;
+    EditText idText;
+    EditText pwText;
     Button loginBtn;
     Button signupBtn;
+
+    SharedPreferences sh_Pref;
+    SharedPreferences.Editor toEdit;
+
+    String inputId, inputPw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        id = (EditText)findViewById(R.id.loginId);
-        pw = (EditText)findViewById(R.id.loginPw);
+        idText = (EditText)findViewById(R.id.loginId);
+        pwText = (EditText)findViewById(R.id.loginPw);
         loginBtn = (Button)findViewById(R.id.loginBtn);
         signupBtn = (Button)findViewById(R.id.signupBtn);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String inputId = id.getText().toString();
-                String inputPw = pw.getText().toString();
+                inputId = idText.getText().toString();
+                inputPw = pwText.getText().toString();
+
                 if(inputId.equals("")){
                     Toast.makeText(getApplicationContext(), "please enter your ID", Toast.LENGTH_SHORT).show();
                 }
@@ -40,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
                         if(inputPw.equals("12345")){
                             Toast.makeText(getApplicationContext(), "login success", Toast.LENGTH_SHORT).show();
 
+                            //아이디랑 비밀번호 저장하는 부분
+                            sharedPrefernces();
+                            //applySharedPreference();
+
+                            //메인 화면 띄워주기
                             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
                             startActivity(intent);
 
@@ -64,5 +76,29 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+    }
+
+    private void sharedPrefernces() {
+        sh_Pref=getSharedPreferences("Login Credentials", MODE_PRIVATE);
+        toEdit=sh_Pref.edit();
+        toEdit.putString("UserID", inputId);
+        toEdit.putString("Password", inputPw);
+        toEdit.commit();
+
+        applySharedPreference();
+    }
+
+    private void applySharedPreference() {
+        sh_Pref = getSharedPreferences("Login Credentials", MODE_PRIVATE);
+        //Toast.makeText(getApplicationContext(),"1111111",Toast.LENGTH_LONG).show();
+        if (sh_Pref!=null && sh_Pref.contains("Username") && sh_Pref.contains("Password")){
+            //왜 여기 안으로 못 들어오는 것일까...
+            //Toast.makeText(getApplicationContext(),"22222",Toast.LENGTH_LONG).show();
+            String id = sh_Pref.getString("UserID","noname");
+            String pw = sh_Pref.getString("Password","nopassword");
+            idText.setText(id);
+            pwText.setText(pw);
+        }
     }
 }

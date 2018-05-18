@@ -20,6 +20,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/signupId" />
         </TableRow>
+
         <TableRow>
             <TextView android:text="PW"
                 android:layout_width="40dp"
@@ -29,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/signupPw" />
         </TableRow>
+
         <TableRow>
             <TextView android:text="Name"
                 android:layout_width="40dp"
@@ -38,8 +40,11 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/signupName" />
         </TableRow>
+
         <!--회원가입할때 더 필요한게 있나?-->
     </TableLayout>
+
+    //DB랑 연동하기!
     <Button
         android:id="@+id/registerBtn"
         android:layout_width="wrap_content"
