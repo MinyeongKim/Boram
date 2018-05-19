@@ -95,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
 
                                         return;
                                     }
+                                    else{
+                                        Toast.makeText(getApplicationContext(), "wrong password", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
                                 }
                             }
                             Toast.makeText(getApplicationContext(), "존재하지 않는 아이디", Toast.LENGTH_SHORT).show();
