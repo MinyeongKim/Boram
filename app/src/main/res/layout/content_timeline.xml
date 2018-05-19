@@ -8,17 +8,15 @@
     tools:context="org.androidtown.myapplication.TimelineActivity"
     tools:showIn="@layout/activity_timeline">
 
-    <!--수직 방향의 스크롤 뷰를 통해 자신의 습관 관리를 확인하고 관리할 수 있음 -->
-    <ScrollView
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/dynamicArea"
+        <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-        </LinearLayout>
+            android:layout_height="wrap_content"/>
 
-    </ScrollView>
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>
