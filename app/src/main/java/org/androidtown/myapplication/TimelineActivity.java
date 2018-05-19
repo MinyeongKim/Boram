@@ -12,14 +12,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class TimelineActivity extends AppCompatActivity {
 
 
     //타임라인 activity
-    //여기서는 각각의 메모장처럼(버튼으로 구현할 예정) 각각 습관의 이름, 빈도수, 진도율 등등을 보여줌
+    //여기서는 각각의 메모장처럼(버튼으로 구현할 예정) 각각 습관의 이름, 빈도수, 진도율 등등을 보여줌 -> 됨 => 디비랑 이제 연동해서 값 넣어주면 됨
     //그리고 나서 선택하면 해당 습관을 얼마나 했는지 보여주는 달력을 띄워줄 예정 => 이건 추가적인 부분//
 
     private final int DYNAMIC_VIEW_ID=0x8000;
@@ -29,6 +38,17 @@ public class TimelineActivity extends AppCompatActivity {
     String[] habit_title=new String[habit_num];
     String[] habit_type = new String[habit_num];
 
+    ProgressBar progressBar;
+
+    //디비에서 값 읽을 때마다 넣어주면 됨
+    int did_count; //총 몇 번 했는지
+    int to_do_count; //총 몇 번 해야 하는지
+    int ratio; // did_count / to_do_count => 총 몇 % 했는지
+
+    ListView listView;
+    TimelineAdapter adapter;
+    EditText editText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,29 +57,93 @@ public class TimelineActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        listView = (ListView) findViewById(R.id.listView);
+        adapter = new TimelineAdapter();
+
         /*
         DB에서 습관 갯수 읽어오는 부분 -> 읽은 갯수==habit_num;
         읽으면서 제목, 빈도수 등 배열 값에다 입력하기
         */
 
         //일단 디비 연결 전 습관 개수를 4개라고 생각하기
-        habit_num=4;
-        dynamicLayout=(LinearLayout)findViewById(R.id.dynamicArea);
+        habit_num=10;
 
-        for(int i=0; i<=(habit_num-1); i++){
-            Button dynamicButton = new Button(this);
+        for(int i=0; i<habit_num;i++){
+            did_count=i;
+            to_do_count=i;
+            ratio = i+30*i-10;
 
-            //일단 습관 제목과 타입 임의로 설정 -> 디비 연결되면 갯수 읽을 때, 값 넣어주기
-            //habit_title[i]="습관 제목 ";
-            //habit_type[i]="습관 타입 ";
-
-            dynamicButton.setId(DYNAMIC_VIEW_ID+i);
-            dynamicButton.setText("번호: "+i);
-
-            dynamicLayout.addView(dynamicButton, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            //adapter.addItem(new TimelineItem(제목, 체크 타입, "몇번 했나요? "+did_count+" 몇번 해야하나요? "+to_do_count, progressBar, ratio (진행률), ratio+" %" (프로그레스 바 옆에 몇 %지 보여주기), R.drawable.home =>그림));
+            adapter.addItem(new TimelineItem("제목","누구랑 함께? ", "몇번 했나요? "+did_count+" 몇번 해야하나요? "+to_do_count, progressBar, ratio, ratio+" %"));
         }
 
+        listView.setAdapter(adapter);
+
         setupActionBar();
+
+        //editText = (EditText) findViewById(R.id.editText);
+        /*
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = editText.getText().toString();
+                String mobile = "010-1000-1000";
+                int age = 20;
+
+                //adapter.addItem(new TimelineItem(name, mobile, age, R.drawable.ic_launcher_background));
+                adapter.notifyDataSetChanged();
+            }
+        });
+        */
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                TimelineItem item = (TimelineItem) adapter.getItem(position);
+                Toast.makeText(getApplicationContext(), "이름 : " + item.getTitle(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    class TimelineAdapter extends BaseAdapter {
+        ArrayList<TimelineItem> items = new ArrayList<TimelineItem>();
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        public void addItem(TimelineItem item) {
+            items.add(item);
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup viewGroup) {
+
+            TimelineItemView view = new TimelineItemView(getApplicationContext());
+
+            TimelineItem item = items.get(position);
+            view.setTitle(item.getTitle());
+            view.setHabit_check(item.getHabit_check());
+            view.setHabit_count(item.getHabit_count());
+            view.setProgressBar(item.getProgressBar());
+            view.setRatio(item.getRatio());
+            //view.setImage(item.getResId());
+
+            return view;
+        }
     }
 
     //뒤로가는 버튼 생성
