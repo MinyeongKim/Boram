@@ -46,7 +46,7 @@ public class SignupActivity extends AppCompatActivity {
                 databaseReference.child(id.getText().toString()).child("PW").setValue(pw.getText().toString());
                 databaseReference.child(id.getText().toString()).child("NAME").setValue(name.getText().toString());
 
-                Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
 
                 Toast.makeText(getApplicationContext(), "signup success, please login", Toast.LENGTH_SHORT).show();
