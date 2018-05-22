@@ -101,43 +101,10 @@ public class TimelineActivity extends AppCompatActivity {
             int type1=R.drawable.good_tree;
             int type2 = R.drawable.bad_tree;
 
-<<<<<<< HEAD
-            /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot){
-                    Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
-                    while(userList.hasNext()){
-                        DataSnapshot data = userList.next();
-                        if(data.getKey().equals(inputId)) {
-                            userID = (String)data.getKey();
-                            storedPw = (String)data.child("PW").getValue();
-                            if(i/2==1) {
-                                adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
-                                        "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type1));
-                            }
-
-                            else{
-                                adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
-                                        "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type2));
-                            }
-                        }
-                    }
-                    Toast.makeText(getApplicationContext(), "존재하지 않는 아이디", Toast.LENGTH_SHORT).show();
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError){
-
-                }
-
-            });*/
-
-
-=======
->>>>>>> f973cffece6151e0cfe1455cdfd8108498969f8c
             //String type = "R.drawable.home";
             //adapter.addItem(new TimelineItem(제목, 체크 타입, "몇번 했나요? "+did_count+" 몇번 해야하나요? "+to_do_count, progressBar, ratio (진행률), ratio+" %" (프로그레스 바 옆에 몇 %지 보여주기), R.drawable.home =>그림));
 
-            /*if(i/2==1) {
+            if(i/2==1) {
                 adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
                         "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type1));
             }
@@ -145,7 +112,7 @@ public class TimelineActivity extends AppCompatActivity {
             else{
                 adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
                         "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type2));
-            }*/
+            }
 
         }
 
