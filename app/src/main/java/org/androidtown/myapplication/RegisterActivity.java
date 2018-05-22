@@ -191,7 +191,45 @@ public class RegisterActivity extends AppCompatActivity {
         register_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+<<<<<<< HEAD
+                title = habit_title_input.getText().toString();
+
+                startDate = fromDate.getText().toString();
+                finishDate = toDate.getText().toString();
+
+                int index = 0;
+                String line;
+
+                //시작 날짜 구하는 부분
+                index = startDate.indexOf("-");
+                int startYear = Integer.parseInt(startDate.substring(0, index));
+
+                line = startDate.substring(index + 1);
+
+                index = line.indexOf("-");
+                int startMonth = Integer.parseInt(line.substring(0, index));
+
+                line = line.substring(index + 1);
+                int startDay = Integer.parseInt(line);
+
+
+                //finish date 구하는 부분
+                index = finishDate.indexOf("-");
+                int finishYear = Integer.parseInt(finishDate.substring(0, index));
+
+                line = finishDate.substring(index + 1);
+
+                index = line.indexOf("-");
+                int finishMonth = Integer.parseInt(line.substring(0, index));dz
+
+                line = line.substring(index + 1);
+                int finishDay = Integer.parseInt(line);
+
+                Calendar sCalendar = Calendar.getInstance();
+                Calendar fCalendar = Calendar.getInstance();
+=======
                 title=habit_title_input.getText().toString();
+>>>>>>> b4736cbf04e4da63ab5cb3abe09e5cd04fcd96f1
 
                 startDate=fromDate.getText().toString();
                 finishDate=toDate.getText().toString();
@@ -226,7 +264,11 @@ public class RegisterActivity extends AppCompatActivity {
                 //사용자가 입력을 제대로 안했을 경우 -> 실행이 안되도록 해야함
                 //라디오 버튼을 다 누르지 않았을 경우에 잘 실행이 되나
                 //제목, 횟수를 입력안하는 경우는 제대로 인식하지 못함...ㅠㅠㅠㅠㅠㅠㅠㅠ
+<<<<<<< HEAD
+                if (title == "" || startDate == "" || finishDate == "" || frequency == "" || habitType == null || checkType == null) {
+=======
                 /*if(title=="" || startDate=="" || finishDate=="" || frequency=="" || habitType==null || checkType==null ){
+>>>>>>> b4736cbf04e4da63ab5cb3abe09e5cd04fcd96f1
                     Toast.makeText(getApplicationContext(), "모든 내용을 입력해주세요", Toast.LENGTH_LONG).show();
                 }
 
@@ -234,10 +276,10 @@ public class RegisterActivity extends AppCompatActivity {
                     //사용자의 입력 값 확인 차원, Toast 메세지
                     Toast.makeText(getApplicationContext(), title+" "+startDate+" "+finishDate+" "+
                             frequency+" "+habitType+" "+checkType, Toast.LENGTH_LONG).show();
-                }*/
+                }
 
                 //습관 인덱스 계산
-                /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
@@ -250,8 +292,9 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onCancelled(DatabaseError databaseError){
 
                     }
-                });*/
-                //Toast.makeText(getApplicationContext(), habitIndex, Toast.LENGTH_LONG).show();
+                });
+
+                Toast.makeText(getApplicationContext(), habitIndex, Toast.LENGTH_LONG).show();
 
                 /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     int i=0;
@@ -274,7 +317,15 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onCancelled(DatabaseError databaseError){
 
                     }
+<<<<<<< HEAD
+                });
+
+                    Toast.makeText(getApplicationContext(), title + " " + startDate + " " + finishDate + " " +
+                            frequency + " " + habitType + " " + checkType+" "+time_do, Toast.LENGTH_LONG).show();
+                }
+=======
                 });*/
+>>>>>>> b4736cbf04e4da63ab5cb3abe09e5cd04fcd96f1
 
                 //이제 이 값들을 사용자 DB에 넣어줘야함......
                 String idx = String.valueOf(habitIndex+1);
