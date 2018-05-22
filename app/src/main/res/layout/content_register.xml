@@ -47,6 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:textSize="20dp"
                 android:text="시작" />
 
             <ImageButton
@@ -64,6 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:layout_marginTop="15dp"
+                android:textSize="20dp"
                 android:text="끝" />
 
             <ImageButton
