@@ -5,7 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="org.androidtown.myapplication.CheckingActivity"
-    tools:showIn="@layout/activity_checking">
+    tools:context="org.androidtown.myapplication.CheckActivity"
+    tools:showIn="@layout/activity_check">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#96020202">
+
+
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -59,6 +59,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setupActionBar();
 
         listView = (ListView) findViewById(R.id.listView);
         adapter = new TimelineAdapter();
@@ -81,7 +82,6 @@ public class TimelineActivity extends AppCompatActivity {
             int type1=R.drawable.good_tree;
             int type2 = R.drawable.bad_tree;
 
-
             //String type = "R.drawable.home";
             //adapter.addItem(new TimelineItem(제목, 체크 타입, "몇번 했나요? "+did_count+" 몇번 해야하나요? "+to_do_count, progressBar, ratio (진행률), ratio+" %" (프로그레스 바 옆에 몇 %지 보여주기), R.drawable.home =>그림));
 
@@ -99,8 +99,6 @@ public class TimelineActivity extends AppCompatActivity {
 
         listView.setAdapter(adapter);
 
-        setupActionBar();
-
         //editText = (EditText) findViewById(R.id.editText);
         /*
         Button button = (Button) findViewById(R.id.button);
@@ -117,15 +115,26 @@ public class TimelineActivity extends AppCompatActivity {
         });
         */
 
+        /*
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 TimelineItem item = (TimelineItem) adapter.getItem(position);
                 Toast.makeText(getApplicationContext(), "이름 : " + item.getTitle(), Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
+                startActivity(intent);
             }
         });
+*/
 
-
+        imageButton.setOnClickListener(new ImageButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

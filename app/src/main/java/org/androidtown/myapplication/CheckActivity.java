@@ -9,17 +9,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-public class CheckingActivity extends AppCompatActivity {
+public class CheckActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_checking);
+        setContentView(R.layout.activity_check);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        setupActionBar();
 
     }
+
 
     //뒤로가는 버튼 생성
     private void setupActionBar() {
