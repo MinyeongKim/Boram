@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 public class TimelineActivity extends AppCompatActivity {
 
+    String UserID;
 
     //타임라인 activity
     //여기서는 각각의 메모장처럼(버튼으로 구현할 예정) 각각 습관의 이름, 빈도수, 진도율 등등을 보여줌 -> 됨 => 디비랑 이제 연동해서 값 넣어주면 됨
@@ -56,6 +57,10 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        UserID = bundle.getString("ID");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

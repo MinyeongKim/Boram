@@ -253,45 +253,18 @@ public class RegisterActivity extends AppCompatActivity {
                 }*/
 
                 //습관 인덱스 계산
-                /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
-                        while (userList.hasNext()) {
-                            habitIndex++;
-                        }
-                        Toast.makeText(getApplicationContext(), habitIndex, Toast.LENGTH_LONG).show();
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError){
-
-                    }
-                });*/
-                //Toast.makeText(getApplicationContext(), habitIndex, Toast.LENGTH_LONG).show();
-
-                /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    int i=0;
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot){
-                        Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
-                        while(userList.hasNext()){
-                            DataSnapshot data = userList.next();
-                            if(data.getKey().equals(String.valueOf(i))) {
-                                return;
-                            }
-                            else{
-                                i++;
-                                return;
-                            }
-                        }
-                        Toast.makeText(getApplicationContext(), i, Toast.LENGTH_SHORT).show();
+                        habitIndex = (int)dataSnapshot.getChildrenCount();
+                        Toast.makeText(getApplicationContext(), "존재하지 않는 아이디"+habitIndex, Toast.LENGTH_SHORT).show();//3
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError){
 
                     }
-                });*/
-
+                });
+                Toast.makeText(getApplicationContext(), "존재하지 않는 아이디"+habitIndex, Toast.LENGTH_SHORT).show();//0
                 //이제 이 값들을 사용자 DB에 넣어줘야함......
                 String idx = String.valueOf(habitIndex + 1);
                 databaseReference.child(idx).child("TITLE").setValue(title);

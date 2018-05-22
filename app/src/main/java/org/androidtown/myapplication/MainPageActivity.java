@@ -100,6 +100,7 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         //타임라인 보기
         else if (id == R.id.timeline) {
             Intent intent = new Intent(getApplicationContext(), TimelineActivity.class);
+            intent.putExtras(bundle);
             startActivity(intent);
         }
 
