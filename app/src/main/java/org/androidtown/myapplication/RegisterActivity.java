@@ -197,7 +197,7 @@ public class RegisterActivity extends AppCompatActivity {
                 startDate = fromDate.getText().toString();
                 finishDate = toDate.getText().toString();
 
-                //count_day = calculate_days(startDate, finishDate);
+                count_day = calculate_days(startDate, finishDate);
 
                 num = Integer.parseInt(frequency_input.getText().toString());
 
@@ -242,7 +242,7 @@ public class RegisterActivity extends AppCompatActivity {
                 //사용자가 입력을 제대로 안했을 경우 -> 실행이 안되도록 해야함
                 //라디오 버튼을 다 누르지 않았을 경우에 잘 실행이 되나
                 //제목, 횟수를 입력안하는 경우는 제대로 인식하지 못함...ㅠㅠㅠㅠㅠㅠㅠㅠ
-                if(title=="" || startDate=="" || finishDate=="" || frequency=="" || habitType==null || checkType==null ){
+                /*if(title=="" || startDate=="" || finishDate=="" || frequency=="" || habitType==null || checkType==null ){
                     Toast.makeText(getApplicationContext(), "모든 내용을 입력해주세요", Toast.LENGTH_LONG).show();
                 }
 
@@ -250,48 +250,21 @@ public class RegisterActivity extends AppCompatActivity {
                     //사용자의 입력 값 확인 차원, Toast 메세지
                     Toast.makeText(getApplicationContext(), title+" "+startDate+" "+finishDate+" "+
                             frequency+" "+habitType+" "+checkType, Toast.LENGTH_LONG).show();
-                }
+                }*/
 
                 //습관 인덱스 계산
-                /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
-                        while (userList.hasNext()) {
-                            habitIndex++;
-                        }
-                        Toast.makeText(getApplicationContext(), habitIndex, Toast.LENGTH_LONG).show();
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError){
-
-                    }
-                });*/
-                //Toast.makeText(getApplicationContext(), habitIndex, Toast.LENGTH_LONG).show();
-
-                /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    int i=0;
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot){
-                        Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
-                        while(userList.hasNext()){
-                            DataSnapshot data = userList.next();
-                            if(data.getKey().equals(String.valueOf(i))) {
-                                return;
-                            }
-                            else{
-                                i++;
-                                return;
-                            }
-                        }
-                        Toast.makeText(getApplicationContext(), i, Toast.LENGTH_SHORT).show();
+                        habitIndex = (int)dataSnapshot.getChildrenCount();
+                        Toast.makeText(getApplicationContext(), "존재하지 않는 아이디"+habitIndex, Toast.LENGTH_SHORT).show();//3
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError){
 
                     }
-                });*/
-
+                });
+                Toast.makeText(getApplicationContext(), "존재하지 않는 아이디"+habitIndex, Toast.LENGTH_SHORT).show();//0
                 //이제 이 값들을 사용자 DB에 넣어줘야함......
                 String idx = String.valueOf(habitIndex + 1);
                 databaseReference.child(idx).child("TITLE").setValue(title);
