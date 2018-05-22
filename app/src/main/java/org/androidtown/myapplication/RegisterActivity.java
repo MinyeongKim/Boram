@@ -261,7 +261,7 @@ public class RegisterActivity extends AppCompatActivity {
                         databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
                         databaseReference.child(idx).child("TYPE").setValue(habitType);
                         databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
-                        databaseReference.child(idx).child("WILL").setValue(time_do);//몇번해야하는지
+                        databaseReference.child(idx).child("WILL").setValue(String.valueOf(time_do));//몇번해야하는지
                         databaseReference.child(idx).child("DID").setValue("0");//몇번했는지
 
                     }
