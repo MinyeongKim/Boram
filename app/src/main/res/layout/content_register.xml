@@ -170,13 +170,33 @@
             </RadioGroup>
         </TableRow>
 
+        <TableRow>
+            <EditText
+                android:id="@+id/friend_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:hint="친구의 아이디를 입력하세요"
+                android:layout_column="1"
+                android:layout_span="1"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_column="2"
+                android:text="확인"/>
+        </TableRow>
+
 
         <TableRow>
             <Button
                 android:id="@+id/register_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="20dp"
                 android:layout_column="1"
                 android:text="등록하기" />
         </TableRow>

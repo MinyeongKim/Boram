@@ -33,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
+import java.util.Iterator;
 
 /*
 2018-05-17. 02:22
@@ -80,13 +81,18 @@ public class RegisterActivity extends AppCompatActivity {
     RadioButton alone;
     RadioButton friend;
     RadioButton otherPerson;
+    EditText friend_id;
+    Button friend_check;
+    String friend_id_get;
+    boolean validation;
+    boolean button_validation = false;
 
     //등록 버튼
     Button register_button;
-    String title;
-    String startDate;
-    String finishDate;
-    String frequency; //하루, 일주일, 한달
+    String title = null;
+    String startDate = null;
+    String finishDate = null;
+    String frequency = null; //하루, 일주일, 한달
     int num; //frequency마다 몇번씩 할 것인지
     int time_do;
 
@@ -111,7 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
         UserID = bundle.getString("ID");
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("users/"+UserID+"/habits");
+        databaseReference = database.getReference("users/" + UserID + "/habits");
 
 
         //습관 제목 받아오는 부분
@@ -135,18 +141,6 @@ public class RegisterActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         frequency_spinner.setAdapter(adapter);
 
-        frequency_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView adapterView, View view, int i, long id) {
-                frequency = frequency_type[i];
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
 
         //습관 종류 선택을 읽기 위한 부분
         habit_type_group = (RadioGroup) findViewById(R.id.habit_type_group);
@@ -158,6 +152,65 @@ public class RegisterActivity extends AppCompatActivity {
         alone = (RadioButton) findViewById(R.id.alone);
         friend = (RadioButton) findViewById(R.id.friend);
         otherPerson = (RadioButton) findViewById(R.id.otherPerson);
+        friend_id = (EditText) findViewById(R.id.friend_id);
+        friend_check = (Button) findViewById(R.id.button);
+
+        habit_check_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (i == R.id.friend) {
+                    friend_id.setVisibility(View.VISIBLE);
+                    friend_check.setVisibility(View.VISIBLE);
+                } else {
+                    friend_id.setVisibility(View.INVISIBLE);
+                    friend_check.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        friend_check.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //친구 아이디 입력할 수 있도록
+                friend_id_get = friend_id.getText().toString();
+
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
+                        while (userList.hasNext()) {
+                            DataSnapshot data = userList.next();
+                            if (data.getKey().equals(friend_id_get)) {
+                                friend_id_get = (String) data.getKey();
+
+                                validation = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
+        friend_check.setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if (!validation) {
+                    friend_id.setText("");
+                    Toast.makeText(getApplicationContext(), "친구의 ID를 확인해주세요.", Toast.LENGTH_LONG).show();
+                } else {
+                    button_validation = true;
+                }
+            }
+        });
 
         //마지막 등록 버튼
         register_button = (Button) findViewById(R.id.register_button);
@@ -196,22 +249,30 @@ public class RegisterActivity extends AppCompatActivity {
                 startDate = fromDate.getText().toString();
                 finishDate = toDate.getText().toString();
 
-                count_day = calculateDays(startDate,finishDate);
+                count_day = calculateDays(startDate, finishDate);
 
                 num = Integer.parseInt(frequency_input.getText().toString());
                 //-> 한달 or 한주 or 하루에 몇번 실천할 것인지
 
+                frequency_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView adapterView, View view, int i, long id) {
+                        frequency = frequency_type[i];
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
                 //총 실천해야 하는 횟수 -> 하루, 일주일, 한달 선택과 그 기간동안 몇 번 할건지 입력한 것에 따라 계산
-                if(frequency.equals("하루")){
-                    time_do = (-1)*count_day*num;
-                }
-
-                else if(frequency.equals("일주일")){
-                    time_do = ((-1)*count_day)/7*num;
-                }
-
-                else{
-                    time_do = ((-1)*count_day)/30*num;
+                if (frequency.equals("하루")) {
+                    time_do = (-1) * count_day * num;
+                } else if (frequency.equals("일주일")) {
+                    time_do = ((-1) * count_day) / 7 * num;
+                } else {
+                    time_do = ((-1) * count_day) / 30 * num;
                 }
 
                 int radioID = habit_type_group.getCheckedRadioButtonId();
@@ -241,35 +302,38 @@ public class RegisterActivity extends AppCompatActivity {
                 //사용자가 입력을 제대로 안했을 경우 -> 실행이 안되도록 해야함
                 //라디오 버튼을 다 누르지 않았을 경우에 잘 실행이 되나
                 //제목, 횟수를 입력안하는 경우는 제대로 인식하지 못함...ㅠㅠㅠㅠㅠㅠㅠㅠ
-                if (title == "" || startDate == "" || finishDate == "" || frequency == "" || habitType == null || checkType == null) {
+                if (title == null || startDate == null || finishDate == null || frequency == null || habitType == null || checkType == null) {
                     Toast.makeText(getApplicationContext(), "모든 내용을 입력해주세요", Toast.LENGTH_LONG).show();
-                } else {
-                    //사용자의 입력 값 확인 차원, Toast 메세지
-                    Toast.makeText(getApplicationContext(), title + " " + startDate + " " + finishDate + " " +
-                            frequency + " " + habitType + " " + checkType+" "+time_do, Toast.LENGTH_LONG).show();
                 }
 
-                //이제 이 값들을 사용자 DB에 넣어줘야함......
-                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        habitIndex = (int)dataSnapshot.getChildrenCount();
-                        String idx = String.valueOf(habitIndex + 1);
-                        databaseReference.child(idx).child("TITLE").setValue(title);
-                        databaseReference.child(idx).child("START").setValue(startDate);
-                        databaseReference.child(idx).child("END").setValue(finishDate);
-                        databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
-                        databaseReference.child(idx).child("TYPE").setValue(habitType);
-                        databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
+                if (!button_validation) {
+                    Toast.makeText(getApplicationContext(), "아이디 확인 버튼을 눌러주세요", Toast.LENGTH_LONG).show();
+                }
 
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError){
+                if(!(title == null || startDate == null || finishDate == null || frequency == null || habitType == null || checkType == null || button_validation)){
+                    //이제 이 값들을 사용자 DB에 넣어줘야함......
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            habitIndex = (int) dataSnapshot.getChildrenCount();
+                            String idx = String.valueOf(habitIndex + 1);
+                            databaseReference.child(idx).child("TITLE").setValue(title);
+                            databaseReference.child(idx).child("START").setValue(startDate);
+                            databaseReference.child(idx).child("END").setValue(finishDate);
+                            databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
+                            databaseReference.child(idx).child("TYPE").setValue(habitType);
+                            databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
 
-                    }
+                            Toast.makeText(getApplicationContext(), "습관이 등록되었습니다.", Toast.LENGTH_LONG).show();
+                        }
 
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
+                        }
+
+                    });
+                }
             }
         });
     }
