@@ -24,9 +24,19 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class TimelineActivity extends AppCompatActivity {
+
+    FirebaseDatabase database;
+    DatabaseReference databaseReference;
 
     String UserID;
 
@@ -62,6 +72,9 @@ public class TimelineActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         UserID = bundle.getString("ID");
 
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference("users/" + UserID + "/habits");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -76,7 +89,7 @@ public class TimelineActivity extends AppCompatActivity {
         */
 
         //일단 디비 연결 전 습관 개수를 4개라고 생각하기
-        habit_num=10;
+        habit_num=5;
 
         for(int i=0; i<habit_num;i++){
             did_count=i;
@@ -86,11 +99,40 @@ public class TimelineActivity extends AppCompatActivity {
             int type1=R.drawable.good_tree;
             int type2 = R.drawable.bad_tree;
 
+            /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot){
+                    Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
+                    while(userList.hasNext()){
+                        DataSnapshot data = userList.next();
+                        if(data.getKey().equals(inputId)) {
+                            userID = (String)data.getKey();
+                            storedPw = (String)data.child("PW").getValue();
+                            if(i/2==1) {
+                                adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
+                                        "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type1));
+                            }
+
+                            else{
+                                adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
+                                        "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type2));
+                            }
+                        }
+                    }
+                    Toast.makeText(getApplicationContext(), "존재하지 않는 아이디", Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError){
+
+                }
+
+            });*/
+
 
             //String type = "R.drawable.home";
             //adapter.addItem(new TimelineItem(제목, 체크 타입, "몇번 했나요? "+did_count+" 몇번 해야하나요? "+to_do_count, progressBar, ratio (진행률), ratio+" %" (프로그레스 바 옆에 몇 %지 보여주기), R.drawable.home =>그림));
 
-            if(i/2==1) {
+            /*if(i/2==1) {
                 adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
                         "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type1));
             }
@@ -98,7 +140,7 @@ public class TimelineActivity extends AppCompatActivity {
             else{
                 adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
                         "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type2));
-            }
+            }*/
 
         }
 
