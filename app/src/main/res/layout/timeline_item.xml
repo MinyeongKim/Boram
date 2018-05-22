@@ -14,8 +14,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
+            <!--
             <ImageButton
                 android:id="@+id/imageButton"
+                android:background="#fafafa"
+                android:layout_width="80dp"
+                android:layout_height="150dp"
+                android:layout_marginLeft="20dp"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:scaleType="fitXY"/>
+            -->
+            <ImageView
+                android:id="@+id/imageView"
                 android:background="#fafafa"
                 android:layout_width="80dp"
                 android:layout_height="150dp"
@@ -26,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_toRightOf="@+id/imageButton"
+                android:layout_toRightOf="@+id/imageView"
                 android:orientation="vertical">
 
                 <TextView

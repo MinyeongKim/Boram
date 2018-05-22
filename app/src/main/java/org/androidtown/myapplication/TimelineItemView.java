@@ -20,7 +20,7 @@ public class TimelineItemView extends LinearLayout {
     TextView habit_count;
     ProgressBar progressBar;
     TextView progress_ratio;
-    ImageButton imageButton;
+    ImageView imageView;
 
     public TimelineItemView(Context context) {
         super(context);
@@ -43,7 +43,7 @@ public class TimelineItemView extends LinearLayout {
         habit_count = (TextView) findViewById(R.id.habit_count);
         progressBar = (ProgressBar) findViewById(R.id.progress);
         progress_ratio = (TextView) findViewById(R.id.ratio);
-        imageButton = (ImageButton) findViewById(R.id.imageButton);
+        imageView = (ImageView) findViewById(R.id.imageView);
     }
 
     public void setTitle(String title) {
@@ -59,7 +59,7 @@ public class TimelineItemView extends LinearLayout {
     }
 
     public void setImage(int resId) {
-        imageButton.setImageResource(resId);
+        imageView.setImageResource(resId);
     }
 
     public void setProgressBar(int rate) {

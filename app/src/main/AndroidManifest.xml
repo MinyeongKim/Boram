@@ -33,9 +33,14 @@
             android:label="@string/title_activity_register"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CheckingActivity"
-            android:label="@string/title_activity_checking"
+            android:name=".CheckActivity"
+            android:label="@string/title_activity_check"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".RatingActivity"></activity>
     </application>
 
 </manifest>

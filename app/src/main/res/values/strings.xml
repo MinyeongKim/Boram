@@ -89,4 +89,5 @@
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_checking">CheckingActivity</string>
     <string name="title_activity_signup_">Signup_Activity</string>
+    <string name="title_activity_check">CheckActivity</string>
 </resources>
