@@ -91,6 +91,23 @@ public class TimelineActivity extends AppCompatActivity {
         */
 
         //일단 디비 연결 전 습관 개수를 4개라고 생각하기
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int habitIndex = (int)dataSnapshot.getChildrenCount();
+                String idx = String.valueOf(habitIndex + 1);
+
+                for(int i=0; i<habit_num;i++){
+
+                }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError){
+
+            }
+
+        });
         habit_num=5;
 
         for(int i=0; i<habit_num;i++){
