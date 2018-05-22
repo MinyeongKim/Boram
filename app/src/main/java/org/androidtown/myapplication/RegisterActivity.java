@@ -141,6 +141,18 @@ public class RegisterActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         frequency_spinner.setAdapter(adapter);
 
+        frequency_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView adapterView, View view, int i, long id) {
+                frequency = frequency_type[i];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         //습관 종류 선택을 읽기 위한 부분
         habit_type_group = (RadioGroup) findViewById(R.id.habit_type_group);
@@ -254,18 +266,6 @@ public class RegisterActivity extends AppCompatActivity {
                 num = Integer.parseInt(frequency_input.getText().toString());
                 //-> 한달 or 한주 or 하루에 몇번 실천할 것인지
 
-                frequency_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView adapterView, View view, int i, long id) {
-                        frequency = frequency_type[i];
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-
                 //총 실천해야 하는 횟수 -> 하루, 일주일, 한달 선택과 그 기간동안 몇 번 할건지 입력한 것에 따라 계산
                 if (frequency.equals("하루")) {
                     time_do = (-1) * count_day * num;
@@ -306,36 +306,13 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "모든 내용을 입력해주세요", Toast.LENGTH_LONG).show();
                 }
 
-<<<<<<< HEAD
+                /*
                 if (!button_validation) {
                     Toast.makeText(getApplicationContext(), "아이디 확인 버튼을 눌러주세요", Toast.LENGTH_LONG).show();
                 }
-=======
+*/
                 //이제 이 값들을 사용자 DB에 넣어줘야함......
-                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        habitIndex = (int)dataSnapshot.getChildrenCount();
-                        String idx = String.valueOf(habitIndex + 1);
-                        databaseReference.child(idx).child("TITLE").setValue(title);
-                        databaseReference.child(idx).child("START").setValue(startDate);
-                        databaseReference.child(idx).child("END").setValue(finishDate);
-                        databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
-                        databaseReference.child(idx).child("TYPE").setValue(habitType);
-                        databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
-                        databaseReference.child(idx).child("WILL").setValue(String.valueOf(time_do));//몇번해야하는지
-                        databaseReference.child(idx).child("DID").setValue("0");//몇번했는지
 
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError){
-
-                    }
-
-                });
->>>>>>> d6b9e77d8e13159c79d80d297dd78ede6ced4bd7
-
-                if(!(title == null || startDate == null || finishDate == null || frequency == null || habitType == null || checkType == null || button_validation)){
                     //이제 이 값들을 사용자 DB에 넣어줘야함......
                     databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -348,6 +325,8 @@ public class RegisterActivity extends AppCompatActivity {
                             databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
                             databaseReference.child(idx).child("TYPE").setValue(habitType);
                             databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
+                            databaseReference.child(idx).child("WILL").setValue(String.valueOf(time_do));//몇번해야하는지
+                            databaseReference.child(idx).child("DID").setValue("0");//몇번했는지
 
                             Toast.makeText(getApplicationContext(), "습관이 등록되었습니다.", Toast.LENGTH_LONG).show();
                         }
@@ -358,7 +337,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
 
                     });
-                }
+
             }
         });
     }
