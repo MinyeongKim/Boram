@@ -1,5 +1,6 @@
 package org.androidtown.myapplication;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -85,16 +86,16 @@ public class RegisterActivity extends AppCompatActivity {
     String title;
     String startDate;
     String finishDate;
-    String frequency;
-    String num; //int로 바꾸고 싶음
+    String frequency; //하루, 일주일, 한달
+    int num; //frequency마다 몇번씩 할 것인지
+    int time_do;
+
     String habitType; //좋은 습관 or 나쁜 습관인데 boolean으로 해도 괜찮을 것 같음
     //근데 바꿀거면 '등록'버튼 누른 후에 값 읽는 부분도 바꿔줘야함!
     String checkType;
 
-
-    int year;
-    int month;
-    int day;
+    int count_day;
+    long start, finish, length;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,21 +116,21 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         //습관 제목 받아오는 부분
-        habit_title_input=(EditText)findViewById(R.id.habit_title_input);
+        habit_title_input = (EditText) findViewById(R.id.habit_title_input);
 
         //사용자가 설정한 시작, 끝 날짜 보여주는 부분
         //달력에서 선택하면 보여줄 예정
-        fromDate =(TextView)findViewById(R.id.fromDate);
-        toDate =(TextView)findViewById(R.id.toDate);
+        fromDate = (TextView) findViewById(R.id.fromDate);
+        toDate = (TextView) findViewById(R.id.toDate);
 
         //이 버튼을 누르면 달력을 띄워서 사용자가 날짜를 고르게 하고 -> 이를 위에 텍스트 뷰에 넣어줄 예정
-        fromDateButton=(ImageButton)findViewById(R.id.fromDateButton);
-        toDateButton=(ImageButton)findViewById(R.id.toDateButton);
+        fromDateButton = (ImageButton) findViewById(R.id.fromDateButton);
+        toDateButton = (ImageButton) findViewById(R.id.toDateButton);
 
         //습관 빈도수를 위한 부분 -> 버튼을 누르면 달, 주, 일이 나와서 선택할 수 있도록 함
         //그러고 나서 몇 번을 실천할 것인지 사용자의 입력을 받음
         frequency_spinner = (Spinner) findViewById(R.id.num_button);
-        frequency_input = (EditText)findViewById(R.id.number);
+        frequency_input = (EditText) findViewById(R.id.number);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, frequency_type);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -138,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
         frequency_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView adapterView, View view, int i, long id) {
-                frequency=frequency_type[i];
+                frequency = frequency_type[i];
             }
 
             @Override
@@ -149,18 +150,18 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         //습관 종류 선택을 읽기 위한 부분
-        habit_type_group = (RadioGroup)findViewById(R.id.habit_type_group);
-        good = (RadioButton)findViewById(R.id.good_habit);
-        bad=(RadioButton)findViewById(R.id.bad_habit);
+        habit_type_group = (RadioGroup) findViewById(R.id.habit_type_group);
+        good = (RadioButton) findViewById(R.id.good_habit);
+        bad = (RadioButton) findViewById(R.id.bad_habit);
 
         //습관 체크 방법을 읽기 위한 부분
-        habit_check_group = (RadioGroup)findViewById(R.id.habit_check_group);
-        alone = (RadioButton)findViewById(R.id.alone);
-        friend = (RadioButton)findViewById(R.id.friend);
-        otherPerson = (RadioButton)findViewById(R.id.otherPerson);
+        habit_check_group = (RadioGroup) findViewById(R.id.habit_check_group);
+        alone = (RadioButton) findViewById(R.id.alone);
+        friend = (RadioButton) findViewById(R.id.friend);
+        otherPerson = (RadioButton) findViewById(R.id.otherPerson);
 
         //마지막 등록 버튼
-        register_button =(Button)findViewById(R.id.register_button);
+        register_button = (Button) findViewById(R.id.register_button);
 
 
         /*
@@ -170,9 +171,9 @@ public class RegisterActivity extends AppCompatActivity {
         //달력 이미지 버튼을 누르면 달력을 띄워서 날짜를 선택할 수 있도록 구현함
         //그러나 오늘 날짜 이전을 선택하지 못하게 하는 것 + 끝 날짜를 시작 날짜보다 먼저 선택하는 경우 못하게 막는 것 => 구현해야함
         //시작 날짜 선택할 수 있는 달력 띄워주기
-        fromDateButton.setOnClickListener(new View.OnClickListener(){
+        fromDateButton.setOnClickListener(new View.OnClickListener() {
 
-            public  void onClick(View view){
+            public void onClick(View view) {
                 DatePickerFragment mDatePicker = new DatePickerFragment();
                 mDatePicker.show(getFragmentManager(), "Select date");
             }
@@ -191,47 +192,105 @@ public class RegisterActivity extends AppCompatActivity {
         register_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                title=habit_title_input.getText().toString();
+                title = habit_title_input.getText().toString();
 
-                startDate=fromDate.getText().toString();
-                finishDate=toDate.getText().toString();
+                startDate = fromDate.getText().toString();
+                finishDate = toDate.getText().toString();
 
-                //frequency = frequency_button.getText().toString();
-                //num=frequency_input.getText().toString(); -> 한달 or 한주 or 하루에 몇번 실천할 것인지
+                int index = 0;
+                String line;
+
+                //시작 날짜 구하는 부분
+                index = startDate.indexOf("-");
+                int startYear = Integer.parseInt(startDate.substring(0, index));
+
+                line = startDate.substring(index + 1);
+
+                index = line.indexOf("-");
+                int startMonth = Integer.parseInt(line.substring(0, index));
+
+                line = line.substring(index + 1);
+                int startDay = Integer.parseInt(line);
+
+
+                //finish date 구하는 부분
+                index = finishDate.indexOf("-");
+                int finishYear = Integer.parseInt(finishDate.substring(0, index));
+
+                line = finishDate.substring(index + 1);
+
+                index = line.indexOf("-");
+                int finishMonth = Integer.parseInt(line.substring(0, index));
+
+                line = line.substring(index + 1);
+                int finishDay = Integer.parseInt(line);
+
+                Calendar sCalendar = Calendar.getInstance();
+                Calendar fCalendar = Calendar.getInstance();
+
+                sCalendar.set(startYear, startMonth, startDay);
+                fCalendar.set(finishYear, finishMonth, finishDay);
+
+                start = sCalendar.getTimeInMillis() / (24 * 60 * 60 * 1000);
+                finish = fCalendar.getTimeInMillis() / (24 * 60 * 60 * 1000);
+
+                length = (start - finish);
+                //여기까지가 디데이 구하는 공식 -> 나중에 함수로 뺄 예정
+
+                count_day = (int) length; //며칠 남았는지
+
+                num = Integer.parseInt(frequency_input.getText().toString());
+                //-> 한달 or 한주 or 하루에 몇번 실천할 것인지
+
+                //총 실천해야 하는 횟수 -> 하루, 일주일, 한달 선택과 그 기간동안 몇 번 할건지 입력한 것에 따라 계산
+                if(frequency.equals("하루")){
+                    time_do = (-1)*count_day*num;
+                }
+
+                else if(frequency.equals("일주일")){
+                    time_do = ((-1)*count_day)/7*num;
+                }
+
+                else{
+                    time_do = ((-1)*count_day)/30*num;
+                }
 
                 int radioID = habit_type_group.getCheckedRadioButtonId();
 
-                if(good.getId() == radioID){
-                    habitType="good";
+                if (good.getId() == radioID) {
+                    habitType = "good";
                 }
 
-                if(bad.getId()==radioID){
-                    habitType="bad";
+                if (bad.getId() == radioID) {
+                    habitType = "bad";
                 }
 
                 radioID = habit_check_group.getCheckedRadioButtonId();
 
-                if(alone.getId()==radioID){
-                    checkType="alone";
+                if (alone.getId() == radioID) {
+                    checkType = "alone";
                 }
 
-                if(friend.getId()==radioID){
-                    checkType="friend";
+                if (friend.getId() == radioID) {
+                    checkType = "friend";
                 }
 
-                if(otherPerson.getId()==radioID){
-                    checkType="otherPerson";
+                if (otherPerson.getId() == radioID) {
+                    checkType = "otherPerson";
                 }
 
                 //사용자가 입력을 제대로 안했을 경우 -> 실행이 안되도록 해야함
                 //라디오 버튼을 다 누르지 않았을 경우에 잘 실행이 되나
                 //제목, 횟수를 입력안하는 경우는 제대로 인식하지 못함...ㅠㅠㅠㅠㅠㅠㅠㅠ
+<<<<<<< HEAD
                 /*if(title=="" || startDate=="" || finishDate=="" || frequency=="" || habitType==null || checkType==null ){
+=======
+                if (title == "" || startDate == "" || finishDate == "" || frequency == "" || habitType == null || checkType == null) {
+>>>>>>> d5879dc8c7266b367ca54b6d659c5c23addfde0e
                     Toast.makeText(getApplicationContext(), "모든 내용을 입력해주세요", Toast.LENGTH_LONG).show();
-                }
-
-                else{
+                } else {
                     //사용자의 입력 값 확인 차원, Toast 메세지
+<<<<<<< HEAD
                     Toast.makeText(getApplicationContext(), title+" "+startDate+" "+finishDate+" "+
                             frequency+" "+habitType+" "+checkType, Toast.LENGTH_LONG).show();
                 }*/
@@ -275,6 +334,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                     }
                 });*/
+=======
+                    Toast.makeText(getApplicationContext(), title + " " + startDate + " " + finishDate + " " +
+                            frequency + " " + habitType + " " + checkType+" "+time_do, Toast.LENGTH_LONG).show();
+                }
+>>>>>>> d5879dc8c7266b367ca54b6d659c5c23addfde0e
 
                 //이제 이 값들을 사용자 DB에 넣어줘야함......
                 String idx = String.valueOf(habitIndex+1);
@@ -299,8 +363,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     //뒤로가기 버튼이 눌렀을 경우
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 //NavUtils.navigateUpFromSameTask(this);
                 finish();
@@ -312,10 +376,11 @@ public class RegisterActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+    @SuppressLint("ValidFragment")
+    public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState){
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
@@ -325,14 +390,15 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            fromDate.setText(String.valueOf(year) + "년 " + String.valueOf(month) + "월 " + String.valueOf(day)+"일");
+            fromDate.setText(String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(day));
         }
     }
 
-    public static class DatePickerFragment2 extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+    @SuppressLint("ValidFragment")
+    public class DatePickerFragment2 extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState){
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
@@ -342,7 +408,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            toDate.setText(String.valueOf(year) + "년 " + String.valueOf(month) + "월 " + String.valueOf(day)+"일");
+            toDate.setText(String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(day));
         }
     }
 }

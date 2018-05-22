@@ -31,7 +31,11 @@
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CheckingActivity"
+            android:label="@string/title_activity_checking"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

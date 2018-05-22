@@ -23,14 +23,14 @@ public class TimelineItem {
     }
 */
 
-    public TimelineItem(String title, String habit_check, String habit_count, ProgressBar progressBar, int rateId, String ratio /*,int resId*/) {
+    public TimelineItem(String title, String habit_check, String habit_count, ProgressBar progressBar, int rateId, String ratio ,int resId) {
         this.title = title;
         this.habit_check = habit_check;
         this.habit_count = habit_count;
         this.progressBar=progressBar;
         this.rate=rateId;
         this.ratio=ratio;
-        //this.resId = resId;
+        this.resId = resId;
     }
 
     public int getProgressBar() {
