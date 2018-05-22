@@ -50,6 +50,7 @@ import java.util.Iterator;
 public class RegisterActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceForFriend;
 
     String UserID;
     int habitIndex = 0;
@@ -118,6 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/" + UserID + "/habits");
+        databaseReferenceForFriend = database.getReference("users");
 
 
         //습관 제목 받아오는 부분
@@ -187,7 +189,7 @@ public class RegisterActivity extends AppCompatActivity {
                 //친구 아이디 입력할 수 있도록
                 friend_id_get = friend_id.getText().toString();
 
-                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReferenceForFriend.addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -195,12 +197,13 @@ public class RegisterActivity extends AppCompatActivity {
                         while (userList.hasNext()) {
                             DataSnapshot data = userList.next();
                             if (data.getKey().equals(friend_id_get)) {
-                                friend_id_get = (String) data.getKey();
+                                //friend_id_get(친구아이디)를 디비에 저장(뒤에서 같이)
 
-                                validation = true;
-                                break;
+                                //validation = true;
+                                return;
                             }
                         }
+                        Toast.makeText(getApplicationContext(), "친구의 ID를 확인해주세요.", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -211,7 +214,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        friend_check.setOnClickListener(new Button.OnClickListener() {
+        /*friend_check.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -222,7 +225,7 @@ public class RegisterActivity extends AppCompatActivity {
                     button_validation = true;
                 }
             }
-        });
+        });*/
 
         //마지막 등록 버튼
         register_button = (Button) findViewById(R.id.register_button);
@@ -311,32 +314,31 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "아이디 확인 버튼을 눌러주세요", Toast.LENGTH_LONG).show();
                 }
 */
+
                 //이제 이 값들을 사용자 DB에 넣어줘야함......
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        habitIndex = (int) dataSnapshot.getChildrenCount();
+                        String idx = String.valueOf(habitIndex + 1);
+                        databaseReference.child(idx).child("TITLE").setValue(title);
+                        databaseReference.child(idx).child("START").setValue(startDate);
+                        databaseReference.child(idx).child("END").setValue(finishDate);
+                        databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
+                        databaseReference.child(idx).child("TYPE").setValue(habitType);
+                        databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
+                        databaseReference.child(idx).child("WILL").setValue(String.valueOf(time_do));//몇번해야하는지
+                        databaseReference.child(idx).child("DID").setValue("0");//몇번했는지
 
-                    //이제 이 값들을 사용자 DB에 넣어줘야함......
-                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            habitIndex = (int) dataSnapshot.getChildrenCount();
-                            String idx = String.valueOf(habitIndex + 1);
-                            databaseReference.child(idx).child("TITLE").setValue(title);
-                            databaseReference.child(idx).child("START").setValue(startDate);
-                            databaseReference.child(idx).child("END").setValue(finishDate);
-                            databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
-                            databaseReference.child(idx).child("TYPE").setValue(habitType);
-                            databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
-                            databaseReference.child(idx).child("WILL").setValue(String.valueOf(time_do));//몇번해야하는지
-                            databaseReference.child(idx).child("DID").setValue("0");//몇번했는지
+                        Toast.makeText(getApplicationContext(), "습관이 등록되었습니다.", Toast.LENGTH_LONG).show();
+                    }
 
-                            Toast.makeText(getApplicationContext(), "습관이 등록되었습니다.", Toast.LENGTH_LONG).show();
-                        }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    }
 
-                        }
-
-                    });
+                });
 
             }
         });
