@@ -87,4 +87,6 @@
     <string name="title_activity_timline">Timline</string>
     <string name="title_activity_timeline">Timeline</string>
     <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_checking">CheckingActivity</string>
+    <string name="title_activity_signup_">Signup_Activity</string>
 </resources>

@@ -1,6 +1,7 @@
 package org.androidtown.myapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.LinkAddress;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -45,6 +47,7 @@ public class TimelineActivity extends AppCompatActivity {
     int to_do_count; //총 몇 번 해야 하는지
     int ratio; // did_count / to_do_count => 총 몇 % 했는지
 
+    ImageButton imageButton;
     ListView listView;
     TimelineAdapter adapter;
     EditText editText;
@@ -60,6 +63,8 @@ public class TimelineActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView);
         adapter = new TimelineAdapter();
 
+        imageButton=(ImageButton)findViewById(R.id.imageButton);
+
         /*
         DB에서 습관 갯수 읽어오는 부분 -> 읽은 갯수==habit_num;
         읽으면서 제목, 빈도수 등 배열 값에다 입력하기
@@ -73,8 +78,23 @@ public class TimelineActivity extends AppCompatActivity {
             to_do_count=i;
             ratio = i+30*i-10;
 
+            int type1=R.drawable.good_tree;
+            int type2 = R.drawable.bad_tree;
+
+
+            //String type = "R.drawable.home";
             //adapter.addItem(new TimelineItem(제목, 체크 타입, "몇번 했나요? "+did_count+" 몇번 해야하나요? "+to_do_count, progressBar, ratio (진행률), ratio+" %" (프로그레스 바 옆에 몇 %지 보여주기), R.drawable.home =>그림));
-            adapter.addItem(new TimelineItem("제목","누구랑 함께? ", "몇번 했나요? "+did_count+" 몇번 해야하나요? "+to_do_count, progressBar, ratio, ratio+" %"));
+
+            if(i/2==1) {
+                adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
+                        "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type1));
+            }
+
+            else{
+                adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
+                        "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type2));
+            }
+
         }
 
         listView.setAdapter(adapter);
@@ -104,6 +124,8 @@ public class TimelineActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "이름 : " + item.getTitle(), Toast.LENGTH_LONG).show();
             }
         });
+
+
 
     }
 
@@ -140,7 +162,7 @@ public class TimelineActivity extends AppCompatActivity {
             view.setHabit_count(item.getHabit_count());
             view.setProgressBar(item.getProgressBar());
             view.setRatio(item.getRatio());
-            //view.setImage(item.getResId());
+            view.setImage(item.getResId());
 
             return view;
         }
