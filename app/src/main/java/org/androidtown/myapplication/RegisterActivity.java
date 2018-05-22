@@ -252,6 +252,7 @@ public class RegisterActivity extends AppCompatActivity {
                             frequency+" "+habitType+" "+checkType, Toast.LENGTH_LONG).show();
                 }*/
 
+                /*
                 //습관 인덱스 계산
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -264,7 +265,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                     }
                 });
-                Toast.makeText(getApplicationContext(), "존재하지 않는 아이디"+habitIndex, Toast.LENGTH_SHORT).show();//0
+*/
+                Toast.makeText(getApplicationContext(), "=========="+habitIndex, Toast.LENGTH_SHORT).show();//0
+
                 //이제 이 값들을 사용자 DB에 넣어줘야함......
                 String idx = String.valueOf(habitIndex + 1);
                 databaseReference.child(idx).child("TITLE").setValue(title);
@@ -273,7 +276,6 @@ public class RegisterActivity extends AppCompatActivity {
                 databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
                 databaseReference.child(idx).child("TYPE").setValue(habitType);
                 databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
-
             }
         });
     }
