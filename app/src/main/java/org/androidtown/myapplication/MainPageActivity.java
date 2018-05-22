@@ -13,15 +13,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Time;
+import java.util.Iterator;
 
-public class MainPageActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainPageActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    TextView userName;
+    TextView userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.nav_header_main_page);
+
+        userName = (TextView) findViewById(R.id.UserName);
+        userID = (TextView) findViewById(R.id.UserID);
+
         setContentView(R.layout.activity_main_page);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -35,6 +51,15 @@ public class MainPageActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //슬라이드 메뉴 회원 이름, 아이디 보여주기
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String name = bundle.getString("name");
+        userName.setText(name);
+        String id = bundle.getString("ID");
+        userID.setText(id);
+        //안되고있음.
     }
 
     //슬라이드 메뉴 다시 넣는 부분
@@ -53,6 +78,10 @@ public class MainPageActivity extends AppCompatActivity
     @Override
     //슬라이드 메뉴에서 메뉴를 선택했을 때
     public boolean onNavigationItemSelected(MenuItem item) {
+        String USERID = (String)userID.getText().toString();
+        Bundle bundle = new Bundle();
+        bundle.putString("ID", USERID);
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -62,13 +91,14 @@ public class MainPageActivity extends AppCompatActivity
         }
 
         //습관 등록
-        else if(id==R.id.enroll_habit){
+        else if (id == R.id.enroll_habit) {
             Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+            intent.putExtras(bundle);
             startActivity(intent);
         }
 
         //타임라인 보기
-        else if(id==R.id.timeline){
+        else if (id == R.id.timeline) {
             Intent intent = new Intent(getApplicationContext(), TimelineActivity.class);
             startActivity(intent);
         }

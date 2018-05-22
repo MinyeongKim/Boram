@@ -3,12 +3,14 @@ package org.androidtown.myapplication;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,7 +26,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.Calendar;
+import java.util.Iterator;
 
 /*
 2018-05-17. 02:22
@@ -38,6 +47,11 @@ import java.util.Calendar;
  */
 
 public class RegisterActivity extends AppCompatActivity {
+    FirebaseDatabase database;
+    DatabaseReference databaseReference;
+
+    String UserID;
+    int habitIndex = 0;
 
     //습관 이름
     EditText habit_title_input;
@@ -90,6 +104,15 @@ public class RegisterActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         setupActionBar();
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        UserID = bundle.getString("ID");
+
+        database = FirebaseDatabase.getInstance();
+        //databaseReference = database.getReference("users/"+UserID+"/habits/"+habitIndex);
+        databaseReference = database.getReference("users/"+UserID+"/habits");
+
 
         //습관 제목 받아오는 부분
         habit_title_input=(EditText)findViewById(R.id.habit_title_input);
@@ -203,7 +226,7 @@ public class RegisterActivity extends AppCompatActivity {
                 //사용자가 입력을 제대로 안했을 경우 -> 실행이 안되도록 해야함
                 //라디오 버튼을 다 누르지 않았을 경우에 잘 실행이 되나
                 //제목, 횟수를 입력안하는 경우는 제대로 인식하지 못함...ㅠㅠㅠㅠㅠㅠㅠㅠ
-                if(title=="" || startDate=="" || finishDate=="" || frequency=="" || habitType==null || checkType==null ){
+                /*if(title=="" || startDate=="" || finishDate=="" || frequency=="" || habitType==null || checkType==null ){
                     Toast.makeText(getApplicationContext(), "모든 내용을 입력해주세요", Toast.LENGTH_LONG).show();
                 }
 
@@ -211,9 +234,57 @@ public class RegisterActivity extends AppCompatActivity {
                     //사용자의 입력 값 확인 차원, Toast 메세지
                     Toast.makeText(getApplicationContext(), title+" "+startDate+" "+finishDate+" "+
                             frequency+" "+habitType+" "+checkType, Toast.LENGTH_LONG).show();
-                }
+                }*/
+
+                //습관 인덱스 계산
+                /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
+                        while (userList.hasNext()) {
+                            habitIndex++;
+                        }
+                        Toast.makeText(getApplicationContext(), habitIndex, Toast.LENGTH_LONG).show();
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError){
+
+                    }
+                });*/
+                //Toast.makeText(getApplicationContext(), habitIndex, Toast.LENGTH_LONG).show();
+
+                /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    int i=0;
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot){
+                        Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
+                        while(userList.hasNext()){
+                            DataSnapshot data = userList.next();
+                            if(data.getKey().equals(String.valueOf(i))) {
+                                return;
+                            }
+                            else{
+                                i++;
+                                return;
+                            }
+                        }
+                        Toast.makeText(getApplicationContext(), i, Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError){
+
+                    }
+                });*/
 
                 //이제 이 값들을 사용자 DB에 넣어줘야함......
+                String idx = String.valueOf(habitIndex+1);
+                databaseReference.child(idx).child("TITLE").setValue(title);
+                databaseReference.child(idx).child("START").setValue(startDate);
+                databaseReference.child(idx).child("END").setValue(finishDate);
+                databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
+                databaseReference.child(idx).child("TYPE").setValue(habitType);
+                databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
+
             }
         });
     }

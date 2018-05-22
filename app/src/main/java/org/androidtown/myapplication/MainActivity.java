@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor toEdit;
 
     String inputId, inputPw;
+    String userID;
+    String storedPw;
+    String userName;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -55,27 +58,6 @@ public class MainActivity extends AppCompatActivity {
                 } else if (inputPw.equals("")) {
                     Toast.makeText(getApplicationContext(), "please enter your password", Toast.LENGTH_SHORT).show();
                 } else {
-                    /*if(inputId.equals("surim")){
-                        if(inputPw.equals("12345")){
-                            Toast.makeText(getApplicationContext(), "login success", Toast.LENGTH_SHORT).show();
-
-                            //아이디랑 비밀번호 저장하는 부분
-                            sharedPrefernces();
-                            //applySharedPreference();
-
-                            //메인 화면 띄워주기
-                            Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
-                            startActivity(intent);
-
-                            finish();
-                        }
-                        else{
-                            Toast.makeText(getApplicationContext(), "wrong password", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(), "wrong id", Toast.LENGTH_SHORT).show();
-                    }*/
                     databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot){
@@ -83,12 +65,18 @@ public class MainActivity extends AppCompatActivity {
                             while(userList.hasNext()){
                                 DataSnapshot data = userList.next();
                                 if(data.getKey().equals(inputId)) {
-                                    String storedPw = (String)data.child("PW").getValue();
+                                    userID = (String)data.getKey();
+                                    storedPw = (String)data.child("PW").getValue();
                                     if(storedPw.equals(inputPw)) {
+                                        userName = (String)data.child("NAME").getValue();
                                         Toast.makeText(getApplicationContext(), "login success", Toast.LENGTH_SHORT).show();
 
                                         //메인 화면 띄워주기
                                         Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("name", userName);
+                                        bundle.putString("ID", userID);
+                                        intent.putExtras(bundle);
                                         startActivity(intent);
 
                                         finish();

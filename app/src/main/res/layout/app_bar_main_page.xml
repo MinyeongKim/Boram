@@ -20,7 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    //content_main_page에 있는 내용물을 가져옴
+    <!--content_main_page에 있는 내용물을 가져옴-->
     <include layout="@layout/content_main_page" />
 
 </android.support.design.widget.CoordinatorLayout>
