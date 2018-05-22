@@ -306,9 +306,34 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "모든 내용을 입력해주세요", Toast.LENGTH_LONG).show();
                 }
 
+<<<<<<< HEAD
                 if (!button_validation) {
                     Toast.makeText(getApplicationContext(), "아이디 확인 버튼을 눌러주세요", Toast.LENGTH_LONG).show();
                 }
+=======
+                //이제 이 값들을 사용자 DB에 넣어줘야함......
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        habitIndex = (int)dataSnapshot.getChildrenCount();
+                        String idx = String.valueOf(habitIndex + 1);
+                        databaseReference.child(idx).child("TITLE").setValue(title);
+                        databaseReference.child(idx).child("START").setValue(startDate);
+                        databaseReference.child(idx).child("END").setValue(finishDate);
+                        databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
+                        databaseReference.child(idx).child("TYPE").setValue(habitType);
+                        databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
+                        databaseReference.child(idx).child("WILL").setValue(String.valueOf(time_do));//몇번해야하는지
+                        databaseReference.child(idx).child("DID").setValue("0");//몇번했는지
+
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError){
+
+                    }
+
+                });
+>>>>>>> d6b9e77d8e13159c79d80d297dd78ede6ced4bd7
 
                 if(!(title == null || startDate == null || finishDate == null || frequency == null || habitType == null || checkType == null || button_validation)){
                     //이제 이 값들을 사용자 DB에 넣어줘야함......

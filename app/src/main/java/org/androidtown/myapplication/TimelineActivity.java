@@ -48,7 +48,7 @@ public class TimelineActivity extends AppCompatActivity {
     private final int DYNAMIC_VIEW_ID = 0x8000;
     private LinearLayout dynamicLayout;
 
-    int habit_num;
+    int habit_num=0;
     String[] habit_title = new String[habit_num];
     String[] habit_type = new String[habit_num];
 
@@ -69,16 +69,16 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setupActionBar();
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         UserID = bundle.getString("ID");
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("users/" + UserID + "/habits");
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        setupActionBar();
+        databaseReference = database.getReference("users/"+UserID+"/habits");
 
         listView = (ListView) findViewById(R.id.listView);
         adapter = new TimelineAdapter();
@@ -91,7 +91,115 @@ public class TimelineActivity extends AppCompatActivity {
         */
 
         //일단 디비 연결 전 습관 개수를 4개라고 생각하기
-        habit_num=5;
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                habit_num = (int)dataSnapshot.getChildrenCount();
+                String idx = String.valueOf(habit_num);
+                //Toast.makeText(getApplication(), idx, Toast.LENGTH_LONG).show();
+
+                int type1=R.drawable.good_tree;
+                int type2 = R.drawable.bad_tree;
+
+                for(int i=1; i <= habit_num;i++){
+                    String habitIndex = String.valueOf(i);
+                    String title = (String)dataSnapshot.child(habitIndex).child("TITLE").getValue();
+                    String withWho = (String)dataSnapshot.child(habitIndex).child("CHECKMETHOD").getValue();
+                    String didString = (String)dataSnapshot.child(habitIndex).child("DID").getValue();
+                    int didNum = Integer.parseInt(didString);//몇번했나
+                    String willString = (String)dataSnapshot.child(habitIndex).child("WILL").getValue();
+                    int willNum = Integer.parseInt(willString);//몇번해야하나
+                    String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue();
+
+                    ratio = i+30*i-10; //이거 어떻게 나온거야?
+
+                    if(type.equals("good")) {
+                        adapter.addItem(new TimelineItem(title, withWho,
+                                "몇번 했나요? " + didNum + " 몇번 해야하나요? " + willNum, progressBar, ratio, ratio + " %", type1));
+                    }
+
+                    else{
+                        adapter.addItem(new TimelineItem(title, withWho,
+                                "몇번 했나요? " + didNum + " 몇번 해야하나요? " + willNum, progressBar, ratio, ratio + " %", type2));
+                    }
+                }
+                Toast.makeText(getApplication(), "finish", Toast.LENGTH_LONG).show();
+                listView.setAdapter(adapter);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        TimelineItem item = (TimelineItem) adapter.getItem(position);
+                        Toast.makeText(getApplicationContext(), "이름 : " + item.getTitle(), Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError){
+
+            }
+
+        });
+
+
+        /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                habit_num = (int)dataSnapshot.getChildrenCount();
+                Toast.makeText(getApplicationContext(), habit_num, Toast.LENGTH_LONG).show();
+
+                for(int i=1; i <= habit_num;i++){
+                    int type1=R.drawable.good_tree;
+                    int type2 = R.drawable.bad_tree;
+
+                    String habitIndex = String.valueOf(i);
+                    String title = (String)dataSnapshot.child(habitIndex).child("TITLE").getValue();
+                    String withWho = (String)dataSnapshot.child(habitIndex).child("CHECKMETHOD").getValue();
+                    int didNum = Integer.parseInt((String)dataSnapshot.child(habitIndex).child("DID").getValue());
+                    int willNum = Integer.parseInt((String)dataSnapshot.child(habitIndex).child("WILL").getValue());
+                    String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue();
+
+                    ratio = i+30*i-10; //이거 어떻게 나온거야?
+
+                    if(type.equals("good")) {
+                        adapter.addItem(new TimelineItem(title, withWho,
+                                "몇번 했나요? " + didNum + " 몇번 해야하나요? " + willNum, progressBar, ratio, ratio + " %", type1));
+                    }
+
+                    else{
+                        adapter.addItem(new TimelineItem(title, withWho,
+                                "몇번 했나요? " + didNum + " 몇번 해야하나요? " + willNum, progressBar, ratio, ratio + " %", type2));
+                    }
+                }
+                listView.setAdapter(adapter);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        TimelineItem item = (TimelineItem) adapter.getItem(position);
+                        Toast.makeText(getApplicationContext(), "이름 : " + item.getTitle(), Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError){
+
+            }
+
+        });*/
+
+        /*habit_num=5;
 
         for(int i=0; i<habit_num;i++){
             did_count=i;
@@ -116,7 +224,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         }
 
-        listView.setAdapter(adapter);
+        listView.setAdapter(adapter);*/
 
         //editText = (EditText) findViewById(R.id.editText);
         /*
@@ -135,7 +243,7 @@ public class TimelineActivity extends AppCompatActivity {
         */
 
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 TimelineItem item = (TimelineItem) adapter.getItem(position);
@@ -144,7 +252,7 @@ public class TimelineActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     class TimelineAdapter extends BaseAdapter {
