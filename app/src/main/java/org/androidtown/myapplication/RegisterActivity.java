@@ -38,6 +38,7 @@ import java.util.Calendar;
                  (2) 값 입력 받을 때, editText의 값을 입력 안한 것도 구별하는 부분 완성해야함
  */
 
+//지금 이건 잘 돌아감!
 public class RegisterActivity extends AppCompatActivity {
 
     //습관 이름
