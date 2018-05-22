@@ -54,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     String UserID;
     int habitIndex = 0;
+    String idx = "";
 
 
     //습관 이름
@@ -85,7 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText friend_id;
     Button friend_check;
     String friend_id_get;
-    boolean validation;
+    boolean validation = false;
     boolean button_validation = false;
 
     //등록 버튼
@@ -198,8 +199,9 @@ public class RegisterActivity extends AppCompatActivity {
                             DataSnapshot data = userList.next();
                             if (data.getKey().equals(friend_id_get)) {
                                 //friend_id_get(친구아이디)를 디비에 저장(뒤에서 같이)
+                                Toast.makeText(getApplicationContext(), "친구의 ID가 확인되었습니다.", Toast.LENGTH_LONG).show();
 
-                                //validation = true;
+                                validation = true;
                                 return;
                             }
                         }
@@ -213,20 +215,7 @@ public class RegisterActivity extends AppCompatActivity {
                 });
             }
         });
-
-        /*friend_check.setOnClickListener(new Button.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                if (!validation) {
-                    friend_id.setText("");
-                    Toast.makeText(getApplicationContext(), "친구의 ID를 확인해주세요.", Toast.LENGTH_LONG).show();
-                } else {
-                    button_validation = true;
-                }
-            }
-        });*/
-
+        
         //마지막 등록 버튼
         register_button = (Button) findViewById(R.id.register_button);
 
@@ -315,31 +304,35 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 */
 
-                //이제 이 값들을 사용자 DB에 넣어줘야함......
-                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        habitIndex = (int) dataSnapshot.getChildrenCount();
-                        String idx = String.valueOf(habitIndex + 1);
-                        databaseReference.child(idx).child("TITLE").setValue(title);
-                        databaseReference.child(idx).child("START").setValue(startDate);
-                        databaseReference.child(idx).child("END").setValue(finishDate);
-                        databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
-                        databaseReference.child(idx).child("TYPE").setValue(habitType);
-                        databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
-                        databaseReference.child(idx).child("WILL").setValue(String.valueOf(time_do));//몇번해야하는지
-                        databaseReference.child(idx).child("DID").setValue("0");//몇번했는지
+                    //이제 이 값들을 사용자 DB에 넣어줘야함......
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            habitIndex = (int) dataSnapshot.getChildrenCount();
+                            idx = String.valueOf(habitIndex + 1);
+                            databaseReference.child(idx).child("TITLE").setValue(title);
+                            databaseReference.child(idx).child("START").setValue(startDate);
+                            databaseReference.child(idx).child("END").setValue(finishDate);
+                            databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
+                            databaseReference.child(idx).child("TYPE").setValue(habitType);
+                            databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
+                            if(validation){ //true=등록된 친구 아이디 받음
+                                databaseReference.child(idx).child("FRIENDID").setValue(friend_id_get);
+                                //Toast.makeText(getApplicationContext(), "유효함.", Toast.LENGTH_LONG).show();
+                            }
+                            databaseReference.child(idx).child("WILL").setValue(String.valueOf(time_do));//몇번해야하는지
+                            databaseReference.child(idx).child("DID").setValue("0");//몇번했는지
 
-                        Toast.makeText(getApplicationContext(), "습관이 등록되었습니다.", Toast.LENGTH_LONG).show();
-                    }
+                            Toast.makeText(getApplicationContext(), "습관이 등록되었습니다.", Toast.LENGTH_LONG).show();
+                        }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
+                        }
 
-                });
-
+                    });
+                finish();
             }
         });
     }
