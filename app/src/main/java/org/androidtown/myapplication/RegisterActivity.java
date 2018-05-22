@@ -309,11 +309,13 @@ public class RegisterActivity extends AppCompatActivity {
         int index = 0;
         String line;
 
-        //시작 날짜 구하는 부분
-        index = startDate.indexOf("-");
-        int startYear = Integer.parseInt(startDate.substring(0, index));
+        String start_day = startDate;
+        String finish_day=finishDate;
 
-        line = startDate.substring(index + 1);
+        index = start_day.indexOf("-");
+        int startYear = Integer.parseInt(start_day.substring(0, index));
+
+        line = start_day.substring(index + 1);
 
         index = line.indexOf("-");
         int startMonth = Integer.parseInt(line.substring(0, index));
@@ -323,10 +325,10 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         //finish date 구하는 부분
-        index = finishDate.indexOf("-");
-        int finishYear = Integer.parseInt(finishDate.substring(0, index));
+        index = finish_day.indexOf("-");
+        int finishYear = Integer.parseInt(finish_day.substring(0, index));
 
-        line = finishDate.substring(index + 1);
+        line = finish_day.substring(index + 1);
 
         index = line.indexOf("-");
         int finishMonth = Integer.parseInt(line.substring(0, index));
@@ -345,7 +347,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         length = (start - finish);
 
-        return (int) length;
+        return (int)length;
     }
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
@@ -361,7 +363,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            fromDate.setText(String.valueOf(year) + "년 " + String.valueOf(month) + "월 " + String.valueOf(day) + "일");
+            fromDate.setText(String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(day));
         }
     }
 
@@ -378,7 +380,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            toDate.setText(String.valueOf(year) + "년 " + String.valueOf(month) + "월 " + String.valueOf(day) + "일");
+            toDate.setText(String.valueOf(year) +"-" + String.valueOf(month) + "-" + String.valueOf(day));
         }
     }
 
