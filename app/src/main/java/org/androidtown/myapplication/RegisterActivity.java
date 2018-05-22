@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.Calendar;
 
 /*
@@ -40,6 +47,12 @@ import java.util.Calendar;
 
 //지금 이건 잘 돌아감!
 public class RegisterActivity extends AppCompatActivity {
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+
+    String UserID;
+    int habitIndex = 0;
+
 
     //습관 이름
     EditText habit_title_input;
@@ -92,6 +105,14 @@ public class RegisterActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         setupActionBar();
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        UserID = bundle.getString("ID");
+
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference("users/"+UserID+"/habits");
+
 
         //습관 제목 받아오는 부분
         habit_title_input = (EditText) findViewById(R.id.habit_title_input);
@@ -229,6 +250,26 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 //이제 이 값들을 사용자 DB에 넣어줘야함......
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        habitIndex = (int)dataSnapshot.getChildrenCount();
+                        String idx = String.valueOf(habitIndex + 1);
+                        databaseReference.child(idx).child("TITLE").setValue(title);
+                        databaseReference.child(idx).child("START").setValue(startDate);
+                        databaseReference.child(idx).child("END").setValue(finishDate);
+                        databaseReference.child(idx).child("FREQUENCY").setValue(frequency);
+                        databaseReference.child(idx).child("TYPE").setValue(habitType);
+                        databaseReference.child(idx).child("CHECKMETHOD").setValue(checkType);
+
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError){
+
+                    }
+
+                });
+
             }
         });
     }
