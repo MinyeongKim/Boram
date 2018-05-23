@@ -1,4 +1,4 @@
-package org.androidtown.myapplication.fcm;
+package org.androidtown.myapplication;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -15,3 +15,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Map<String, String> bundle = remoteMessage.getData();
     }
 }
+
+
+

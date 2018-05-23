@@ -1,4 +1,4 @@
-package org.androidtown.myapplication.fcm;
+package org.androidtown.myapplication;
 
 import android.util.Log;
 
