@@ -112,7 +112,9 @@ public class TimelineActivity extends AppCompatActivity {
                     int willNum = Integer.parseInt(willString);//몇번해야하나
                     String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue();
 
-                    ratio = i+30*i-10; //이거 어떻게 나온거야?
+                    float buf = 0;
+                    buf = (float)didNum/(float)willNum*(float)100.0;
+                    ratio = (int)buf;
 
                     if(type.equals("good")) {
                         adapter.addItem(new TimelineItem(title, withWho,
@@ -137,9 +139,6 @@ public class TimelineActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
-
-
-
             }
             @Override
             public void onCancelled(DatabaseError databaseError){
@@ -147,112 +146,6 @@ public class TimelineActivity extends AppCompatActivity {
             }
 
         });
-
-
-        /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                habit_num = (int)dataSnapshot.getChildrenCount();
-                Toast.makeText(getApplicationContext(), habit_num, Toast.LENGTH_LONG).show();
-
-                for(int i=1; i <= habit_num;i++){
-                    int type1=R.drawable.good_tree;
-                    int type2 = R.drawable.bad_tree;
-
-                    String habitIndex = String.valueOf(i);
-                    String title = (String)dataSnapshot.child(habitIndex).child("TITLE").getValue();
-                    String withWho = (String)dataSnapshot.child(habitIndex).child("CHECKMETHOD").getValue();
-                    int didNum = Integer.parseInt((String)dataSnapshot.child(habitIndex).child("DID").getValue());
-                    int willNum = Integer.parseInt((String)dataSnapshot.child(habitIndex).child("WILL").getValue());
-                    String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue();
-
-                    ratio = i+30*i-10; //이거 어떻게 나온거야?
-
-                    if(type.equals("good")) {
-                        adapter.addItem(new TimelineItem(title, withWho,
-                                "몇번 했나요? " + didNum + " 몇번 해야하나요? " + willNum, progressBar, ratio, ratio + " %", type1));
-                    }
-
-                    else{
-                        adapter.addItem(new TimelineItem(title, withWho,
-                                "몇번 했나요? " + didNum + " 몇번 해야하나요? " + willNum, progressBar, ratio, ratio + " %", type2));
-                    }
-                }
-                listView.setAdapter(adapter);
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                        TimelineItem item = (TimelineItem) adapter.getItem(position);
-                        Toast.makeText(getApplicationContext(), "이름 : " + item.getTitle(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError){
-
-            }
-
-        });*/
-
-        /*habit_num=5;
-
-        for(int i=0; i<habit_num;i++){
-            did_count=i;
-            to_do_count=i;
-            ratio = i+30*i-10;
-
-            int type1=R.drawable.good_tree;
-            int type2 = R.drawable.bad_tree;
-
-            //String type = "R.drawable.home";
-            //adapter.addItem(new TimelineItem(제목, 체크 타입, "몇번 했나요? "+did_count+" 몇번 해야하나요? "+to_do_count, progressBar, ratio (진행률), ratio+" %" (프로그레스 바 옆에 몇 %지 보여주기), R.drawable.home =>그림));
-
-            if(i/2==1) {
-                adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
-                        "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type1));
-            }
-
-            else{
-                adapter.addItem(new TimelineItem("제목", "누구랑 함께? ",
-                        "몇번 했나요? " + did_count + " 몇번 해야하나요? " + to_do_count, progressBar, ratio, ratio + " %", type2));
-            }
-
-        }
-
-        listView.setAdapter(adapter);*/
-
-        //editText = (EditText) findViewById(R.id.editText);
-        /*
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = editText.getText().toString();
-                String mobile = "010-1000-1000";
-                int age = 20;
-
-                //adapter.addItem(new TimelineItem(name, mobile, age, R.drawable.ic_launcher_background));
-                adapter.notifyDataSetChanged();
-            }
-        });
-        */
-
-
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                TimelineItem item = (TimelineItem) adapter.getItem(position);
-                Toast.makeText(getApplicationContext(), "이름 : " + item.getTitle(), Toast.LENGTH_LONG).show();
-
-                Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
-                startActivity(intent);
-            }
-        });*/
     }
 
     class TimelineAdapter extends BaseAdapter {

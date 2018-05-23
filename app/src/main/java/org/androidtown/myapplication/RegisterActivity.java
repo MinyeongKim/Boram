@@ -215,7 +215,7 @@ public class RegisterActivity extends AppCompatActivity {
                 });
             }
         });
-        
+
         //마지막 등록 버튼
         register_button = (Button) findViewById(R.id.register_button);
 
@@ -420,7 +420,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            fromDate.setText(String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(day));
+            fromDate.setText(String.valueOf(year) + "-" + String.valueOf(month+1) + "-" + String.valueOf(day));
         }
     }
 
@@ -438,7 +438,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            toDate.setText(String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(day));
+            toDate.setText(String.valueOf(year) + "-" + String.valueOf(month+1) + "-" + String.valueOf(day));
         }
     }
 }
