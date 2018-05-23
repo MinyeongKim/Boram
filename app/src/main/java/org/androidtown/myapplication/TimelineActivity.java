@@ -112,6 +112,7 @@ public class TimelineActivity extends AppCompatActivity {
                     int willNum = Integer.parseInt(willString);//몇번해야하나
                     String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue();
 
+
                     float buf = 0;
                     buf = (float)didNum/(float)willNum*(float)100.0;
                     ratio = (int)buf;
@@ -133,7 +134,7 @@ public class TimelineActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         TimelineItem item = (TimelineItem) adapter.getItem(position);
-                        Toast.makeText(getApplicationContext(), "이름 : " + item.getTitle(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_LONG).show();
 
                         Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
                         startActivity(intent);
