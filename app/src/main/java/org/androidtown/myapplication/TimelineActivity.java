@@ -81,7 +81,6 @@ public class TimelineActivity extends AppCompatActivity {
         databaseReference = database.getReference("users/"+UserID+"/habits");
 
         listView = (ListView) findViewById(R.id.listView);
-        adapter = new TimelineAdapter();
 
         imageView=(ImageView)findViewById(R.id.imageView);
 
@@ -92,6 +91,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         //일단 디비 연결 전 습관 개수를 4개라고 생각하기
 
+        adapter = new TimelineAdapter();
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

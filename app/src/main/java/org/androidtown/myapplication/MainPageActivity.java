@@ -1,5 +1,6 @@
 package org.androidtown.myapplication;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,11 +56,14 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
     TextView userName;
     TextView userID;
 
+    ProgressBar progress;
+
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReferenceForPushMsgTest;
     //private DatabaseReference databaseReferenceForServerKey;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -68,6 +73,9 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nav_header_main_page);
+
+        //progress = (ProgressBar)findViewById(R.id.sampleImage);
+        //progress.setProgress(80);
 
         database = FirebaseDatabase.getInstance();
         //databaseReferenceForServerKey = database.getReference("ServerKey");
@@ -130,7 +138,7 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         //안되고있음.
 
         //푸쉬메세지 버튼 테스트
-        Button pushTestBtn = (Button) findViewById(R.id.pushTestBtn);
+       // Button pushTestBtn = (Button) findViewById(R.id.pushTestBtn);
         /*pushTestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +154,7 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
             }
         });*/
 
+        /*
         pushTestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,7 +162,7 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
                 new CountDownTask().execute();
             }
         });
-
+*/
 
     }
 

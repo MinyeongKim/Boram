@@ -75,11 +75,6 @@ public class LoadImageActivity extends AppCompatActivity {
 
                     //배치해놓은 ImageView에 set
                     loadImgae.setImageBitmap(image_bitmap);
-
-
-                    //Toast.makeText(getBaseContext(), "name_Str : "+name_Str , Toast.LENGTH_SHORT).show();
-
-
                 } catch (FileNotFoundException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -94,19 +89,6 @@ public class LoadImageActivity extends AppCompatActivity {
         }
     }
 
-    public String getImageNameToUri(Uri data)
-    {
-        String[] proj = { MediaStore.Images.Media.DATA };
-        Cursor cursor = managedQuery(data, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
-        cursor.moveToFirst();
-
-        String imgPath = cursor.getString(column_index);
-        String imgName = imgPath.substring(imgPath.lastIndexOf("/")+1);
-
-        return imgName;
-    }
 
     //뒤로가는 버튼 생성
     private void setupActionBar() {
