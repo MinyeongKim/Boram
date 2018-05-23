@@ -393,11 +393,12 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         }
 
     }*/
-    int habitIdx;
+    //int habitIdx;
     //databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());
 
     private void sendPostToFCM(final String message) {
-        databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString()+"/habits/"+habitIdx+"/FRIENDID");
+        //databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString()+"/habits/"+habitIdx+"/FRIENDID");
+        databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());
         databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
