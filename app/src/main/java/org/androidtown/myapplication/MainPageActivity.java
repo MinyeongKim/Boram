@@ -106,7 +106,7 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
 
         //회원 정보 수정하기
         else if (id == R.id.user_info_change) {
-            Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+            Intent intent = new Intent(getApplicationContext(), ModifyInfoActivity.class);
             startActivity(intent);
         }
 
