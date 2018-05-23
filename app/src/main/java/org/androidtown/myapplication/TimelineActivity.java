@@ -81,7 +81,6 @@ public class TimelineActivity extends AppCompatActivity {
         databaseReference = database.getReference("users/"+UserID+"/habits");
 
         listView = (ListView) findViewById(R.id.listView);
-        adapter = new TimelineAdapter();
 
         imageView=(ImageView)findViewById(R.id.imageView);
 
@@ -92,6 +91,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         //일단 디비 연결 전 습관 개수를 4개라고 생각하기
 
+        adapter = new TimelineAdapter();
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -134,10 +134,15 @@ public class TimelineActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         TimelineItem item = (TimelineItem) adapter.getItem(position);
-                        Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
+
+                        Bundle checkType = new Bundle();
+                        checkType.putString("Check_type", item.getHabit_check());
+                        intent.putExtras(checkType);
                         startActivity(intent);
+
                     }
                 });
             }
