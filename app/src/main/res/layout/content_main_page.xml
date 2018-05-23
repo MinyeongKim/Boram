@@ -14,4 +14,10 @@
         android:id="@+id/sampleImage"
         android:src="@drawable/sprout"/>
 
+    <Button
+        android:id="@+id/pushTestBtn"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="push test" />
+
 </android.support.constraint.ConstraintLayout>

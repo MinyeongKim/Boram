@@ -1,5 +1,6 @@
 package org.androidtown.myapplication;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,22 +23,72 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONObject;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Time;
 import java.util.Iterator;
 
 public class MainPageActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String FCM_MESSAGE_URL= "https://fcm.googleapis.com/fcm/send";
+
+    //서버키 나중에 비공개로: 디비에 저장해놓고 앱 실행하면 불러오기-->MainActivity에 넣는게 나으려나?
+    private static final String ServerKey = "AAAA-cEJ1Gk:APA91bHFBUbnklycU40BQT6FoNzzVRylTKDmahM1nMiVFzB0dlmfQSJH_7BwbEFKvrI94YTLTLPvusd7IJUn1qAi1dbJFUJ3G_bueEotOqKxJihlqYT3WDMRz1XBjjBah7gNZ7QxQ3VX";
+
     TextView userName;
     TextView userID;
+
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceForPushMsgTest;
+    //private DatabaseReference databaseReferenceForServerKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nav_header_main_page);
 
+        database = FirebaseDatabase.getInstance();
+        //databaseReferenceForServerKey = database.getReference("ServerKey");
+        //ServerKey = databaseReferenceForServerKey.getKey();
+
+        /*databaseReferenceForServerKey.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot){
+                ServerKey = (String)dataSnapshot.getValue();
+
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError){
+
+            }
+
+        });*/
+
         userName = (TextView) findViewById(R.id.UserName);
         userID = (TextView) findViewById(R.id.UserID);
+
+        //메뉴에 사용자 정보 띄워줄라 했는데 안됨
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String name = bundle.getString("name");
+        userName.setText(name);
+        String id = bundle.getString("ID");
+        userID.setText(id);
+
+        //database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference("users/"+id);
+
+        //로그인되면 스마트폰 주소 받아오기
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        databaseReference.child("fcmToken").setValue(refreshedToken);
+
 
         setContentView(R.layout.activity_main_page);
 
@@ -53,13 +105,31 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         navigationView.setNavigationItemSelectedListener(this);
 
         //슬라이드 메뉴 회원 이름, 아이디 보여주기
-        Intent intent = getIntent();
+        /*Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         String name = bundle.getString("name");
         userName.setText(name);
         String id = bundle.getString("ID");
-        userID.setText(id);
+        userID.setText(id);*/
         //안되고있음.
+
+        //푸쉬메세지 버튼 테스트
+        Button pushTestBtn = (Button)findViewById(R.id.pushTestBtn);
+        /*pushTestBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                sendPostToFCM("push message test");
+            }
+        });*/
+
+        pushTestBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                sendPostToFCM("push message test");
+            }
+        });
+
+
     }
 
     //슬라이드 메뉴 다시 넣는 부분
@@ -122,4 +192,57 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void sendPostToFCM(final String message){
+        databaseReferenceForPushMsgTest = database.getReference("users/"+userID.getText().toString());//users/id/habits/habitIdx/friendName으로 바꿔야함.
+        databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //받는 사람 주소
+                final String fcmToken = (String)dataSnapshot.child("fcmToken").getValue();
+                new Thread(new Runnable(){
+                    @Override
+                    public void run(){
+                        try{
+                            Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
+                            //FMC 메세지 생성 start
+                            JSONObject root = new JSONObject();
+                            JSONObject notification = new JSONObject();
+                            notification.put("body", message);
+                            notification.put("title", "Success plz");
+                            root.put("notification", notification);
+                            root.put("to", fcmToken);
+                            //FMC 메세지 생성 end
+
+                            Toast.makeText(getApplication(), "fcm 생성 완료", Toast.LENGTH_SHORT).show();
+
+                            URL Url = new URL(FCM_MESSAGE_URL);
+                            HttpURLConnection conn = (HttpURLConnection)Url.openConnection();
+                            conn.setRequestMethod("POST");
+                            conn.setDoOutput(true);
+                            conn.setDoInput(true);
+                            conn.addRequestProperty("Authorization", "key="+ServerKey);
+                            conn.setRequestProperty("Accept", "application/json");
+                            conn.setRequestProperty("Content-type", "application/json");
+                            OutputStream os = conn.getOutputStream();
+                            os.write(root.toString().getBytes("utf-8"));
+                            os.flush();
+                            conn.getResponseCode();
+                        } catch (Exception e){
+                            //Toast.makeText(getApplication(), "catch에 잡힘", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+
 }
