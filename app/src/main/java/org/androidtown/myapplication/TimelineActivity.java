@@ -134,10 +134,15 @@ public class TimelineActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         TimelineItem item = (TimelineItem) adapter.getItem(position);
-                        Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
+
+                        Bundle checkType = new Bundle();
+                        checkType.putString("Check_type", item.getHabit_check());
+                        intent.putExtras(checkType);
                         startActivity(intent);
+
                     }
                 });
             }

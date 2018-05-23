@@ -39,21 +39,44 @@ public class CheckActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setupActionBar();
 
-        Button button = (Button)findViewById(R.id.button);
-        rating_layout=(LinearLayout)findViewById(R.id.rating);
+        Intent check_type = getIntent();
+        Bundle get_type = check_type.getExtras();
 
-        CalendarView calendar = (CalendarView)findViewById(R.id.calendar);
+        final String type = get_type.getString("Check_type");
+
+        Button button = (Button) findViewById(R.id.button);
+        rating_layout = (LinearLayout) findViewById(R.id.rating);
+
+        CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int y, int m, int d) {
-                Toast.makeText(getApplicationContext(), y+"년 "+(m+1)+"월 "+d+"일", Toast.LENGTH_SHORT).show();
-                year=y;
-                month=m+1;
-                day=d;
+                Toast.makeText(getApplicationContext(), y + "년 " + (m + 1) + "월 " + d + "일", Toast.LENGTH_SHORT).show();
+                year = y;
+                month = m + 1;
+                day = d;
 
-                LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                inflater.inflate(R.layout.rating, rating_layout, true);
+                switch (type) {
+                    case "alone":
+                        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        inflater.inflate(R.layout.rating, rating_layout, true);
+                        break;
+
+                    case "friend":
+                        Intent intent = new Intent(getApplicationContext(), LoadImageActivity.class);
+                        startActivity(intent);
+                        break;
+
+                    case "otherPerson":
+                        Intent intent2 = new Intent(getApplicationContext(), LoadImageActivity.class);
+                        startActivity(intent2);
+                        break;
+
+                    default:
+                        break;
+
+                }
             }
         });
     }
@@ -68,8 +91,8 @@ public class CheckActivity extends AppCompatActivity {
     }
 
     //뒤로가기 버튼이 눌렀을 경우
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 //NavUtils.navigateUpFromSameTask(this);
                 finish();
