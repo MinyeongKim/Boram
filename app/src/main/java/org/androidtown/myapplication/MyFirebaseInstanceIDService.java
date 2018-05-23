@@ -10,7 +10,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
  */
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
-    private static final String TAG = "MyFirebaseIDService";
+    /*private static final String TAG = "MyFirebaseIDService";
 
     @Override
     public void onTokenRefresh(){
@@ -22,5 +22,13 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     private void sendRegistrationToServer(String token){
         //여기서 저장
+    }*/
+
+    private final static String TAG = "FCM_ID";
+
+    @Override
+    public void onTokenRefresh(){
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "FirebaseInstanceId Refreshed token: "+refreshedToken);
     }
 }

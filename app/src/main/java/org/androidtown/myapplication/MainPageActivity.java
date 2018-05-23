@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,7 +34,10 @@ import junit.framework.Test;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Time;
@@ -129,12 +133,22 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         userID.setText(id);*/
         //안되고있음.
 
+        String msg;
+
         //푸쉬메세지 버튼 테스트
         Button pushTestBtn = (Button) findViewById(R.id.pushTestBtn);
+        pushTestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendPostToFCM("확인해주세요!");
+            }
+        });
+
         /*pushTestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendPostToFCM("push message test");
+                ConnectThread thread = new ConnectThread(FCM_MESSAGE_URL);
+                thread.start();
             }
         });*/
 
@@ -146,16 +160,101 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
             }
         });*/
 
-        pushTestBtn.setOnClickListener(new View.OnClickListener() {
+        /*pushTestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //sendPostToFCM("push message test");
                 new CountDownTask().execute();
             }
-        });
+        });*/
 
 
     }
+
+    /*class ConnectThread extends Thread{
+        String urlStr;
+
+        public ConnectThread(String instr){
+            urlStr = instr;
+        }
+
+        public void run(){
+            try{
+                request(urlStr);
+                handler.post(new Runnable(){
+                    public void run(){
+                        //
+                        Toast.makeText(getApplicationContext(), "완료", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+            } catch(Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        private void request(String urlStr) {
+            databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());//users/id/habits/habitIdx/friendName으로 바꿔야함.
+
+            databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    //받는 사람 주소
+                    final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
+                            try {
+                                //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
+                                //FMC 메세지 생성 start
+                                JSONObject root = new JSONObject();
+                                JSONObject notification = new JSONObject();
+                                notification.put("body", TestMsg);
+                                notification.put("title", "Success plz");
+                                root.put("notification", notification);
+                                root.put("to", fcmToken);
+                                //FMC 메세지 생성 end
+
+                                //Toast.makeText(getApplication(), "fcm 생성 완료", Toast.LENGTH_SHORT).show();
+
+                                URL Url = new URL(FCM_MESSAGE_URL);
+                                HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                                conn.setRequestMethod("POST");
+                                conn.setDoOutput(true);
+                                conn.setDoInput(true);
+                                conn.addRequestProperty("Authorization", "key=" + ServerKey);
+                                conn.setRequestProperty("Accept", "application/json");
+                                conn.setRequestProperty("Content-type", "application/json");
+                                OutputStream os = conn.getOutputStream();
+                                os.write(root.toString().getBytes("utf-8"));
+                                os.flush();
+                                conn.getResponseCode();
+                            } catch (Exception e) {
+                                //Toast.makeText(getApplication(), "catch에 잡힘", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+    }*/
+
+
+
+
+
+
+
+
+
+
 
     //슬라이드 메뉴 다시 넣는 부분
     @Override
@@ -275,8 +374,11 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         }
 
     }*/
+    int habitIdx;
+    //databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());
+
     private void sendPostToFCM(final String message) {
-        databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());//users/id/habits/habitIdx/friendName으로 바꿔야함.
+        databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString()+"/habits/"+habitIdx+"/FRIENDID");
         databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -285,19 +387,15 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
                         try {
-                            //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
-                            //FMC 메세지 생성 start
+                            //FMC 메세지 만들기
                             JSONObject root = new JSONObject();
                             JSONObject notification = new JSONObject();
-                            notification.put("body", message);
-                            notification.put("title", "Success plz");
+                            //notification.put("body", message);
+                            notification.put("body", "확인해주세요!");
+                            notification.put("title", "누군가가 인증을 요청했어요~");
                             root.put("notification", notification);
                             root.put("to", fcmToken);
-                            //FMC 메세지 생성 end
-
-                            Toast.makeText(getApplication(), "fcm 생성 완료", Toast.LENGTH_SHORT).show();
 
                             URL Url = new URL(FCM_MESSAGE_URL);
                             HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
@@ -312,7 +410,6 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
                             os.flush();
                             conn.getResponseCode();
                         } catch (Exception e) {
-                            //Toast.makeText(getApplication(), "catch에 잡힘", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -329,7 +426,64 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
 
     }
 
-    private class CountDownTask extends AsyncTask<Void, Integer, Void> {
+    /*private void sendPostToFCM(final String message) {
+        databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());//users/id/habits/habitIdx/friendName으로 바꿔야함.
+        databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //받는 사람 주소
+                final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
+                        try {
+                            //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
+                            //FMC 메세지 생성 start
+                            JSONObject root = new JSONObject();
+                            JSONObject notification = new JSONObject();
+                            notification.put("body", message);
+                            notification.put("title", "Success plz");
+                            root.put("notification", notification);
+                            root.put("to", fcmToken);
+                            //FMC 메세지 생성 end
+
+
+
+                            URL Url = new URL(FCM_MESSAGE_URL);
+                            HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                            conn.setRequestMethod("POST");
+                            conn.setDoOutput(true);
+                            conn.setDoInput(true);
+                            conn.addRequestProperty("Authorization", "key=" + ServerKey);
+                            conn.setRequestProperty("Accept", "application/json");
+                            conn.setRequestProperty("Content-type", "application/json");
+                            OutputStream os = conn.getOutputStream();
+                            os.write(root.toString().getBytes("utf-8"));
+                            os.flush();
+                            conn.getResponseCode();
+                            //Toast.makeText(getApplication(), String.valueOf(responseCode), Toast.LENGTH_SHORT).show();
+
+                            //Toast.makeText(getApplication(), "완료", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            //Toast.makeText(getApplication(), "catch에 잡힘", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }*/
+
+    /*private class CountDownTask extends AsyncTask<Void, Integer, Void> {
         @Override
         protected void onPreExecute() {
 
@@ -337,14 +491,14 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
 
         @Override
         protected Void doInBackground(Void... params) {
-            /*for (int i = 15; i >= 0; i--) {
+            for (int i = 15; i >= 0; i--) {
                 try {
                     Thread.sleep(1000);
                     publishProgress(i); //Invokes// onProgressUpdate();
                 } catch (Exception e) {
                 }
             }
-            return null;*/
+            return null;
 
 
 
@@ -411,6 +565,48 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         protected void onPostExecute(Void aVoid) {
 
         }
-    }
+    }*/
+
+    /*private void sendPostToFCM(final String message){
+        databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());//users/id/habits/habitIdx/friendName으로 바꿔야함.
+        databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot){
+                final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
+                new Thread(new Runnable(){
+                    @Override
+                    public void run(){
+                        try{
+                            JSONObject root = new JSONObject();
+                            JSONObject notification = new JSONObject();
+                            notification.put("body", message);
+                            notification.put("title", getString(R.string.app_name));
+                            root.put("notification", notification);
+                            root.put("to", fcmToken);
+
+                            URL Url = new URL(FCM_MESSAGE_URL);
+                            HttpURLConnection conn = (HttpURLConnection)Url.openConnection();
+                            conn.setRequestMethod("POST");
+                            conn.setDoOutput(true);
+                            conn.setDoInput(true);
+                            conn.addRequestProperty("Authorization", "Key=" + ServerKey);
+                            conn.setRequestProperty("Accept", "application/json");
+                            conn.setRequestProperty("Content-type", "application/json");
+                            OutputStream os = conn.getOutputStream();
+                            os.write(root.toString().getBytes("utf-8"));
+                            os.flush();
+                            conn.getResponseCode();
+                        } catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError){
+
+            }
+        });
+    }*/
 
 }
