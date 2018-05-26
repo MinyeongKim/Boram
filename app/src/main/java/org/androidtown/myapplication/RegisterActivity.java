@@ -261,9 +261,12 @@ public class RegisterActivity extends AppCompatActivity {
                 //총 실천해야 하는 횟수 -> 하루, 일주일, 한달 선택과 그 기간동안 몇 번 할건지 입력한 것에 따라 계산
                 if (frequency.equals("하루")) {
                     time_do = (-1) * count_day * num;
-                } else if (frequency.equals("일주일")) {
+                }
+
+                else if (frequency.equals("일주일")) {
                     time_do = ((-1) * count_day) / 7 * num;
-                } else {
+                }
+                else {
                     time_do = ((-1) * count_day) / 30 * num;
                 }
 
