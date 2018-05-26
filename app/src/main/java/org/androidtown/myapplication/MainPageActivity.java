@@ -25,6 +25,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +41,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import junit.framework.Test;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -43,11 +51,13 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Time;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
+import static java.sql.DriverManager.println;
 
 public class MainPageActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-
 
     Handler handler = new Handler(Looper.getMainLooper());
     private static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
@@ -61,6 +71,8 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
     TextView userID;
 
     ProgressBar progress;
+
+    RequestQueue queue;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -84,20 +96,6 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         database = FirebaseDatabase.getInstance();
         //databaseReferenceForServerKey = database.getReference("ServerKey");
         //ServerKey = databaseReferenceForServerKey.getKey();
-
-        /*databaseReferenceForServerKey.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot){
-                ServerKey = (String)dataSnapshot.getValue();
-
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError){
-
-            }
-
-        });*/
 
         userName = (TextView) findViewById(R.id.UserName);
         userID = (TextView) findViewById(R.id.UserID);
@@ -132,15 +130,6 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //슬라이드 메뉴 회원 이름, 아이디 보여주기
-        /*Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        String name = bundle.getString("name");
-        userName.setText(name);
-        String id = bundle.getString("ID");
-        userID.setText(id);*/
-        //안되고있음.
-
         String msg;
 
         //푸쉬메세지 버튼 테스트
@@ -152,128 +141,7 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
-       // Button pushTestBtn = (Button) findViewById(R.id.pushTestBtn);
-        /*pushTestBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ConnectThread thread = new ConnectThread(FCM_MESSAGE_URL);
-                thread.start();
-            }
-        });*/
-
-        /*pushTestBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                sendPostToFCM t = new sendPostToFCM("push message test");
-                t.start();
-            }
-        });*/
-
-
-        /*pushTestBtn.setOnClickListener(new View.OnClickListener() {
-
-
-        pushTestBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                //sendPostToFCM("push message test");
-                new CountDownTask().execute();
-            }
-
-        });
-
-
-        });
-*/
-
-
     }
-
-    /*class ConnectThread extends Thread{
-        String urlStr;
-
-        public ConnectThread(String instr){
-            urlStr = instr;
-        }
-
-        public void run(){
-            try{
-                request(urlStr);
-                handler.post(new Runnable(){
-                    public void run(){
-                        //
-                        Toast.makeText(getApplicationContext(), "완료", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-            } catch(Exception ex){
-                ex.printStackTrace();
-            }
-        }
-        private void request(String urlStr) {
-            databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());//users/id/habits/habitIdx/friendName으로 바꿔야함.
-
-            databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    //받는 사람 주소
-                    final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
-                            try {
-                                //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
-                                //FMC 메세지 생성 start
-                                JSONObject root = new JSONObject();
-                                JSONObject notification = new JSONObject();
-                                notification.put("body", TestMsg);
-                                notification.put("title", "Success plz");
-                                root.put("notification", notification);
-                                root.put("to", fcmToken);
-                                //FMC 메세지 생성 end
-
-                                //Toast.makeText(getApplication(), "fcm 생성 완료", Toast.LENGTH_SHORT).show();
-
-                                URL Url = new URL(FCM_MESSAGE_URL);
-                                HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
-                                conn.setRequestMethod("POST");
-                                conn.setDoOutput(true);
-                                conn.setDoInput(true);
-                                conn.addRequestProperty("Authorization", "key=" + ServerKey);
-                                conn.setRequestProperty("Accept", "application/json");
-                                conn.setRequestProperty("Content-type", "application/json");
-                                OutputStream os = conn.getOutputStream();
-                                os.write(root.toString().getBytes("utf-8"));
-                                os.flush();
-                                conn.getResponseCode();
-                            } catch (Exception e) {
-                                //Toast.makeText(getApplication(), "catch에 잡힘", Toast.LENGTH_SHORT).show();
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-    }*/
-
-
-
-
-
-
-
-
-
-
 
     //슬라이드 메뉴 다시 넣는 부분
     @Override
@@ -335,67 +203,6 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    /*class sendPostToFCM extends Thread{
-        String msg="";
-        public sendPostToFCM(String string){
-            msg=string;
-
-            databaseReferenceForPushMsgTest = database.getReference("users/"+userID.getText().toString());//users/id/habits/habitIdx/friendName으로 바꿔야함.
-
-            databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    //받는 사람 주소
-                    final String fcmToken = (String)dataSnapshot.child("fcmToken").getValue();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
-                            try{
-                                //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
-                                //FMC 메세지 생성 start
-                                JSONObject root = new JSONObject();
-                                JSONObject notification = new JSONObject();
-                                notification.put("body", msg);
-                                notification.put("title", "Success plz");
-                                root.put("notification", notification);
-                                root.put("to", fcmToken);
-                                //FMC 메세지 생성 end
-
-                                //Toast.makeText(getApplication(), "fcm 생성 완료", Toast.LENGTH_SHORT).show();
-
-                                URL Url = new URL(FCM_MESSAGE_URL);
-                                HttpURLConnection conn = (HttpURLConnection)Url.openConnection();
-                                conn.setRequestMethod("POST");
-                                conn.setDoOutput(true);
-                                conn.setDoInput(true);
-                                conn.addRequestProperty("Authorization", "key="+ServerKey);
-                                conn.setRequestProperty("Accept", "application/json");
-                                conn.setRequestProperty("Content-type", "application/json");
-                                OutputStream os = conn.getOutputStream();
-                                os.write(root.toString().getBytes("utf-8"));
-                                os.flush();
-                                conn.getResponseCode();
-                            } catch (Exception e){
-                                //Toast.makeText(getApplication(), "catch에 잡힘", Toast.LENGTH_SHORT).show();
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-    }*/
-    //int habitIdx;
-    //databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());
-
     private void sendPostToFCM(final String message) {
         //databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString()+"/habits/"+habitIdx+"/FRIENDID");
         databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());
@@ -435,7 +242,6 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
                     }
                 });
 
-
             }
 
             @Override
@@ -445,188 +251,5 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         });
 
     }
-
-    /*private void sendPostToFCM(final String message) {
-        databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());//users/id/habits/habitIdx/friendName으로 바꿔야함.
-        databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //받는 사람 주소
-                final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
-                        try {
-                            //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
-                            //FMC 메세지 생성 start
-                            JSONObject root = new JSONObject();
-                            JSONObject notification = new JSONObject();
-                            notification.put("body", message);
-                            notification.put("title", "Success plz");
-                            root.put("notification", notification);
-                            root.put("to", fcmToken);
-                            //FMC 메세지 생성 end
-
-
-
-                            URL Url = new URL(FCM_MESSAGE_URL);
-                            HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
-                            conn.setRequestMethod("POST");
-                            conn.setDoOutput(true);
-                            conn.setDoInput(true);
-                            conn.addRequestProperty("Authorization", "key=" + ServerKey);
-                            conn.setRequestProperty("Accept", "application/json");
-                            conn.setRequestProperty("Content-type", "application/json");
-                            OutputStream os = conn.getOutputStream();
-                            os.write(root.toString().getBytes("utf-8"));
-                            os.flush();
-                            conn.getResponseCode();
-                            //Toast.makeText(getApplication(), String.valueOf(responseCode), Toast.LENGTH_SHORT).show();
-
-                            //Toast.makeText(getApplication(), "완료", Toast.LENGTH_SHORT).show();
-                        } catch (Exception e) {
-                            //Toast.makeText(getApplication(), "catch에 잡힘", Toast.LENGTH_SHORT).show();
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }*/
-
-    /*private class CountDownTask extends AsyncTask<Void, Integer, Void> {
-        @Override
-        protected void onPreExecute() {
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            for (int i = 15; i >= 0; i--) {
-                try {
-                    Thread.sleep(1000);
-                    publishProgress(i); //Invokes// onProgressUpdate();
-                } catch (Exception e) {
-                }
-            }
-            return null;
-
-
-
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            //tvCounter.setText(Integer.toString(values[0].intValue()));
-
-            databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());//users/id/habits/habitIdx/friendName으로 바꿔야함.
-            databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    //받는 사람 주소
-                    final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
-                            try {
-                                //Toast.makeText(getApplication(), "fcm 생성 시작", Toast.LENGTH_SHORT).show();
-                                //FMC 메세지 생성 start
-                                JSONObject root = new JSONObject();
-                                JSONObject notification = new JSONObject();
-                                notification.put("body", TestMsg);
-                                notification.put("title", "Success plz");
-                                root.put("notification", notification);
-                                root.put("to", fcmToken);
-                                //FMC 메세지 생성 end
-
-                                Toast.makeText(getApplication(), "fcm 생성 완료", Toast.LENGTH_SHORT).show();
-
-                                URL Url = new URL(FCM_MESSAGE_URL);
-                                HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
-                                conn.setRequestMethod("POST");
-                                conn.setDoOutput(true);
-                                conn.setDoInput(true);
-                                conn.addRequestProperty("Authorization", "key=" + ServerKey);
-                                conn.setRequestProperty("Accept", "application/json");
-                                conn.setRequestProperty("Content-type", "application/json");
-                                OutputStream os = conn.getOutputStream();
-                                os.write(root.toString().getBytes("utf-8"));
-                                os.flush();
-                                conn.getResponseCode();
-                            } catch (Exception e) {
-                                //Toast.makeText(getApplication(), "catch에 잡힘", Toast.LENGTH_SHORT).show();
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-
-        }
-    }*/
-
-    /*private void sendPostToFCM(final String message){
-        databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());//users/id/habits/habitIdx/friendName으로 바꿔야함.
-        databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot){
-                final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
-                new Thread(new Runnable(){
-                    @Override
-                    public void run(){
-                        try{
-                            JSONObject root = new JSONObject();
-                            JSONObject notification = new JSONObject();
-                            notification.put("body", message);
-                            notification.put("title", getString(R.string.app_name));
-                            root.put("notification", notification);
-                            root.put("to", fcmToken);
-
-                            URL Url = new URL(FCM_MESSAGE_URL);
-                            HttpURLConnection conn = (HttpURLConnection)Url.openConnection();
-                            conn.setRequestMethod("POST");
-                            conn.setDoOutput(true);
-                            conn.setDoInput(true);
-                            conn.addRequestProperty("Authorization", "Key=" + ServerKey);
-                            conn.setRequestProperty("Accept", "application/json");
-                            conn.setRequestProperty("Content-type", "application/json");
-                            OutputStream os = conn.getOutputStream();
-                            os.write(root.toString().getBytes("utf-8"));
-                            os.flush();
-                            conn.getResponseCode();
-                        } catch(Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError){
-
-            }
-        });
-    }*/
 
 }

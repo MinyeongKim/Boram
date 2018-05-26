@@ -48,12 +48,16 @@
             android:label="@string/title_activity_modify_info"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name=".MyFirebaseMessagingService">
+        <service android:name=".MyFirebaseMessagingService"
+            android:enabled = "true"
+            android:exported = "true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".MyFirebaseInstanceIDService">
+        <service android:name=".MyFirebaseInstanceIDService"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -62,7 +66,8 @@
         <activity
             android:name=".LoadImageActivity"
             android:label="@string/title_activity_load_image"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>
