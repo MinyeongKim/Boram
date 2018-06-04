@@ -24,11 +24,11 @@
             android:layout_height="wrap_content"
             android:text="평가해주세요"
             android:layout_gravity="center"
-            android:textSize="10dp"/>
+            android:textSize="20dp"/>
 
         <EditText
             android:id="@+id/editTExt"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"

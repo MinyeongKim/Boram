@@ -1,11 +1,13 @@
 package org.androidtown.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
+
     EditText idText;
     EditText pwText;
     Button loginBtn;
@@ -30,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
     String userID;
     String storedPw;
     String userName;
+
+    String loginId, loginPwd;
+
+    CheckBox checked;
+
+    SharedPreferences auto;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -44,64 +53,95 @@ public class MainActivity extends AppCompatActivity {
         loginBtn = (Button) findViewById(R.id.loginBtn);
         signupBtn = (Button) findViewById(R.id.signupBtn);
 
+        checked = (CheckBox) findViewById(R.id.autoLogin);
+
+        auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users");
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                inputId = idText.getText().toString();
-                inputPw = pwText.getText().toString();
+        loginId = auto.getString("inputId", null);
+        loginPwd = auto.getString("inputPwd", null);
 
-                if (inputId.equals("")) {
-                    Toast.makeText(getApplicationContext(), "please enter your ID", Toast.LENGTH_SHORT).show();
-                } else if (inputPw.equals("")) {
-                    Toast.makeText(getApplicationContext(), "please enter your password", Toast.LENGTH_SHORT).show();
-                } else {
-                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot){
-                            Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
-                            while(userList.hasNext()){
-                                DataSnapshot data = userList.next();
-                                if(data.getKey().equals(inputId)) {
-                                    userID = (String)data.getKey();
-                                    storedPw = (String)data.child("PW").getValue();
-                                    if(storedPw.equals(inputPw)) {
-                                        userName = (String)data.child("NAME").getValue();
-                                        Toast.makeText(getApplicationContext(), "login success", Toast.LENGTH_SHORT).show();
+        if(loginId !=null && loginPwd !=null)
+        {
+            //메인 화면 띄워주기
+            Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("name", userName);
+            bundle.putString("ID", userID);
+            intent.putExtras(bundle);
+            startActivity(intent);
 
-                                        //메인 화면 띄워주기
-                                        Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("name", userName);
-                                        bundle.putString("ID", userID);
-                                        intent.putExtras(bundle);
-                                        startActivity(intent);
+            finish();
+        }
 
-                                        finish();
+        else if(loginId ==null && loginPwd ==null) {
+            loginBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    inputId = idText.getText().toString();
+                    inputPw = pwText.getText().toString();
 
-                                        return;
-                                    }
-                                    else{
-                                        Toast.makeText(getApplicationContext(), "wrong password", Toast.LENGTH_SHORT).show();
-                                        return;
+                    auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+
+                    if (inputId.equals("")) {
+                        Toast.makeText(getApplicationContext(), "please enter your ID", Toast.LENGTH_SHORT).show();
+                    } else if (inputPw.equals("")) {
+                        Toast.makeText(getApplicationContext(), "please enter your password", Toast.LENGTH_SHORT).show();
+                    } else {
+                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
+                                while (userList.hasNext()) {
+                                    DataSnapshot data = userList.next();
+                                    if (data.getKey().equals(inputId)) {
+                                        userID = (String) data.getKey();
+                                        storedPw = (String) data.child("PW").getValue();
+                                        if (storedPw.equals(inputPw)) {
+                                            userName = (String) data.child("NAME").getValue();
+                                            Toast.makeText(getApplicationContext(), "login success", Toast.LENGTH_SHORT).show();
+
+                                            if(checked.isChecked()) {
+                                                SharedPreferences.Editor autoLogin = auto.edit();
+                                                autoLogin.putString("inputId", inputId);
+                                                autoLogin.putString("inputPwd", inputPw);
+
+                                                autoLogin.commit();
+                                            }
+
+                                            //메인 화면 띄워주기
+                                            Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("name", userName);
+                                            bundle.putString("ID", userID);
+                                            intent.putExtras(bundle);
+                                            startActivity(intent);
+
+                                            finish();
+
+                                            return;
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "wrong password", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
                                     }
                                 }
+                                Toast.makeText(getApplicationContext(), "존재하지 않는 아이디", Toast.LENGTH_SHORT).show();
                             }
-                            Toast.makeText(getApplicationContext(), "존재하지 않는 아이디", Toast.LENGTH_SHORT).show();
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError){
 
-                        }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                    });
-                    ////////////////////////////////////////
+                            }
+
+                        });
+                        ////////////////////////////////////////
+                    }
                 }
-            }
-        });
-
+            });
+        }
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,30 +151,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-
-
-    private void sharedPrefernces() {
-        sh_Pref = getSharedPreferences("Login Credentials", MODE_PRIVATE);
-        toEdit = sh_Pref.edit();
-        toEdit.putString("UserID", inputId);
-        toEdit.putString("Password", inputPw);
-        toEdit.commit();
-
-        applySharedPreference();
-    }
-
-    private void applySharedPreference() {
-        sh_Pref = getSharedPreferences("Login Credentials", MODE_PRIVATE);
-        //Toast.makeText(getApplicationContext(),"1111111",Toast.LENGTH_LONG).show();
-        if (sh_Pref != null && sh_Pref.contains("Username") && sh_Pref.contains("Password")) {
-            //왜 여기 안으로 못 들어오는 것일까...
-            //Toast.makeText(getApplicationContext(),"22222",Toast.LENGTH_LONG).show();
-            String id = sh_Pref.getString("UserID", "noname");
-            String pw = sh_Pref.getString("Password", "nopassword");
-            idText.setText(id);
-            pwText.setText(pw);
-        }
     }
 }

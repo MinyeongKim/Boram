@@ -1,8 +1,10 @@
 package org.androidtown.myapplication;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,6 +68,7 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
     private static final String ServerKey = "AAAA-cEJ1Gk:APA91bHFBUbnklycU40BQT6FoNzzVRylTKDmahM1nMiVFzB0dlmfQSJH_7BwbEFKvrI94YTLTLPvusd7IJUn1qAi1dbJFUJ3G_bueEotOqKxJihlqYT3WDMRz1XBjjBah7gNZ7QxQ3VX";
     private static final String TestMsg = "push message test";
 
+    SharedPreferences auto;
 
     TextView userName;
     TextView userID;
@@ -197,6 +200,21 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
             startActivity(intent);
 
             //finish();
+        }
+
+        //로그아웃
+        else if(id== R.id.app_logout){
+            //SharedPreferences에 저장된 값들을 로그아웃 버튼을 누르면 삭제하기 위해
+            //SharedPreferences를 불러옵니다. 메인에서 만든 이름으로
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+
+            SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor = auto.edit();
+            //editor.clear()는 auto에 들어있는 모든 정보를 기기에서 지웁니다.
+            editor.clear();
+            editor.commit();
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
