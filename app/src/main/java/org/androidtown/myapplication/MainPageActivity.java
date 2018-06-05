@@ -59,7 +59,7 @@ import java.util.Map;
 
 import static java.sql.DriverManager.println;
 
-public class MainPageActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainPageActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Handler handler = new Handler(Looper.getMainLooper());
     private static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
@@ -118,13 +118,13 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         databaseReference.child("fcmToken").setValue(refreshedToken);
 
-
         setContentView(R.layout.activity_main_page);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -218,9 +218,11 @@ public class MainPageActivity extends AppCompatActivity implements NavigationVie
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Utilities.setGlobalFont(drawer);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     private void sendPostToFCM(final String message) {
         //databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString()+"/habits/"+habitIdx+"/FRIENDID");
         databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());

@@ -25,7 +25,7 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.util.Calendar;
 
-public class CheckActivity extends AppCompatActivity {
+public class CheckActivity extends BaseActivity {
 
     Button button;
     int year, month, day;

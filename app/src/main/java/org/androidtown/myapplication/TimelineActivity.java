@@ -34,7 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends BaseActivity {
 
     FirebaseDatabase database;
     DatabaseReference databaseReference;
@@ -81,6 +81,7 @@ public class TimelineActivity extends AppCompatActivity {
         databaseReference = database.getReference("users/"+UserID+"/habits");
 
         listView = (ListView) findViewById(R.id.listView);
+        Utilities.setGlobalFont(listView);
 
         imageView=(ImageView)findViewById(R.id.imageView);
 
@@ -127,6 +128,7 @@ public class TimelineActivity extends AppCompatActivity {
                                 "몇번 했나요? " + didNum + " 몇번 해야하나요? " + willNum, progressBar, ratio, ratio + " %", type2));
                     }
                 }
+
                 Toast.makeText(getApplication(), "finish", Toast.LENGTH_LONG).show();
                 listView.setAdapter(adapter);
 

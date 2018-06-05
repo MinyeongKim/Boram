@@ -47,7 +47,7 @@ import java.util.Iterator;
  */
 
 //지금 이건 잘 돌아감!
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends BaseActivity {
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReferenceForFriend;

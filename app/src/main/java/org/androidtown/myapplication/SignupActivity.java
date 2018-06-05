@@ -13,7 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Date;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends BaseActivity {
     EditText id;
     EditText pw;
     EditText name;

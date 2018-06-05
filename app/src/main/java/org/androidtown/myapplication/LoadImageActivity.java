@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class LoadImageActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoadImageActivity extends BaseActivity implements View.OnClickListener {
 
     Button loadButton, sendButton;
     ImageView loadImgae;

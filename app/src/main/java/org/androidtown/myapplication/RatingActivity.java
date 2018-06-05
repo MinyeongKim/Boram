@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
-public class RatingActivity extends AppCompatActivity {
+public class RatingActivity extends BaseActivity {
 
     EditText comment;
 
