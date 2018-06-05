@@ -59,17 +59,19 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     private DatabaseReference databaseReferenceForPartner;
     private DatabaseReference databaseReferenceForPushMsgTest;
     private DatabaseReference databaseReferenceForServerKey;
+    private DatabaseReference databaseReferenceForUserName;
 
 
     Button loadButton, sendButton;
     ImageView loadImgae;
 
     final int PICK_FROM_ALBUM = 0;
-    final int PICK_FROM_CAMERA=1;
-    final int CROP_FROM_IMAGE =2;
+    final int PICK_FROM_CAMERA = 1;
+    final int CROP_FROM_IMAGE = 2;
 
     private int id_view;
 
+    String UserName;
     String friendID;
     String UserID;
     int habitIdx;
@@ -117,7 +119,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         });
 
         //databaseReference = database.getReference("users/" + id);
-        databaseReference = database.getReference("users/"+UserID);
+        databaseReference = database.getReference("users/" + UserID);
 
         //로그인되면 스마트폰 주소 받아오기
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
@@ -161,7 +163,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         //푸쉬메세지와 함께 사용자가 입력한 값과 사진을
         //if()
 
-        if(view.getId() == R.id.sendButton){
+        if (view.getId() == R.id.sendButton) {
             sendPostToFCM("확인해주세요!");
         }
 
@@ -192,20 +194,18 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(resultCode!=RESULT_OK)
+        if (resultCode != RESULT_OK)
             return;
 
-        switch (requestCode){
-            case PICK_FROM_ALBUM:
-            {
-                mlmageCaptureUri=data.getData();
-                Log.d("BORAM",mlmageCaptureUri.getPath().toString());
+        switch (requestCode) {
+            case PICK_FROM_ALBUM: {
+                mlmageCaptureUri = data.getData();
+                Log.d("BORAM", mlmageCaptureUri.getPath().toString());
             }
 
-            case PICK_FROM_CAMERA:
-            {
+            case PICK_FROM_CAMERA: {
                 Intent intent = new Intent("com.android.camera.action.CROP");
-                intent.setDataAndType(mlmageCaptureUri,"image/");
+                intent.setDataAndType(mlmageCaptureUri, "image/");
 
                 intent.putExtra("outputX", 200);
                 intent.putExtra("outputY", 200);
@@ -217,29 +217,27 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                 break;
             }
 
-            case CROP_FROM_IMAGE:
-            {
-                if(resultCode!=RESULT_OK)
+            case CROP_FROM_IMAGE: {
+                if (resultCode != RESULT_OK)
                     return;
 
                 final Bundle extras = data.getExtras();
 
-                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+
-                        "/BORAM/"+System.currentTimeMillis()+".jpg";
+                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                        "/BORAM/" + System.currentTimeMillis() + ".jpg";
 
-                if(extras!=null)
-                {
+                if (extras != null) {
                     Bitmap photo = extras.getParcelable("data");
                     loadImgae.setImageBitmap(photo);
 
-                    storeCropImage(photo,filePath);
+                    storeCropImage(photo, filePath);
 
                     absoultePath = filePath;
                     break;
                 }
 
                 File f = new File(mlmageCaptureUri.getPath());
-                if(f.exists()){
+                if (f.exists()) {
                     f.delete();
                 }
             }
@@ -378,20 +376,20 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void storeCropImage(Bitmap bitmap, String filePath) {
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/BORAM/";
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/BORAM/";
         File directory_BORAM = new File(dirPath);
 
-        if(!directory_BORAM.exists())
+        if (!directory_BORAM.exists())
             directory_BORAM.mkdir();
 
         File copyFile = new File(filePath);
         BufferedOutputStream out = null;
 
-        try{
+        try {
             copyFile.createNewFile();
             out = new BufferedOutputStream(new FileOutputStream(copyFile));
 
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(copyFile)));
 
@@ -436,65 +434,78 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         UserID = bundle.getString("ID");
         habitIdx = bundle.getInt("INDEX");
         //String habitIdxString = String.valueOf(habitIdx);
-        databaseReferenceForPartner = database.getReference("users/"+UserID+"/habits/"+habitIdx);
-        Toast.makeText(getApplicationContext(), "users/"+UserID+"/habits/"+habitIdx, Toast.LENGTH_SHORT).show();
-        databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReferenceForUserName = database.getReference("users/" + UserID);
+        databaseReferenceForUserName.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                friendID = (String) dataSnapshot.child("FRIENDID").getValue();
+                UserName = (String) dataSnapshot.child("NAME").getValue();
 
-                databaseReferenceForPushMsgTest = database.getReference("users/"+friendID);
-                databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/" + habitIdx);
+                //Toast.makeText(getApplicationContext(), "users/"+UserID+"/habits/"+habitIdx, Toast.LENGTH_SHORT).show();
+                databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        //받는 사람 주소
-                        final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
-                        final String userName = (String) dataSnapshot.child("NAME").getValue();
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    //FMC 메세지 만들기
-                                    JSONObject root = new JSONObject();
-                                    JSONObject notification = new JSONObject();
-                                    //notification.put("body", message);
-                                    notification.put("body", "확인해주세요!");
-                                    notification.put("title", UserID + " 님이 인증을 요청했어요~");
-                                    root.put("notification", notification);
-                                    root.put("to", fcmToken);
+                        friendID = (String) dataSnapshot.child("FRIENDID").getValue();
 
-                                    URL Url = new URL(FCM_MESSAGE_URL);
-                                    HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
-                                    conn.setRequestMethod("POST");
-                                    conn.setDoOutput(true);
-                                    conn.setDoInput(true);
-                                    conn.addRequestProperty("Authorization", "key=" + ServerKey);
-                                    conn.setRequestProperty("Accept", "application/json");
-                                    conn.setRequestProperty("Content-type", "application/json");
-                                    OutputStream os = conn.getOutputStream();
-                                    os.write(root.toString().getBytes("utf-8"));
-                                    os.flush();
-                                    conn.getResponseCode();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                        databaseReferenceForPushMsgTest = database.getReference("users/" + friendID);
+                        databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                //받는 사람 주소
+                                final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            //FMC 메세지 만들기
+                                            JSONObject root = new JSONObject();
+                                            JSONObject notification = new JSONObject();
+                                            //notification.put("body", message);
+                                            notification.put("body", "확인해주세요!");
+                                            notification.put("title", UserName + " 님이 인증을 요청했어요~");
+                                            root.put("notification", notification);
+                                            root.put("to", fcmToken);
+
+                                            URL Url = new URL(FCM_MESSAGE_URL);
+                                            HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                                            conn.setRequestMethod("POST");
+                                            conn.setDoOutput(true);
+                                            conn.setDoInput(true);
+                                            conn.addRequestProperty("Authorization", "key=" + ServerKey);
+                                            conn.setRequestProperty("Accept", "application/json");
+                                            conn.setRequestProperty("Content-type", "application/json");
+                                            OutputStream os = conn.getOutputStream();
+                                            os.write(root.toString().getBytes("utf-8"));
+                                            os.flush();
+                                            conn.getResponseCode();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
                             }
                         });
-
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
+
                 });
-                }
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-
         });
     }
+
 }
