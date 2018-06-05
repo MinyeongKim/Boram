@@ -90,7 +90,6 @@ public class TimelineActivity extends BaseActivity {
         읽으면서 제목, 빈도수 등 배열 값에다 입력하기
         */
 
-        //일단 디비 연결 전 습관 개수를 4개라고 생각하기
 
         adapter = new TimelineAdapter();
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -129,7 +128,7 @@ public class TimelineActivity extends BaseActivity {
                     }
                 }
 
-                Toast.makeText(getApplication(), "finish", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplication(), "finish", Toast.LENGTH_LONG).show();
                 listView.setAdapter(adapter);
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -142,6 +141,8 @@ public class TimelineActivity extends BaseActivity {
 
                         Bundle checkType = new Bundle();
                         checkType.putString("Check_type", item.getHabit_check());
+                        checkType.putString("ID", UserID);
+                        checkType.putInt("INDEX", position+1);
                         intent.putExtras(checkType);
                         startActivity(intent);
 

@@ -30,6 +30,8 @@ public class CheckActivity extends BaseActivity {
     Button button;
     int year, month, day;
     LinearLayout rating_layout;
+    String UserID;
+    int habitIdx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,8 @@ public class CheckActivity extends BaseActivity {
         Bundle get_type = check_type.getExtras();
 
         final String type = get_type.getString("Check_type");
+        UserID = get_type.getString("ID");
+        habitIdx = get_type.getInt("INDEX");
 
         Button button = (Button) findViewById(R.id.button);
         rating_layout = (LinearLayout) findViewById(R.id.rating);
@@ -57,6 +61,10 @@ public class CheckActivity extends BaseActivity {
                 month = m + 1;
                 day = d;
 
+                Bundle bundle = new Bundle();
+                bundle.putString("ID", UserID);
+                bundle.putInt("INDEX", habitIdx);
+
                 switch (type) {
                     case "alone":
                         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -65,11 +73,13 @@ public class CheckActivity extends BaseActivity {
 
                     case "friend":
                         Intent intent = new Intent(getApplicationContext(), LoadImageActivity.class);
+                        intent.putExtras(bundle);
                         startActivity(intent);
                         break;
 
                     case "otherPerson":
                         Intent intent2 = new Intent(getApplicationContext(), LoadImageActivity.class);
+                        intent2.putExtras(bundle);
                         startActivity(intent2);
                         break;
 

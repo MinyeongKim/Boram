@@ -24,11 +24,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         if(remoteMessage.getNotification()!=null){
             String body = remoteMessage.getNotification().getBody();
+            String title = remoteMessage.getNotification().getTitle();
             Log.d(TAG, "Notification Body: "+body);
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
-                    .setSmallIcon(R.drawable.home) //알림 영역에 노출 될 아이콘
-                    .setContentTitle(getString(R.string.app_name)) //알림 영역에 노출 될 타이틀
+                    .setSmallIcon(R.mipmap.icon_v1) //알림 영역에 노출 될 아이콘//"@mipmap/ic_launcher_round"
+                    //.setContentTitle(getString(R.string.app_name)) //알림 영역에 노출 될 타이틀
+                    .setContentTitle(title)
                     .setContentText(body); //Firebase Console에서 사용자가 전달한 메시지 내용
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
             notificationManagerCompat.notify(0x1001, notificationBuilder.build());

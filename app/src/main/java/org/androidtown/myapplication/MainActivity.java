@@ -77,6 +77,7 @@ public class MainActivity extends BaseActivity{
             finish();
         }
 
+        //인터넷 연결 안되어있으면 와이파이나 데이터 연결하라는 토스트 띄워주기
         else if(loginId ==null && loginPwd ==null) {
             loginBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

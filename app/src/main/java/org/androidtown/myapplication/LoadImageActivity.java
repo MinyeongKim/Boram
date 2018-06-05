@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,15 +23,43 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Iterator;
 
 public class LoadImageActivity extends BaseActivity implements View.OnClickListener {
+
+    Handler handler = new Handler(Looper.getMainLooper());
+    private static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
+
+    //서버키 나중에 비공개로: 디비에 저장해놓고 앱 실행하면 불러오기-->MainActivity에 넣는게 나으려나?
+    private String ServerKey;
+    private static final String TestMsg = "push message test";
+
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceForPartner;
+    private DatabaseReference databaseReferenceForPushMsgTest;
+    private DatabaseReference databaseReferenceForServerKey;
+
 
     Button loadButton, sendButton;
     ImageView loadImgae;
@@ -38,6 +69,10 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     final int CROP_FROM_IMAGE =2;
 
     private int id_view;
+
+    String friendID;
+    String UserID;
+    int habitIdx;
 
     Uri mlmageCaptureUri, photoURI, albumURI;
     String absoultePath;
@@ -52,6 +87,11 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
 
         setupActionBar();
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        UserID = bundle.getString("ID");
+        habitIdx = bundle.getInt("INDEX");
+
         loadImgae = (ImageView) findViewById(R.id.imageLoad);
         loadButton = (Button) findViewById(R.id.loadButton);
         sendButton = (Button) findViewById(R.id.sendButton);
@@ -59,6 +99,29 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         loadImgae.setOnClickListener(this);
         loadButton.setOnClickListener(this);
         sendButton.setOnClickListener(this);
+
+        database = FirebaseDatabase.getInstance();
+
+        //server key
+        databaseReferenceForServerKey = database.getReference("ServerKey");
+        databaseReferenceForServerKey.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ServerKey = (String) dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //databaseReference = database.getReference("users/" + id);
+        databaseReference = database.getReference("users/"+UserID);
+
+        //로그인되면 스마트폰 주소 받아오기
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        databaseReference.child("fcmToken").setValue(refreshedToken);
     }
 
     public void onClick(View view) {
@@ -97,6 +160,12 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         //전송 버튼 눌리면 전송해줘야함
         //푸쉬메세지와 함께 사용자가 입력한 값과 사진을
         //if()
+
+        if(view.getId() == R.id.sendButton){
+            sendPostToFCM("확인해주세요!");
+        }
+
+
     }
 
     private void doTakeAlbumAction() {
@@ -355,5 +424,77 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    //사진이 업로드 되지 않았으면 토스트 띄워주기 --> boolean으로 변수 두면 될듯
+    private void sendPostToFCM(final String message) {
+        //databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString()+"/habits/"+habitIdx+"/FRIENDID");
+        //databaseReferenceForPushMsgTest = database.getReference("users/" + userID.getText().toString());
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        UserID = bundle.getString("ID");
+        habitIdx = bundle.getInt("INDEX");
+        //String habitIdxString = String.valueOf(habitIdx);
+        databaseReferenceForPartner = database.getReference("users/"+UserID+"/habits/"+habitIdx);
+        Toast.makeText(getApplicationContext(), "users/"+UserID+"/habits/"+habitIdx, Toast.LENGTH_SHORT).show();
+        databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                friendID = (String) dataSnapshot.child("FRIENDID").getValue();
+
+                databaseReferenceForPushMsgTest = database.getReference("users/"+friendID);
+                databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //받는 사람 주소
+                        final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
+                        final String userName = (String) dataSnapshot.child("NAME").getValue();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    //FMC 메세지 만들기
+                                    JSONObject root = new JSONObject();
+                                    JSONObject notification = new JSONObject();
+                                    //notification.put("body", message);
+                                    notification.put("body", "확인해주세요!");
+                                    notification.put("title", UserID + " 님이 인증을 요청했어요~");
+                                    root.put("notification", notification);
+                                    root.put("to", fcmToken);
+
+                                    URL Url = new URL(FCM_MESSAGE_URL);
+                                    HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                                    conn.setRequestMethod("POST");
+                                    conn.setDoOutput(true);
+                                    conn.setDoInput(true);
+                                    conn.addRequestProperty("Authorization", "key=" + ServerKey);
+                                    conn.setRequestProperty("Accept", "application/json");
+                                    conn.setRequestProperty("Content-type", "application/json");
+                                    OutputStream os = conn.getOutputStream();
+                                    os.write(root.toString().getBytes("utf-8"));
+                                    os.flush();
+                                    conn.getResponseCode();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
     }
 }

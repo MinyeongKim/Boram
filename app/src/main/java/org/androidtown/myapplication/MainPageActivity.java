@@ -65,7 +65,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
     private static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
 
     //서버키 나중에 비공개로: 디비에 저장해놓고 앱 실행하면 불러오기-->MainActivity에 넣는게 나으려나?
-    private static final String ServerKey = "AAAA-cEJ1Gk:APA91bHFBUbnklycU40BQT6FoNzzVRylTKDmahM1nMiVFzB0dlmfQSJH_7BwbEFKvrI94YTLTLPvusd7IJUn1qAi1dbJFUJ3G_bueEotOqKxJihlqYT3WDMRz1XBjjBah7gNZ7QxQ3VX";
+    private String ServerKey;
     private static final String TestMsg = "push message test";
 
     SharedPreferences auto;
@@ -80,7 +80,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReferenceForPushMsgTest;
-    //private DatabaseReference databaseReferenceForServerKey;
+    private DatabaseReference databaseReferenceForServerKey;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -100,13 +100,26 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
         //databaseReferenceForServerKey = database.getReference("ServerKey");
         //ServerKey = databaseReferenceForServerKey.getKey();
 
+        databaseReferenceForServerKey = database.getReference("ServerKey");
+        databaseReferenceForServerKey.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ServerKey = (String) dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         userName = (TextView) findViewById(R.id.UserName);
         userID = (TextView) findViewById(R.id.UserID);
 
         //메뉴에 사용자 정보 띄워줄라 했는데 안됨
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        String name = bundle.getString("name");
+        String name = bundle.getString("name");//값은 잘 넘어옴.
         userName.setText(name);
         String id = bundle.getString("ID");
         userID.setText(id);
@@ -203,7 +216,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
         }
 
         //로그아웃
-        else if(id== R.id.app_logout){
+        else if (id == R.id.app_logout) {
             //SharedPreferences에 저장된 값들을 로그아웃 버튼을 누르면 삭제하기 위해
             //SharedPreferences를 불러옵니다. 메인에서 만든 이름으로
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -231,6 +244,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //받는 사람 주소
                 final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
+                final String userName = (String) dataSnapshot.child("NAME").getValue();
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -240,7 +254,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
                             JSONObject notification = new JSONObject();
                             //notification.put("body", message);
                             notification.put("body", "확인해주세요!");
-                            notification.put("title", "누군가가 인증을 요청했어요~");
+                            notification.put("title", userID + "님이 인증을 요청했어요~");
                             root.put("notification", notification);
                             root.put("to", fcmToken);
 
