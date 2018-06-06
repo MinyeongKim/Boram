@@ -116,6 +116,7 @@ public class TimelineActivity extends BaseActivity {
          */
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        Utilities.setGlobalFont(recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
