@@ -75,4 +75,12 @@ public class item {
     public void setWillNum(int num) {
         this.willNum = num;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

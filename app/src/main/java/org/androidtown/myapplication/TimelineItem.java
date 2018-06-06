@@ -8,13 +8,9 @@ import android.widget.ProgressBar;
 
 public class TimelineItem {
 
-    String title;
-    String habit_check;
-    String habit_count;
-    ProgressBar progressBar;
-    String ratio;
-    int rate;
-    int resId;
+    String date;
+    String comment;
+    String rate;
 
     /*
     public TimelineItem(String title, String habit_check, String habit_count, ProgressBar progressBar, String ratio, int home) {
@@ -23,16 +19,44 @@ public class TimelineItem {
     }
 */
 
-    public TimelineItem(String title, String habit_check, String habit_count, ProgressBar progressBar, int rateId, String ratio ,int resId) {
-        this.title = title;
-        this.habit_check = habit_check;
-        this.habit_count = habit_count;
-        this.progressBar=progressBar;
-        this.rate=rateId;
-        this.ratio=ratio;
-        this.resId = resId;
+    public TimelineItem(String date1, String comment1, String rate1) {
+        this.date = date1;
+        this.comment = comment1;
+        this.rate = rate1;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    /*
+    public String getRatio(){
+        return ratio;
+    }
+
+    public void setRatio(String ratio){
+        this.ratio=ratio;
+    }
     public int getProgressBar() {
         return rate;
     }
@@ -80,4 +104,5 @@ public class TimelineItem {
     public void setTitle(String title) {
         this.title = title;
     }
+    */
 }

@@ -40,6 +40,7 @@ public class MainActivity extends BaseActivity{
     CheckBox checked;
 
     SharedPreferences auto;
+    SharedPreferences info;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -57,6 +58,7 @@ public class MainActivity extends BaseActivity{
         checked = (CheckBox) findViewById(R.id.autoLogin);
 
         auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        info = getSharedPreferences("info", Activity.MODE_PRIVATE);
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users");
@@ -104,8 +106,17 @@ public class MainActivity extends BaseActivity{
 
                                         if (storedPw.equals(inputPw)) {
                                             userName = (String) data.child("NAME").getValue();
-                                            Toast.makeText(getApplicationContext(), "login success", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), userName+"님 안녕하세요", Toast.LENGTH_SHORT).show();
 
+                                            //앱 로그인 시 저장
+                                            SharedPreferences.Editor information = info.edit();
+                                            information.putString("userId", inputId);
+                                            information.putString("userPw", inputPw);
+                                            information.putString("userName",userName);
+
+                                            information.commit();
+
+                                            //자동로그인을 위한
                                             if(checked.isChecked()) {
                                                 SharedPreferences.Editor autoLogin = auto.edit();
                                                 autoLogin.putString("inputId", inputId);

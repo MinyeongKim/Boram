@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="org.androidtown.myapplication.CheckPWActivity"
+    tools:showIn="@layout/activity_check_pw">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <TableLayout
+        android:id="@+id/loginTable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:layout_centerHorizontal="true">
+
+        <TableRow>
+            <TextView
+                android:text="본인 확인을 위해 비밀번호를 입력해주세요"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView android:text="PW"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/loginPw"
+                android:inputType="textPassword"/>
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/checkPW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginTable"
+        android:layout_marginEnd="11dp"
+        android:layout_marginRight="11dp"
+        android:text="확인" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

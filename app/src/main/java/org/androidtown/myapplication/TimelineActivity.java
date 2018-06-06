@@ -64,7 +64,7 @@ public class TimelineActivity extends BaseActivity {
 
     ImageView imageView;
     ListView listView;
-    TimelineAdapter adapter;
+    //TimelineAdapter adapter;
     EditText editText;
 
     List<item> items;
@@ -187,6 +187,7 @@ public class TimelineActivity extends BaseActivity {
         });
     }
 
+    /*
     class TimelineAdapter extends BaseAdapter {
         ArrayList<TimelineItem> items = new ArrayList<TimelineItem>();
 
@@ -225,6 +226,7 @@ public class TimelineActivity extends BaseActivity {
             return view;
         }
     }
+*/
 
     //뒤로가는 버튼 생성
     private void setupActionBar() {

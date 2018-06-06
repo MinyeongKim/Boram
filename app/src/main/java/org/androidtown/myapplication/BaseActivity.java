@@ -19,8 +19,13 @@ public class BaseActivity extends AppCompatActivity{
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
 
+        //font_1 ->
+        //font_2 ->
+        //font_3 ->The 외계인설명서
+        //font_4 -> 미생체
+
         if (mTypeface == null) {
-            mTypeface = Typeface.createFromAsset(this.getAssets(), "fonts/font_2.ttf");
+            mTypeface = Typeface.createFromAsset(this.getAssets(), "fonts/font_3.ttf");
             // 외부폰트 사용
             //mTypeface = Typeface.MONOSPACE;
         }

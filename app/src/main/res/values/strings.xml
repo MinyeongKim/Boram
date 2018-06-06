@@ -94,4 +94,5 @@
     <string name="title_activity_load_image">LoadImageActivity</string>
     <string name="title_activity_card_time">cardTimeActivity</string>
     <string name="title_activity_history">HistoryActivity</string>
+    <string name="title_activity_check_pw">CheckPWActivity</string>
 </resources>

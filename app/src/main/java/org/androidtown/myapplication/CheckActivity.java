@@ -38,6 +38,10 @@ public class CheckActivity extends BaseActivity {
 
     RatingBar ratingbar1;
     TextView rating_result1;
+    EditText comment_value;
+
+    String comment;
+    private float rate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,8 @@ public class CheckActivity extends BaseActivity {
         rating_result1 = (TextView) findViewById(R.id.rating_result);
         ratingbar1 = (RatingBar) findViewById(R.id.ratingbar);
         button = (Button) findViewById(R.id.button);
+        comment_value=(EditText)findViewById(R.id.editTExt);
+
         rating_layout = (LinearLayout) findViewById(R.id.rating);
 
         //rating 검사
@@ -86,6 +92,7 @@ public class CheckActivity extends BaseActivity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating,
                                         boolean fromUser) {
+                rate=rating;
                 rating_result1.setText("" + rating);
             }
         });
@@ -99,6 +106,13 @@ public class CheckActivity extends BaseActivity {
                 bundle.putInt("INDEX", habitIdx);
 
                 //디비 history 라인에 값 저장하기 ->별점이랑 코멘트 저장
+                comment=comment_value.getText().toString(); //사용자가 입력한 comment
+
+                //rate라는 변수가 사용자가 입력한 별점
+
+                //;날짜 -> year, month, day에 저장되어 있음
+
+                //이제 디비에 넣어주면 됨
 
 
 
