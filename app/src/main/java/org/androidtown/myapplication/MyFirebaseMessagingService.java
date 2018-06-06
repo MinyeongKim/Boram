@@ -24,7 +24,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         //Map<String, String> bundle = remoteMessage.getData();
         super.onMessageReceived(remoteMessage);
-        if (remoteMessage.getNotification() != null) { //&&id==처음받기, &&id==평가받기
+        if (remoteMessage.getNotification() != null) { //&&id==처음받기, &&id==평가받기r
             String body = remoteMessage.getNotification().getBody();
             String title = remoteMessage.getNotification().getTitle();
             Log.d(TAG, "Notification Body: " + body);

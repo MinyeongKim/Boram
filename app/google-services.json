@@ -15,6 +15,18 @@
       },
       "oauth_client": [
         {
+          "client_id": "1072685503593-apg9pkllalqqtahf2avkpqb0nah9v6om.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.androidtown.myapplication",
+            "certificate_hash": "c0ab9e8dce29054f696d948d0cc0b05549faaa31"
+          }
+        },
+        {
+          "client_id": "1072685503593-e74p1h9jf0qvhugg98ofrtlc3umoudj6.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "1072685503593-e74p1h9jf0qvhugg98ofrtlc3umoudj6.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +41,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1072685503593-e74p1h9jf0qvhugg98ofrtlc3umoudj6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
