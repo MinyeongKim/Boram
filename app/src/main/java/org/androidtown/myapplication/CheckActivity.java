@@ -48,6 +48,8 @@ public class CheckActivity extends BaseActivity {
         UserID = get_type.getString("ID");
         habitIdx = get_type.getInt("INDEX");
 
+        Toast.makeText(getApplicationContext(), type+"/"+UserID+"/"+habitIdx, Toast.LENGTH_SHORT).show();
+
         Button button = (Button) findViewById(R.id.button);
         rating_layout = (LinearLayout) findViewById(R.id.rating);
 

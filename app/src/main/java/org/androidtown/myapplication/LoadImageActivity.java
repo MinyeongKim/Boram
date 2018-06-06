@@ -104,7 +104,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         UserID = bundle.getString("ID");
-        habitIdx = bundle.getInt("INDEX")+1;
+        habitIdx = bundle.getInt("INDEX");
         Toast.makeText(getApplicationContext(), "/////"+habitIdx, Toast.LENGTH_SHORT).show();
 
         loadImgae = (ImageView) findViewById(R.id.imageLoad);
@@ -506,12 +506,13 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserName = (String) dataSnapshot.child("NAME").getValue();
 
-                databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/" + habitIdx);
-                //Toast.makeText(getApplicationContext(), "users/"+UserID+"/habits/"+habitIdx, Toast.LENGTH_SHORT).show();
+                databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
+                Toast.makeText(getApplicationContext(), "users/"+UserID+"/habits/"+habitIdx, Toast.LENGTH_SHORT).show();
                 databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         friendID = (String) dataSnapshot.child("FRIENDID").getValue();
+                        Toast.makeText(getApplicationContext(), "friend / "+friendID, Toast.LENGTH_SHORT).show();
 
                         databaseReferenceForPushMsgTest = database.getReference("users/" + friendID);
                         databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
