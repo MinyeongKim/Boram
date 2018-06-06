@@ -60,7 +60,7 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
                 String UserId = item.getUserID();
 
                 Bundle bundle = new Bundle();
-                bundle.putInt("INDEX", POSITION);
+                bundle.putInt("INDEX", POSITION+1);
                 bundle.putString("Check_type", type);
                 bundle.putString("ID", UserId);
 
