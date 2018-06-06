@@ -26,6 +26,7 @@ public class cardTimeActivity extends BaseActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
+        /*
         List<item> items = new ArrayList<>();
         item[] item = new item[5];
         item[0] = new item(R.drawable.bad_tree, title, withWho, didString, R.drawable.home, "#1", willNum, "alone", "");
@@ -40,6 +41,8 @@ public class cardTimeActivity extends BaseActivity {
 
         recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
         Utilities.setGlobalFont(recyclerView);
+
+        */
     }
 
     //뒤로가는 버튼 생성

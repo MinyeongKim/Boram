@@ -248,5 +248,4 @@ public class TimelineActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
