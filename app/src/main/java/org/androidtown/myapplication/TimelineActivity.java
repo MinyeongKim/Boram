@@ -83,7 +83,7 @@ public class TimelineActivity extends BaseActivity {
         UserID = bundle.getString("ID");
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("users/"+UserID+"/habits");
+        databaseReference = database.getReference("users/"+UserID+"/habits/current");
 
         //listView = (ListView) findViewById(R.id.listView);
         Utilities.setGlobalFont(listView);
@@ -115,6 +115,7 @@ public class TimelineActivity extends BaseActivity {
          */
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        Utilities.setGlobalFont(recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);

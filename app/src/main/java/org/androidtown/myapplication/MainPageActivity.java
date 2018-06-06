@@ -245,6 +245,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
 
             SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
             SharedPreferences.Editor editor = auto.edit();
+
             //editor.clear()는 auto에 들어있는 모든 정보를 기기에서 지웁니다.
             editor.clear();
             editor.commit();

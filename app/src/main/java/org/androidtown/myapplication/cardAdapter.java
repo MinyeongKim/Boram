@@ -52,11 +52,11 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, item.getName(), Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(context, CheckActivity.class);
+                Intent i = new Intent(context, HistoryActivity.class);
 
-                String type = item.getWithwho();
+                //String type = item.getWithwho();
 
-                i.putExtra("Check_type", type);
+                //i.putExtra("Check_type", type);
                 context.startActivity(i);
             }
         });

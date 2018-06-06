@@ -3,11 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Boram.iml" filepath="$PROJECT_DIR$/Boram.iml" />
-      <module fileurl="file://C:\Boram\Boram.iml" filepath="C:\Boram\Boram.iml" />
       <module fileurl="file://C:\Users\SurimYuk\Documents\GitHub\Project\Boram.iml" filepath="C:\Users\SurimYuk\Documents\GitHub\Project\Boram.iml" />
       <module fileurl="file://C:\Boram\Project.iml" filepath="C:\Boram\Project.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Boram\app\app.iml" filepath="C:\Boram\app\app.iml" />
     </modules>
   </component>
 </project>
