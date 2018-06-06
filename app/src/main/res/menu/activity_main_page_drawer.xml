@@ -16,8 +16,13 @@
 
         <item
             android:id="@+id/timeline"
-            android:icon="@drawable/timeline1"
+            android:icon="@drawable/timeline"
             android:title="나의 습관 확인하기" />
+
+        <item
+            android:id="@+id/lasttimeline"
+            android:icon="@drawable/timeline1"
+            android:title="지난 습관 확인하기" />
     </group>
 
     <item android:title="설정">

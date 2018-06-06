@@ -29,4 +29,7 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="SplashTheme" parent="android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">@drawable/exam_img</item>
+    </style>
 </resources>

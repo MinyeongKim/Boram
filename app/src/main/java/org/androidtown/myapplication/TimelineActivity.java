@@ -9,6 +9,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class TimelineActivity extends BaseActivity {
 
@@ -64,6 +67,8 @@ public class TimelineActivity extends BaseActivity {
     TimelineAdapter adapter;
     EditText editText;
 
+    List<item> items;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +85,7 @@ public class TimelineActivity extends BaseActivity {
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/"+UserID+"/habits");
 
-        listView = (ListView) findViewById(R.id.listView);
+        //listView = (ListView) findViewById(R.id.listView);
         Utilities.setGlobalFont(listView);
 
         imageView=(ImageView)findViewById(R.id.imageView);
@@ -90,8 +95,32 @@ public class TimelineActivity extends BaseActivity {
         읽으면서 제목, 빈도수 등 배열 값에다 입력하기
         */
 
+        /*
 
-        adapter = new TimelineAdapter();
+
+        List<item> items = new ArrayList<>();
+        item[] item = new item[5];
+        item[0] = new item(R.drawable.home, "#1");
+        item[1] = new item(R.drawable.home, "#2");
+        item[2] = new item(R.drawable.home, "#3");
+        item[3] = new item(R.drawable.home, "#4");
+        item[4] = new item(R.drawable.home, "#5");
+
+        for (int i = 0; i < 5; i++) {
+            items.add(item[i]);
+        }
+
+        recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
+        Utilities.setGlobalFont(recyclerView);
+         */
+
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+
+        items = new ArrayList<>();
+
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -112,25 +141,16 @@ public class TimelineActivity extends BaseActivity {
                     int willNum = Integer.parseInt(willString);//몇번해야하나
                     String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue();
 
-
-                    float buf = 0;
-                    buf = (float)didNum/(float)willNum*(float)100.0;
-                    ratio = (int)buf;
-
-                    if(type.equals("good")) {
-                        adapter.addItem(new TimelineItem(title, withWho,
-                                "몇번 했나요? " + didNum + " 몇번 해야하나요? " + willNum, progressBar, ratio, ratio + " %", type1));
-                    }
-
-                    else{
-                        adapter.addItem(new TimelineItem(title, withWho,
-                                "몇번 했나요? " + didNum + " 몇번 해야하나요? " + willNum, progressBar, ratio, ratio + " %", type2));
-                    }
+                    item  item1 = new item(R.drawable.bad_tree, title, withWho);
+                    items.add(item1);
                 }
 
                 //Toast.makeText(getApplication(), "finish", Toast.LENGTH_LONG).show();
-                listView.setAdapter(adapter);
+                //listView.setAdapter(adapter);
 
+                recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
+                Utilities.setGlobalFont(recyclerView);
+                /*
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -148,6 +168,8 @@ public class TimelineActivity extends BaseActivity {
 
                     }
                 });
+                */
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError){

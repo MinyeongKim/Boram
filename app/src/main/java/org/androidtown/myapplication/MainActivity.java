@@ -101,6 +101,7 @@ public class MainActivity extends BaseActivity{
                                     if (data.getKey().equals(inputId)) {
                                         userID = (String) data.getKey();
                                         storedPw = (String) data.child("PW").getValue();
+
                                         if (storedPw.equals(inputPw)) {
                                             userName = (String) data.child("NAME").getValue();
                                             Toast.makeText(getApplicationContext(), "login success", Toast.LENGTH_SHORT).show();
@@ -149,7 +150,7 @@ public class MainActivity extends BaseActivity{
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
                 startActivity(intent);
-                finish();
+                //finish();
             }
         });
 

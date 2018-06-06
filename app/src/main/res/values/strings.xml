@@ -92,4 +92,5 @@
     <string name="title_activity_check">CheckActivity</string>
     <string name="title_activity_modify_info">ModifyInfoActivity</string>
     <string name="title_activity_load_image">LoadImageActivity</string>
+    <string name="title_activity_card_time">cardTimeActivity</string>
 </resources>
