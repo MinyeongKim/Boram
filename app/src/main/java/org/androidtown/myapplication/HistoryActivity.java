@@ -19,6 +19,13 @@ public class HistoryActivity extends AppCompatActivity {
     ListView list;
     Button check;
 
+    String id;
+    String title;
+    String withWho;
+    int didNum;
+    int willNum;
+    String type;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +37,27 @@ public class HistoryActivity extends AppCompatActivity {
 
         list=(ListView)findViewById(R.id.list);
         check=(Button)findViewById(R.id.check);
+
+        /*
+                        Bundle bundle = new Bundle();
+                bundle.putInt("INDEX", POSITION+1);
+                bundle.putString("Check_type", type);
+                bundle.putString("ID", UserId);
+                bundle.putString("Title", title);
+                bundle.putInt("Did",didNum);
+                bundle.putInt("Will", willNum);
+         */
+
+        //card 뷰가 눌렸을 때, 전달 받은 습관 정보들 출력 ->TimelineView를 이용해서 보여주기
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        id = bundle.getString("ID");
+        title=bundle.getString("Title");
+        withWho=bundle.getString("Check_type");
+        didNum=bundle.getInt("Did");
+        willNum=bundle.getInt("Will");
+
+
 
         check.setOnClickListener(new View.OnClickListener(){
 

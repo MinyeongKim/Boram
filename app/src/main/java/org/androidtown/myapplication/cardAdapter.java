@@ -49,28 +49,30 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
         final int POSITION = position;
         Drawable drawable = ContextCompat.getDrawable(context, item.getPhoto());
         holder.image.setBackground(drawable);
-        holder.title.setText(item.getName());
+        holder.title.setText(item.getTitle());
+
         holder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, item.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, item.getTitle(), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(context, HistoryActivity.class);
 
-<<<<<<< HEAD
-                //String type = item.getWithwho();
 
-                //i.putExtra("Check_type", type);
-=======
+                String title = item.getTitle();
                 String type = item.getWithwho();
                 String UserId = item.getUserID();
+                int didNum=item.getDidNum();
+                int willNum=item.getWillNum();
 
                 Bundle bundle = new Bundle();
-                bundle.putInt("INDEX", POSITION);
+                bundle.putInt("INDEX", POSITION+1);
                 bundle.putString("Check_type", type);
                 bundle.putString("ID", UserId);
+                bundle.putString("Title", title);
+                bundle.putInt("Did",didNum);
+                bundle.putInt("Will", willNum);
 
                 i.putExtras(bundle);
->>>>>>> 9769a3b367235c76346eb58b5eae4005c888e5a6
                 context.startActivity(i);
             }
         });
