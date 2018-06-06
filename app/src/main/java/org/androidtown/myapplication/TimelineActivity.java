@@ -141,9 +141,10 @@ public class TimelineActivity extends BaseActivity {
                     int didNum = Integer.parseInt(didString);//몇번했나
                     String willString = (String)dataSnapshot.child(habitIndex).child("WILL").getValue();
                     int willNum = Integer.parseInt(willString);//몇번해야하나
-                    String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue();
+                    String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue(); //good/bad habit
 
-                    item  item1 = new item(R.drawable.bad_tree, title, withWho, UserID);
+                    //item  item1 = new item(title, R.drawable.home);
+                    item  item1 = new item(title, R.drawable.home, withWho,didNum, willNum,type);
                     items.add(item1);
                 }
 
@@ -247,5 +248,4 @@ public class TimelineActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

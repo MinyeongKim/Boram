@@ -19,7 +19,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -32,6 +35,9 @@ public class CheckActivity extends BaseActivity {
     LinearLayout rating_layout;
     String UserID;
     int habitIdx;
+
+    RatingBar ratingbar1;
+    TextView rating_result1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +54,17 @@ public class CheckActivity extends BaseActivity {
         UserID = get_type.getString("ID");
         habitIdx = get_type.getInt("INDEX");
 
-        Toast.makeText(getApplicationContext(), type+"/"+UserID+"/"+habitIdx, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), type + "/" + UserID + "/" + habitIdx, Toast.LENGTH_SHORT).show();
 
-        Button button = (Button) findViewById(R.id.button);
+        rating_result1 = (TextView) findViewById(R.id.rating_result);
+        ratingbar1 = (RatingBar) findViewById(R.id.ratingbar);
+        button = (Button) findViewById(R.id.button);
         rating_layout = (LinearLayout) findViewById(R.id.rating);
+
+        //rating 검사
+        ratingbar1.setStepSize((float) 0.5);        //별 색깔이 1칸씩줄어들고 늘어남 0.5로하면 반칸씩 들어감
+        ratingbar1.setRating((float) 2.5);      // 처음보여줄때(색깔이 한개도없음) default 값이 0  이다
+        ratingbar1.setIsIndicator(false);           //true - 별점만 표시 사용자가 변경 불가 , false - 사용자가 변경가능
 
         CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
 
@@ -63,22 +76,46 @@ public class CheckActivity extends BaseActivity {
                 month = m + 1;
                 day = d;
 
+                rating_layout.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        ratingbar1.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                        boolean fromUser) {
+                rating_result1.setText("" + rating);
+            }
+        });
+
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putString("ID", UserID);
                 bundle.putInt("INDEX", habitIdx);
 
+                //디비 history 라인에 값 저장하기 ->별점이랑 코멘트 저장
+
+
+
                 switch (type) {
+                    //혼자 하는 경우에는 값을 저장한 후 액티비티 종료
                     case "alone":
-                        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        inflater.inflate(R.layout.rating, rating_layout, true);
+                        finish();
                         break;
 
+                        //친구랑 하는 경우에는 값을 저장한 후 이미지 로드하는 페이지로 연결
                     case "friend":
                         Intent intent = new Intent(getApplicationContext(), LoadImageActivity.class);
                         intent.putExtras(bundle);
                         startActivity(intent);
                         break;
 
+                    //제 3자랑 하는 경우에는 값을 저장한 후 이미지 로드하는 페이지로 연결
                     case "otherPerson":
                         Intent intent2 = new Intent(getApplicationContext(), LoadImageActivity.class);
                         intent2.putExtras(bundle);
@@ -87,7 +124,6 @@ public class CheckActivity extends BaseActivity {
 
                     default:
                         break;
-
                 }
             }
         });

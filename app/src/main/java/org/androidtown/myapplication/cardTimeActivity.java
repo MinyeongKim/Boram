@@ -1,15 +1,11 @@
 package org.androidtown.myapplication;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +26,14 @@ public class cardTimeActivity extends BaseActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
+        /*
         List<item> items = new ArrayList<>();
         item[] item = new item[5];
-        item[0] = new item(R.drawable.home, "#1","alone", "");
-        item[1] = new item(R.drawable.home, "#2","alone", "");
-        item[2] = new item(R.drawable.home, "#3","alone", "");
-        item[3] = new item(R.drawable.home, "#4","alone", "");
-        item[4] = new item(R.drawable.home, "#5","alone", "");
+        item[0] = new item(R.drawable.bad_tree, title, withWho, didString, R.drawable.home, "#1", willNum, "alone", "");
+        item[1] = new item(R.drawable.bad_tree, title, withWho, didString, R.drawable.home, "#2", willNum, "alone", "");
+        item[2] = new item(R.drawable.bad_tree, title, withWho, didString, R.drawable.home, "#3", willNum, "alone", "");
+        item[3] = new item(R.drawable.bad_tree, title, withWho, didString, R.drawable.home, "#4", willNum, "alone", "");
+        item[4] = new item(R.drawable.bad_tree, title, withWho, didString, R.drawable.home, "#5", willNum, "alone", "");
 
         for (int i = 0; i < 5; i++) {
             items.add(item[i]);
@@ -44,6 +41,8 @@ public class cardTimeActivity extends BaseActivity {
 
         recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
         Utilities.setGlobalFont(recyclerView);
+
+        */
     }
 
     //뒤로가는 버튼 생성
