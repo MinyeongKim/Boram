@@ -17,9 +17,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.List;
 
 public class HistoryActivity extends BaseActivity {
+
+
 
     ListView list;
     Button check;
@@ -34,6 +42,8 @@ public class HistoryActivity extends BaseActivity {
     int habitIdx;
     String habitType;
     String UserID;
+
+    String habitTypeGoodBad;
 
     //습관 정보 출력
     ImageView imageView;
@@ -95,11 +105,12 @@ public class HistoryActivity extends BaseActivity {
                 bundle1.putString("Check_type", habitType);
                 bundle1.putString("ID", UserID);
                 bundle1.putInt("INDEX", habitIdx);
-                //Toast.makeText(getApplicationContext(), habitType+"/"+UserID+"/"+habitIdx, Toast.LENGTH_SHORT).show();
                 i.putExtras(bundle1);
                 startActivity(i);
             }
         });
+
+
     }
 
     //뒤로가는 버튼 생성

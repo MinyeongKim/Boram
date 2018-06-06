@@ -25,10 +25,16 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.BufferedReader;
 import java.util.Calendar;
 
 public class CheckActivity extends BaseActivity {
+
+    FirebaseDatabase database;
+    DatabaseReference databaseReference;
 
     Button button;
     int year, month, day;
@@ -38,6 +44,10 @@ public class CheckActivity extends BaseActivity {
 
     RatingBar ratingbar1;
     TextView rating_result1;
+    EditText comment_value;
+
+    String comment;
+    private float rate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +66,14 @@ public class CheckActivity extends BaseActivity {
 
         Toast.makeText(getApplicationContext(), type + "/" + UserID + "/" + habitIdx, Toast.LENGTH_SHORT).show();
 
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference("users/"+UserID+"/habits/current/"+habitIdx+"/history");
+
         rating_result1 = (TextView) findViewById(R.id.rating_result);
         ratingbar1 = (RatingBar) findViewById(R.id.ratingbar);
         button = (Button) findViewById(R.id.button);
+        comment_value=(EditText)findViewById(R.id.editTExt);
+
         rating_layout = (LinearLayout) findViewById(R.id.rating);
 
         //rating 검사
@@ -86,6 +101,7 @@ public class CheckActivity extends BaseActivity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating,
                                         boolean fromUser) {
+                rate=rating;
                 rating_result1.setText("" + rating);
             }
         });
@@ -99,6 +115,23 @@ public class CheckActivity extends BaseActivity {
                 bundle.putInt("INDEX", habitIdx);
 
                 //디비 history 라인에 값 저장하기 ->별점이랑 코멘트 저장
+                comment=comment_value.getText().toString(); //사용자가 입력한 comment
+
+                //rate라는 변수가 사용자가 입력한 별점
+
+                //;날짜 -> year, month, day에 저장되어 있음
+
+                //이제 디비에 넣어주면 됨
+                String checkedDate = year+"";
+                if(month<10) checkedDate = checkedDate+"0"+month;
+                else checkedDate = checkedDate+ "" + month;
+
+                if(day<10) checkedDate = checkedDate+"0"+day;
+                else checkedDate = checkedDate + "" + day;
+
+                String inputRate = String.valueOf(rate);
+                databaseReference.child(checkedDate).child("COMMENT").setValue(comment);
+                databaseReference.child(checkedDate).child("RATING").setValue(inputRate);
 
 
 
@@ -108,7 +141,7 @@ public class CheckActivity extends BaseActivity {
                         finish();
                         break;
 
-                        //친구랑 하는 경우에는 값을 저장한 후 이미지 로드하는 페이지로 연결
+                    //친구랑 하는 경우에는 값을 저장한 후 이미지 로드하는 페이지로 연결
                     case "friend":
                         Intent intent = new Intent(getApplicationContext(), LoadImageActivity.class);
                         intent.putExtras(bundle);

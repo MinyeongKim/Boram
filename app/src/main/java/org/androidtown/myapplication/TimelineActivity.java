@@ -144,7 +144,7 @@ public class TimelineActivity extends BaseActivity {
                     String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue(); //good/bad habit
 
                     //item  item1 = new item(title, R.drawable.home);
-                    item  item1 = new item(title, R.drawable.home, withWho,didNum, willNum,type);
+                    item  item1 = new item(title, R.drawable.home, withWho,didNum, willNum,type, UserID);
                     items.add(item1);
                 }
 
