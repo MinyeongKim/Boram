@@ -119,7 +119,7 @@ public class RegisterActivity extends BaseActivity {
         UserID = bundle.getString("ID");
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("users/" + UserID + "/habits");
+        databaseReference = database.getReference("users/" + UserID + "/habits/current");
         databaseReferenceForFriend = database.getReference("users");
 
 
@@ -297,7 +297,7 @@ public class RegisterActivity extends BaseActivity {
                 //사용자가 입력을 제대로 안했을 경우 -> 실행이 안되도록 해야함
                 //라디오 버튼을 다 누르지 않았을 경우에 잘 실행이 되나
                 //제목, 횟수를 입력안하는 경우는 제대로 인식하지 못함...ㅠㅠㅠㅠㅠㅠㅠㅠ
-                if (title == null || startDate == null || finishDate == null || frequency == null || habitType == null || checkType == null) {
+                if (title.equals("")|| startDate.equals("") || finishDate.equals("") || frequency.equals("") || habitType.equals("") || checkType.equals("")) {
                     Toast.makeText(getApplicationContext(), "모든 내용을 입력해주세요", Toast.LENGTH_LONG).show();
                 }
 

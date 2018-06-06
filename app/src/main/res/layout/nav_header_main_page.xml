@@ -12,6 +12,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
+    <!--
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="80dp"
@@ -19,6 +20,7 @@
         android:scaleType="fitXY"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:src="@drawable/sujeong" />
+-->
 
     <TextView
         android:id="@+id/UserName"
@@ -27,7 +29,6 @@
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:text="suJeong"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 
@@ -35,7 +36,6 @@
         android:id="@+id/UserID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10dp"
-        android:text="sujeong" />
+        android:textSize="10dp" />
 
 </LinearLayout>

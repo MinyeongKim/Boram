@@ -73,6 +73,8 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
     TextView userName;
     TextView userID;
 
+    String name, id;
+
     ProgressBar progress;
 
     RequestQueue queue;
@@ -89,7 +91,19 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        /*
+        auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = auto.edit();
 
+        name=auto.getString("userName","");
+        id=auto.getString("inputId","");
+
+        userName = (TextView) findViewById(R.id.UserName);
+        userID = (TextView) findViewById(R.id.UserID);
+
+        userName.setText(name);
+        userID.setText(id);
+*/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nav_header_main_page);
 
@@ -113,6 +127,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
             }
         });
 
+
         userName = (TextView) findViewById(R.id.UserName);
         userID = (TextView) findViewById(R.id.UserID);
 
@@ -122,7 +137,6 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
         String name = bundle.getString("name");//값은 잘 넘어옴.
         userName.setText(name);
         String id = bundle.getString("ID");
-        userID.setText(id);
 
         //database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/" + id);
@@ -197,6 +211,13 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
         //타임라인 보기
         else if (id == R.id.timeline) {
             Intent intent = new Intent(getApplicationContext(), TimelineActivity.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+
+        //기간이 지난 타임라인 보기
+        else if (id == R.id.lasttimeline) {
+            Intent intent = new Intent(getApplicationContext(), cardTimeActivity.class);
             intent.putExtras(bundle);
             startActivity(intent);
         }
