@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -28,7 +29,7 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
     List<item> items;
     int item_layout;
 
-    public cardAdapter(Context context, List<item> items, int item_layou) {
+    public cardAdapter(Context context, List<item> items, int item_layout) {
         this.context = context;
         this.items = items;
         this.item_layout = item_layout;
@@ -45,6 +46,7 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final item item = items.get(position);
+        final int POSITION = position;
         Drawable drawable = ContextCompat.getDrawable(context, item.getPhoto());
         holder.image.setBackground(drawable);
         holder.title.setText(item.getName());
@@ -54,9 +56,21 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
                 Toast.makeText(context, item.getName(), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(context, HistoryActivity.class);
 
+<<<<<<< HEAD
                 //String type = item.getWithwho();
 
                 //i.putExtra("Check_type", type);
+=======
+                String type = item.getWithwho();
+                String UserId = item.getUserID();
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("INDEX", POSITION);
+                bundle.putString("Check_type", type);
+                bundle.putString("ID", UserId);
+
+                i.putExtras(bundle);
+>>>>>>> 9769a3b367235c76346eb58b5eae4005c888e5a6
                 context.startActivity(i);
             }
         });

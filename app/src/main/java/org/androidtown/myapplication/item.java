@@ -9,11 +9,13 @@ public class item {
     private String name;
     private int photo;
     private String withwho;
+    private String UserID;
 
-    public item(int photo,String name, String who) {
+    public item(int photo,String name, String who, String UserId) {
         this.name = name;
         this.photo = photo;
         this.withwho=who;
+        this.UserID = UserId;
     }
 
     public String getName() {
@@ -22,6 +24,10 @@ public class item {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUserID() {
+        return UserID;
     }
 
     public String getWithwho() {

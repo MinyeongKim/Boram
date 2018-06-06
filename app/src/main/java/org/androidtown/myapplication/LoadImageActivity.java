@@ -2,6 +2,7 @@ package org.androidtown.myapplication;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
@@ -26,12 +28,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONObject;
 
@@ -43,6 +51,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 public class LoadImageActivity extends BaseActivity implements View.OnClickListener {
@@ -50,7 +60,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     Handler handler = new Handler(Looper.getMainLooper());
     private static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
 
-    //서버키 나중에 비공개로: 디비에 저장해놓고 앱 실행하면 불러오기-->MainActivity에 넣는게 나으려나?
+    //서버키 나중에 비공개로: 디비에 저장해놓고 앱 실행하면 불러오기
     private String ServerKey;
     private static final String TestMsg = "push message test";
 
@@ -61,6 +71,8 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     private DatabaseReference databaseReferenceForServerKey;
     private DatabaseReference databaseReferenceForUserName;
 
+    private FirebaseStorage storage;
+    private StorageReference mStorageRef;
 
     Button loadButton, sendButton;
     ImageView loadImgae;
@@ -92,7 +104,8 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         UserID = bundle.getString("ID");
-        habitIdx = bundle.getInt("INDEX");
+        habitIdx = bundle.getInt("INDEX")+1;
+        Toast.makeText(getApplicationContext(), "/////"+habitIdx, Toast.LENGTH_SHORT).show();
 
         loadImgae = (ImageView) findViewById(R.id.imageLoad);
         loadButton = (Button) findViewById(R.id.loadButton);
@@ -101,6 +114,9 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         loadImgae.setOnClickListener(this);
         loadButton.setOnClickListener(this);
         sendButton.setOnClickListener(this);
+
+        storage = FirebaseStorage.getInstance();
+        mStorageRef = storage.getReference();
 
         database = FirebaseDatabase.getInstance();
 
@@ -163,8 +179,56 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         //푸쉬메세지와 함께 사용자가 입력한 값과 사진을
         //if()
 
+
+
         if (view.getId() == R.id.sendButton) {
             sendPostToFCM("확인해주세요!");
+
+            //Uri file = Uri.fromFile(new File(absoultePath));
+            //absoultePath //mStorageRef
+            /*if (file != null) {
+                final ProgressDialog progressDialog = new ProgressDialog(this);
+                progressDialog.setTitle("업로드중...");
+                progressDialog.show();
+
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
+                Date now = new Date();
+                String filename = formatter.format(now) + ".png";//".jpg"?
+
+                StorageReference storageRef = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/").child("images/" + filename);
+
+                storageRef.putFile(file)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        })
+
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+
+                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                @SuppressWarnings("VisibleForTests")
+                                double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                                progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                            }
+                        });
+
+            } else {
+                Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
+            }*/
+
         }
 
 
@@ -224,7 +288,8 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                 final Bundle extras = data.getExtras();
 
                 String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                        "/BORAM/" + System.currentTimeMillis() + ".jpg";
+                      "/BORAM/" + System.currentTimeMillis() + ".jpg";
+
 
                 if (extras != null) {
                     Bitmap photo = extras.getParcelable("data");
@@ -232,7 +297,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
 
                     storeCropImage(photo, filePath);
 
-                    absoultePath = filePath;
+                    absoultePath = filePath + ".jpg";
                     break;
                 }
 
@@ -435,6 +500,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         habitIdx = bundle.getInt("INDEX");
         //String habitIdxString = String.valueOf(habitIdx);
         databaseReferenceForUserName = database.getReference("users/" + UserID);
+        //Toast.makeText(getApplicationContext(), "test: " + UserID, Toast.LENGTH_SHORT).show();
         databaseReferenceForUserName.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
