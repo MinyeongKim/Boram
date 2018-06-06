@@ -23,13 +23,14 @@ public class item {
     }
 
     //item  item1 = new item(title, R.drawable.home, withWho,didNum, willNum,type);
-    public item(String title1, int photo1, String habit_check1, int didNum1, int willNum1, String type1) {
+    public item(String title1, int photo1, String habit_check1, int didNum1, int willNum1, String type1, String userid) {
         this.title=title1;
         this.photo=photo1;
         this.withWho = habit_check1;
         this.didNum=didNum1;
         this.willNum=willNum1;
         this.type=type1;
+        this.UserID = userid;
     }
 
     public String getTitle() {

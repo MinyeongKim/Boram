@@ -54,6 +54,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.UUID;
 
 public class LoadImageActivity extends BaseActivity implements View.OnClickListener {
 
@@ -64,6 +65,8 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     private String ServerKey;
     private static final String TestMsg = "push message test";
 
+    private StorageReference mImageRef;
+
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReferenceForPartner;
@@ -73,6 +76,10 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
 
     private FirebaseStorage storage;
     private StorageReference mStorageRef;
+
+    String filename;
+    Uri selectedImage;
+    private Uri filePath;
 
     Button loadButton, sendButton;
     ImageView loadImgae;
@@ -105,7 +112,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         Bundle bundle = intent.getExtras();
         UserID = bundle.getString("ID");
         habitIdx = bundle.getInt("INDEX");
-        Toast.makeText(getApplicationContext(), "/////"+habitIdx, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "/////" + habitIdx, Toast.LENGTH_SHORT).show();
 
         loadImgae = (ImageView) findViewById(R.id.imageLoad);
         loadButton = (Button) findViewById(R.id.loadButton);
@@ -180,9 +187,11 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         //if()
 
 
-
         if (view.getId() == R.id.sendButton) {
-            sendPostToFCM("확인해주세요!");
+            //sendPostToFCM("확인해주세요!");
+            //uploadPhoto(selectedImage);
+            //uploadPhoto();
+            uploadFile();
 
             //Uri file = Uri.fromFile(new File(absoultePath));
             //absoultePath //mStorageRef
@@ -257,9 +266,12 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //selectedImage = data.getData();
+        super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK)
             return;
+
 
         switch (requestCode) {
             case PICK_FROM_ALBUM: {
@@ -288,7 +300,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                 final Bundle extras = data.getExtras();
 
                 String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                      "/BORAM/" + System.currentTimeMillis() + ".jpg";
+                        "/BORAM/" + System.currentTimeMillis() + ".jpg";
 
 
                 if (extras != null) {
@@ -307,6 +319,8 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         }
+
+
 
         /*
         if(resultCode == RESULT_OK){
@@ -440,6 +454,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         */
     }
 
+
     private void storeCropImage(Bitmap bitmap, String filePath) {
         String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/BORAM/";
         File directory_BORAM = new File(dirPath);
@@ -507,12 +522,12 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                 UserName = (String) dataSnapshot.child("NAME").getValue();
 
                 databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
-                Toast.makeText(getApplicationContext(), "users/"+UserID+"/habits/"+habitIdx, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
                 databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         friendID = (String) dataSnapshot.child("FRIENDID").getValue();
-                        Toast.makeText(getApplicationContext(), "friend / "+friendID, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
 
                         databaseReferenceForPushMsgTest = database.getReference("users/" + friendID);
                         databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -530,6 +545,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                                             //notification.put("body", message);
                                             notification.put("body", "확인해주세요!");
                                             notification.put("title", UserName + " 님이 인증을 요청했어요~");
+                                            notification.put("ImgName", filename);
                                             root.put("notification", notification);
                                             root.put("to", fcmToken);
 
@@ -573,6 +589,139 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
 
             }
         });
+    }
+    /*private void uploadPhoto(Uri uri) {
+        // Reset UI
+        //hideDownloadUI();
+        Toast.makeText(this, "Uploading...", Toast.LENGTH_SHORT).show();
+
+
+        final String TAG ="aaa";
+
+
+        // Upload to Cloud Storage
+        //String uuid = UUID.randomUUID().toString();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/").child("images");
+        storageRef.putFile(selectedImage)
+                .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, "uploadPhoto:onSuccess:" +
+                                    taskSnapshot.getMetadata().getReference().getPath());
+                        }
+                        Toast.makeText(LoadImageActivity.this, "Image uploaded",
+                                Toast.LENGTH_SHORT).show();
+
+                        //showDownloadUI();
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "uploadPhoto:onError", e);
+                        Toast.makeText(LoadImageActivity.this, "Upload failed",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }*/
+
+    /*private void uploadPhoto(){
+        Uri file = Uri.fromFile(new File(absoultePath));
+        //absoultePath //mStorageRef
+            if (file != null) {
+                final ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
+                progressDialog.setTitle("업로드중...");
+                progressDialog.show();
+
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
+                Date now = new Date();
+                String filename = formatter.format(now) + ".png";//".jpg"?
+
+                StorageReference storageRef = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/").child("images/" + filename);
+
+                storageRef.putFile(file)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        })
+
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+
+                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                @SuppressWarnings("VisibleForTests")
+                                double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                                progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                            }
+                        });
+
+            } else {
+                Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
+            }
+    }*/
+
+    private void uploadFile() {
+        //업로드할 파일이 있으면 수행
+        if (mlmageCaptureUri != null) {
+            //업로드 진행 Dialog 보이기
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("업로드중...");
+            progressDialog.show();
+
+            //storage
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+
+            //Unique한 파일명을 만들자.
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
+            Date now = new Date();
+            filename = formatter.format(now) + ".png";
+            //storage 주소와 폴더 파일명을 지정해 준다.
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/").child("images/" + filename);
+            //올라가거라...
+            storageRef.putFile(mlmageCaptureUri)
+                    //성공시
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
+                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                            sendPostToFCM("확인해주세요!");
+                        }
+                    })
+                    //실패시
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    //진행중
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            @SuppressWarnings("VisibleForTests") //이걸 넣어 줘야 아랫줄에 에러가 사라진다. 넌 누구냐?
+                                    double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
+                            //dialog에 진행률을 퍼센트로 출력해 준다
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
+                        }
+                    });
+        } else {
+            Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
