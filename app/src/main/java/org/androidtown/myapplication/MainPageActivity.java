@@ -138,6 +138,9 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
         userName.setText(name);
         String id = bundle.getString("ID");
 
+        userName.setText(name);
+        userID.setText(id);
+
         //database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/" + id);
 

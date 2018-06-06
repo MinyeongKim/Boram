@@ -104,7 +104,8 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         UserID = bundle.getString("ID");
-        habitIdx = bundle.getInt("INDEX");
+        habitIdx = bundle.getInt("INDEX")+1;
+        Toast.makeText(getApplicationContext(), "/////"+habitIdx, Toast.LENGTH_SHORT).show();
 
         loadImgae = (ImageView) findViewById(R.id.imageLoad);
         loadButton = (Button) findViewById(R.id.loadButton);
@@ -183,9 +184,9 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         if (view.getId() == R.id.sendButton) {
             sendPostToFCM("확인해주세요!");
 
-            /*Uri file = Uri.fromFile(new File(absoultePath));
+            //Uri file = Uri.fromFile(new File(absoultePath));
             //absoultePath //mStorageRef
-            if (file != null) {
+            /*if (file != null) {
                 final ProgressDialog progressDialog = new ProgressDialog(this);
                 progressDialog.setTitle("업로드중...");
                 progressDialog.show();
@@ -499,6 +500,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         habitIdx = bundle.getInt("INDEX");
         //String habitIdxString = String.valueOf(habitIdx);
         databaseReferenceForUserName = database.getReference("users/" + UserID);
+        //Toast.makeText(getApplicationContext(), "test: " + UserID, Toast.LENGTH_SHORT).show();
         databaseReferenceForUserName.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

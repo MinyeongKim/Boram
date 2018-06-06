@@ -81,9 +81,10 @@ public class TimelineActivity extends BaseActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         UserID = bundle.getString("ID");
+        Toast.makeText(getApplicationContext(), UserID, Toast.LENGTH_SHORT).show();
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("users/"+UserID+"/habits");
+        databaseReference = database.getReference("users/"+UserID+"/habits/current");
 
         //listView = (ListView) findViewById(R.id.listView);
         Utilities.setGlobalFont(listView);
@@ -141,9 +142,15 @@ public class TimelineActivity extends BaseActivity {
                     int willNum = Integer.parseInt(willString);//몇번해야하나
                     String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue();
 
-                    item  item1 = new item(R.drawable.bad_tree, title, withWho);
+                    item  item1 = new item(R.drawable.bad_tree, title, withWho, UserID);
                     items.add(item1);
                 }
+
+                /*Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ID", UserID);
+                intent.putExtras(bundle);
+                startActivity(intent);*/
 
                 //Toast.makeText(getApplication(), "finish", Toast.LENGTH_LONG).show();
                 //listView.setAdapter(adapter);
@@ -165,7 +172,6 @@ public class TimelineActivity extends BaseActivity {
                         checkType.putInt("INDEX", position+1);
                         intent.putExtras(checkType);
                         startActivity(intent);
-
                     }
                 });
                 */

@@ -32,11 +32,11 @@ public class cardTimeActivity extends BaseActivity {
 
         List<item> items = new ArrayList<>();
         item[] item = new item[5];
-        item[0] = new item(R.drawable.home, "#1","alone");
-        item[1] = new item(R.drawable.home, "#2","alone");
-        item[2] = new item(R.drawable.home, "#3","alone");
-        item[3] = new item(R.drawable.home, "#4","alone");
-        item[4] = new item(R.drawable.home, "#5","alone");
+        item[0] = new item(R.drawable.home, "#1","alone", "");
+        item[1] = new item(R.drawable.home, "#2","alone", "");
+        item[2] = new item(R.drawable.home, "#3","alone", "");
+        item[3] = new item(R.drawable.home, "#4","alone", "");
+        item[4] = new item(R.drawable.home, "#5","alone", "");
 
         for (int i = 0; i < 5; i++) {
             items.add(item[i]);
