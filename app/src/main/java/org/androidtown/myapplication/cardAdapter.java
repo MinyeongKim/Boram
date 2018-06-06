@@ -56,11 +56,6 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
                 Toast.makeText(context, item.getName(), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(context, HistoryActivity.class);
 
-<<<<<<< HEAD
-                //String type = item.getWithwho();
-
-                //i.putExtra("Check_type", type);
-=======
                 String type = item.getWithwho();
                 String UserId = item.getUserID();
 
@@ -70,7 +65,6 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
                 bundle.putString("ID", UserId);
 
                 i.putExtras(bundle);
->>>>>>> 9769a3b367235c76346eb58b5eae4005c888e5a6
                 context.startActivity(i);
             }
         });
