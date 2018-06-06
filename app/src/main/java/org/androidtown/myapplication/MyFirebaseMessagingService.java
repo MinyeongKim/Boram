@@ -24,19 +24,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         //Map<String, String> bundle = remoteMessage.getData();
         super.onMessageReceived(remoteMessage);
-        if (remoteMessage.getNotification() != null) { //&&id==처음받기, &&id==평가받기r
+        if (remoteMessage.getNotification() != null) { //&&id==처음받기(사진받기), &&id==평가받기
             String body = remoteMessage.getNotification().getBody();
             String title = remoteMessage.getNotification().getTitle();
+            //String ImgFileName = remoteMessage.getNotification().
+
             Log.d(TAG, "Notification Body: " + body);
 
             //각 다른 역할에 따라 다른 서비스 제공해야함.//requestCode???가 뭐지???
-            Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+            //Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+            Intent intent = new Intent(getApplicationContext(), SendFeedbackActivity.class);
+            intent.putExtra("NotificationMessage", "값 전달 받음!");
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
                     .setSmallIcon(R.mipmap.icon_v1) //알림 영역에 노출 될 아이콘
                     //.setContentTitle(getString(R.string.app_name)) //알림 영역에 노출 될 타이틀
                     .setContentTitle(title)
                     .setContentText(body) //Firebase Console에서 사용자가 전달한 메시지 내용
+                    //.setExtras(bundle);
                     .setContentIntent(pendingIntent);//푸시 눌렀을때 반응.
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
             notificationManagerCompat.notify(0x1001, notificationBuilder.build());
