@@ -10,12 +10,21 @@ public class TimelineItem {
 
     String date;
     String comment;
+    //float rate;
     String rate;
 
     /*
     public TimelineItem(String title, String habit_check, String habit_count, ProgressBar progressBar, String ratio, int home) {
         this.title = title;
         this.habit_check = habit_check;
+    }
+*/
+
+    /*
+    public TimelineItem(String date1, String comment1, float rate1) {
+        this.date = date1;
+        this.comment = comment1;
+        this.rate = rate1;
     }
 */
 
@@ -49,6 +58,15 @@ public class TimelineItem {
         this.rate = rate;
     }
 
+    /*
+    public float getRate() {
+        return rate;
+    }
+
+    public void setRate(float rate) {
+        this.rate = rate;
+    }
+*/
     /*
     public String getRatio(){
         return ratio;

@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +25,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-<<<<<<< HEAD
 import java.util.ArrayList;
-=======
->>>>>>> bd5ee1f18d78f6b2a2ee2b2ce71e2e694f407cbb
 import java.util.List;
 
 public class HistoryActivity extends BaseActivity {
-
-
 
     ListView list;
     Button check;
@@ -127,9 +122,15 @@ public class HistoryActivity extends BaseActivity {
                     String comment = (String) dataSnapshot.child(date).child("COMMENT").getValue();
                     String rate = (String) dataSnapshot.child(date).child("RATING").getValue();
 
+
+                    //float rating_Value= Float.parseFloat(rate);
+
+                    Log.i("date",date);
+
                     //일단 변수명만 TimelineItem으로 썼어! HistoryItem만들어지면 HistoryItem으로 바꾸면 돼!
                     adapter.addItem(new TimelineItem(date, comment, rate));
                 }
+
                 list.setAdapter(adapter);
             }
 
@@ -151,6 +152,7 @@ public class HistoryActivity extends BaseActivity {
                 bundle1.putInt("INDEX", habitIdx);
                 i.putExtras(bundle1);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -187,8 +189,8 @@ public class HistoryActivity extends BaseActivity {
             TimelineItem item = items.get(position);
             view.setDate(item.getDate());
             view.setComment(item.getComment());
+            //view.setRate(item.getRate());
             view.setRate(item.getRate());
-
             return view;
         }
     }
