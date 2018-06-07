@@ -28,13 +28,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String body = remoteMessage.getNotification().getBody();
             String title = remoteMessage.getNotification().getTitle();
             //String ImgFileName = remoteMessage.getNotification().
+            String ImgFileName = remoteMessage.getNotification().getTag();
 
             Log.d(TAG, "Notification Body: " + body);
 
             //각 다른 역할에 따라 다른 서비스 제공해야함.//requestCode???가 뭐지???
             //Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
             Intent intent = new Intent(getApplicationContext(), SendFeedbackActivity.class);
-            intent.putExtra("NotificationMessage", "값 전달 받음!");
+            //intent.putExtra("NotificationMessage", "값 전달 받음!");
+            intent.putExtra("NotificationMessage", ImgFileName);
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
                     .setSmallIcon(R.mipmap.icon_v1) //알림 영역에 노출 될 아이콘
@@ -42,6 +44,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setContentTitle(title)
                     .setContentText(body) //Firebase Console에서 사용자가 전달한 메시지 내용
                     //.setExtras(bundle);
+                    .setVibrate(new long[]{100, 250, 100, 500})//진동효과-->문제 생기면 지워도 됨.
                     .setContentIntent(pendingIntent);//푸시 눌렀을때 반응.
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
             notificationManagerCompat.notify(0x1001, notificationBuilder.build());

@@ -545,7 +545,8 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                                             //notification.put("body", message);
                                             notification.put("body", "확인해주세요!");
                                             notification.put("title", UserName + " 님이 인증을 요청했어요~");
-                                            notification.put("ImgName", filename);
+                                            //notification.put("ImgName", filename);
+                                            notification.put("tag", filename);
                                             root.put("notification", notification);
                                             root.put("to", fcmToken);
 
