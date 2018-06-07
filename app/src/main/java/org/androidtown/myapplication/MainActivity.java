@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Iterator;
 
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity2 {
 
     EditText idText;
     EditText pwText;
@@ -35,11 +35,12 @@ public class MainActivity extends BaseActivity{
     String storedPw;
     String userName;
 
-    String loginId, loginPwd;
+    String loginId, loginPwd, loginName;
 
     CheckBox checked;
 
     SharedPreferences auto;
+    SharedPreferences info;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -57,20 +58,22 @@ public class MainActivity extends BaseActivity{
         checked = (CheckBox) findViewById(R.id.autoLogin);
 
         auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        info = getSharedPreferences("info", Activity.MODE_PRIVATE);
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users");
 
         loginId = auto.getString("inputId", null);
         loginPwd = auto.getString("inputPwd", null);
+        loginName = auto.getString("inputName", null);
 
-        if(loginId !=null && loginPwd !=null)
-        {
+        Toast.makeText(getApplicationContext(), "" + loginId + " " + loginPwd, Toast.LENGTH_SHORT).show();
+        if (loginId != null && loginPwd != null) {
             //메인 화면 띄워주기
             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("name", userName);
-            bundle.putString("ID", userID);
+            bundle.putString("name", loginName);
+            bundle.putString("ID", loginId);
             intent.putExtras(bundle);
             startActivity(intent);
 
@@ -78,7 +81,7 @@ public class MainActivity extends BaseActivity{
         }
 
         //인터넷 연결 안되어있으면 와이파이나 데이터 연결하라는 토스트 띄워주기
-        else if(loginId ==null && loginPwd ==null) {
+        else if (loginId == null && loginPwd == null) {
             loginBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -104,15 +107,24 @@ public class MainActivity extends BaseActivity{
 
                                         if (storedPw.equals(inputPw)) {
                                             userName = (String) data.child("NAME").getValue();
-                                            Toast.makeText(getApplicationContext(), "login success", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), userName + "님 안녕하세요", Toast.LENGTH_SHORT).show();
 
-                                            if(checked.isChecked()) {
+                                            //자동로그인을 위한
+                                            if (checked.isChecked()) {
                                                 SharedPreferences.Editor autoLogin = auto.edit();
                                                 autoLogin.putString("inputId", inputId);
                                                 autoLogin.putString("inputPwd", inputPw);
-
+                                                autoLogin.putString("inputName", userName);
                                                 autoLogin.commit();
                                             }
+
+                                            //앱 로그인 시 저장
+                                            SharedPreferences.Editor information = info.edit();
+                                            information.putString("userId", inputId);
+                                            information.putString("userPw", inputPw);
+                                            information.putString("userName",userName);
+
+                                            information.commit();
 
                                             //메인 화면 띄워주기
                                             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);

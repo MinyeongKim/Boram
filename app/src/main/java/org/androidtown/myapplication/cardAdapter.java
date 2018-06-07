@@ -63,18 +63,20 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
 
                 //i.putExtra("Check_type", type);
 
-                String type = item.getWithwho();
+                String withwho = item.getWithwho();
                 String UserId = item.getUserID();
                 int didNum=item.getDidNum();
                 int willNum=item.getWillNum();
+                String type=item.getType();
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("INDEX", POSITION+1);
-                bundle.putString("Check_type", type);
+                bundle.putString("Check_type", withwho);
                 bundle.putString("ID", UserId);
                 bundle.putString("Title", title);
                 bundle.putInt("Did",didNum);
                 bundle.putInt("Will", willNum);
+                bundle.putString("Type", type);
 
                 i.putExtras(bundle);
                 context.startActivity(i);

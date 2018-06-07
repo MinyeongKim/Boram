@@ -122,17 +122,25 @@ public class CheckActivity extends BaseActivity {
                 //;날짜 -> year, month, day에 저장되어 있음
 
                 //이제 디비에 넣어주면 됨
-                String checkedDate = year+"";
-                if(month<10) checkedDate = checkedDate+"0"+month;
-                else checkedDate = checkedDate+ "" + month;
+                //등록한 날짜 정보
+                String checkedDate = year+"년 ";
+                if(month<10) checkedDate = checkedDate+"0"+month+"월 ";
+                else checkedDate = checkedDate+ "" + month+"월 ";
 
-                if(day<10) checkedDate = checkedDate+"0"+day;
-                else checkedDate = checkedDate + "" + day;
+                if(day<10) checkedDate = checkedDate+"0"+day+"일 ";
+                else checkedDate = checkedDate + "" + day+"일 ";
+
+                //시간도 읽어서 넣어줘야함
+                /*
+
+                 */
 
                 String inputRate = String.valueOf(rate);
                 databaseReference.child(checkedDate).child("COMMENT").setValue(comment);
                 databaseReference.child(checkedDate).child("RATING").setValue(inputRate);
 
+                //값 제대로 읽히는지 테스팅
+                Toast.makeText(getApplicationContext(),"comment: "+comment+" rating: "+inputRate, Toast.LENGTH_SHORT).show();
 
 
                 switch (type) {

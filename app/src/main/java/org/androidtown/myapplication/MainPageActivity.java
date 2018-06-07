@@ -227,7 +227,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
 
         //회원 정보 수정하기
         else if (id == R.id.user_info_change) {
-            Intent intent = new Intent(getApplicationContext(), ModifyInfoActivity.class);
+            Intent intent = new Intent(getApplicationContext(), CheckPWActivity.class);
             startActivity(intent);
         }
 

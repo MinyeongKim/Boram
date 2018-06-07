@@ -51,7 +51,6 @@
             android:name=".CheckActivity"
             android:label="@string/title_activity_check"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".RatingActivity" />
         <activity
             android:name=".ModifyInfoActivity"
             android:label="@string/title_activity_modify_info"
@@ -86,7 +85,14 @@
             android:name=".HistoryActivity"
             android:label="@string/title_activity_history"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".CheckPWActivity"
+            android:label="@string/title_activity_check_pw"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <activity android:name=".SendFeedbackActivity"></activity>
+
     </application>
 
 </manifest>
