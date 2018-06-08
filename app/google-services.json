@@ -53,6 +53,41 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1072685503593:android:bdb4c5b8ee6f0bfd",
+        "android_client_info": {
+          "package_name": "org.gcsw.boram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1072685503593-e74p1h9jf0qvhugg98ofrtlc3umoudj6.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1072685503593-e74p1h9jf0qvhugg98ofrtlc3umoudj6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6kBAi-p2e6jOUW-PXVqVeSHzPHHnpLQY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"
