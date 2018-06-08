@@ -5,6 +5,11 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +28,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,9 +81,13 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
 
     String name, id;
 
+    ImageButton menuButton;
+
     ProgressBar progress;
 
     RequestQueue queue;
+
+    Toolbar toolbar;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -150,13 +160,41 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
 
         setContentView(R.layout.activity_main_page);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.sun_icon);
+        /*
+        if(getSupportActionBar()!=null){
+            Drawable drawable= getResources().getDrawable(R.drawable.sun_icon);
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            Drawable newdrawable = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 250, 250, true));
+
+            newdrawable.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(newdrawable);
+        }
+        */
+        //toolbar.setNavigationIcon(R.drawable.sun_icon);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        /*
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        */
+
+
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -165,6 +203,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
 
         String msg;
 
+        /*
         //푸쉬메세지 버튼 테스트
         Button pushTestBtn = (Button) findViewById(R.id.pushTestBtn);
         pushTestBtn.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +212,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
                 sendPostToFCM("확인해주세요!");
             }
         });
+*/
 
     }
 
