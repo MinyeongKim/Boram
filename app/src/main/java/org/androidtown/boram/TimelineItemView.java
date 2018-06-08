@@ -1,14 +1,15 @@
-package org.androidtown.myapplication;
+package org.androidtown.boram;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import org.androidtown.myapplication.R;
 
 /**
  * Created by sj971 on 2018-05-19.

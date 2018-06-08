@@ -1,4 +1,4 @@
-package org.androidtown.myapplication;
+package org.androidtown.boram;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -7,8 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.androidtown.myapplication.R;
 
 public class cardTimeActivity extends BaseActivity {
 

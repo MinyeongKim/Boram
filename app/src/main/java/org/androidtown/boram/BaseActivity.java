@@ -1,6 +1,5 @@
-package org.androidtown.myapplication;
+package org.androidtown.boram;
 
-import android.app.Activity;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * Created by sj971 on 2018-06-07.
+ * Created by sj971 on 2018-06-05.
  */
 
-public class BaseActivity2 extends Activity {
+public class BaseActivity extends AppCompatActivity{
 
     private static Typeface mTypeface = null;
 

@@ -1,6 +1,4 @@
-package org.androidtown.myapplication;
-
-import android.widget.ProgressBar;
+package org.androidtown.boram;
 
 /**
  * Created by sj971 on 2018-05-19.

@@ -1,17 +1,16 @@
-package org.androidtown.myapplication;
+package org.androidtown.boram;
 
 import android.app.Activity;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * Created by sj971 on 2018-06-05.
+ * Created by sj971 on 2018-06-07.
  */
 
-public class BaseActivity extends AppCompatActivity{
+public class BaseActivity2 extends Activity {
 
     private static Typeface mTypeface = null;
 

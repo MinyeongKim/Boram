@@ -1,4 +1,4 @@
-package org.androidtown.myapplication;
+package org.androidtown.boram;
 
 import android.util.Log;
 

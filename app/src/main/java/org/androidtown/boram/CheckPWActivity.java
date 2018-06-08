@@ -1,8 +1,9 @@
-package org.androidtown.myapplication;
+package org.androidtown.boram;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,32 +11,48 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-public class ModifyInfoActivity extends BaseActivity {
+import org.androidtown.myapplication.R;
 
-    EditText loginID, loginPW, userName;
-    Button submit;
+public class CheckPWActivity extends AppCompatActivity {
+
+    EditText loginPw;
+    Button CheckPW;
+
+    SharedPreferences info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_modify_info);
+        setContentView(R.layout.activity_check_pw);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         setupActionBar();
 
-        loginID=(EditText)findViewById(R.id.loginId);
-        loginPW=(EditText)findViewById(R.id.loginPw);
-        userName=(EditText)findViewById(R.id.userName);
+        loginPw=(EditText)findViewById(R.id.loginPw);
+        CheckPW=(Button)findViewById(R.id.checkPW);
 
-        submit=(Button)findViewById(R.id.modify);
-        submit.setOnClickListener(new Button.OnClickListener(){
+        CheckPW.setOnClickListener(new View.OnClickListener(){
 
-            //회원정보 수정
             @Override
             public void onClick(View view) {
+                String pw1=loginPw.getText().toString();
 
+                info = getSharedPreferences("info", Activity.MODE_PRIVATE);
+                String userPW = info.getString("userPw", null);
+
+                if(userPW.equals(pw1)){
+                    Intent intent = new Intent(getApplication(), ModifyInfoActivity.class);
+                    startActivity(intent);
+
+                    finish();
+                }
+
+                else{
+                    Toast.makeText(getApplicationContext(),"비밀번호를 잘 못 입력하셨습니다.",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -62,5 +79,4 @@ public class ModifyInfoActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

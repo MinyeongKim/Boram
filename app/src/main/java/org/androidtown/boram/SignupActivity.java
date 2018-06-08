@@ -1,7 +1,6 @@
-package org.androidtown.myapplication;
+package org.androidtown.boram;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +10,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Date;
+import org.androidtown.myapplication.R;
 
 public class SignupActivity extends BaseActivity {
     EditText id;

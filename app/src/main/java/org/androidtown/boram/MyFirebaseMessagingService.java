@@ -1,9 +1,7 @@
-package org.androidtown.myapplication;
+package org.androidtown.boram;
 
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -11,7 +9,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.util.Map;
+import org.androidtown.myapplication.R;
 
 /**
  * Created by SurimYuk on 2018-05-23.
