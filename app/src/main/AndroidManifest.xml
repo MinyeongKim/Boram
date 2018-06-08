@@ -85,14 +85,15 @@
             android:name=".HistoryActivity"
             android:label="@string/title_activity_history"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".CheckPWActivity"
             android:label="@string/title_activity_check_pw"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".SendFeedbackActivity" />
+        <activity
+            android:name=".GetMessageActivity"
+            android:label="@string/title_activity_get_message"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-
-        <activity android:name=".SendFeedbackActivity"></activity>
-
     </application>
 
 </manifest>
