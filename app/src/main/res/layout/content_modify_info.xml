@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="org.androidtown.myapplication.org.androidtown.boram.ModifyInfoActivity"
+    tools:context="org.androidtown.myapplication.ModifyInfoActivity"
     tools:showIn="@layout/activity_modify_info">
 
     <RelativeLayout

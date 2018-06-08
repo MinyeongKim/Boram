@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="org.androidtown.myapplication.org.androidtown.boram.HistoryActivity"
+    tools:context="org.androidtown.myapplication.HistoryActivity"
     tools:showIn="@layout/activity_history">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="org.androidtown.boram.SplashActivity"
+            android:name=".SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -30,34 +30,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="org.androidtown.boram.MainActivity" />
-        <activity android:name="org.androidtown.boram.SignupActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SignupActivity" />
         <activity
-            android:name="org.androidtown.boram.MainPageActivity"
+            android:name=".MainPageActivity"
             android:label="@string/title_activity_main_page"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.androidtown.boram.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name="org.androidtown.boram.TimelineActivity"
+            android:name=".TimelineActivity"
             android:label="@string/title_activity_timeline"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.androidtown.boram.RegisterActivity"
+            android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.androidtown.boram.CheckActivity"
+            android:name=".CheckActivity"
             android:label="@string/title_activity_check"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.androidtown.boram.ModifyInfoActivity"
+            android:name=".ModifyInfoActivity"
             android:label="@string/title_activity_modify_info"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
-            android:name="org.androidtown.boram.MyFirebaseMessagingService"
+            android:name=".MyFirebaseMessagingService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -65,7 +65,7 @@
             </intent-filter>
         </service>
         <service
-            android:name="org.androidtown.boram.MyFirebaseInstanceIDService"
+            android:name=".MyFirebaseInstanceIDService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -74,24 +74,24 @@
         </service>
 
         <activity
-            android:name="org.androidtown.boram.LoadImageActivity"
+            android:name=".LoadImageActivity"
             android:label="@string/title_activity_load_image"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.androidtown.boram.cardTimeActivity"
+            android:name=".cardTimeActivity"
             android:label="@string/title_activity_card_time"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.androidtown.boram.HistoryActivity"
+            android:name=".HistoryActivity"
             android:label="@string/title_activity_history"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="org.androidtown.boram.CheckPWActivity"
+            android:name=".CheckPWActivity"
             android:label="@string/title_activity_check_pw"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <activity android:name="org.androidtown.boram.SendFeedbackActivity"></activity>
+        <activity android:name=".SendFeedbackActivity"></activity>
 
     </application>
 
