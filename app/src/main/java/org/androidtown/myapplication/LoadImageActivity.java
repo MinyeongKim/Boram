@@ -680,6 +680,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                             progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                             sendPostToFCM("확인해주세요!");
+                            finish();
                         }
                     })
                     //실패시

@@ -258,6 +258,7 @@ public class CheckActivity extends BaseActivity {
                     default:
                         break;
                 }
+                finish();
             }
         });
     }
