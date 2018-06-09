@@ -44,6 +44,7 @@ public class CheckActivity extends BaseActivity {
     LinearLayout rating_layout;
     String UserID;
     int habitIdx;
+    int totalHistoryNum;
 
     RatingBar ratingbar1;
     TextView rating_result1;
@@ -66,13 +67,18 @@ public class CheckActivity extends BaseActivity {
         final String type = get_type.getString("Check_type");
         UserID = get_type.getString("ID");
         habitIdx = get_type.getInt("INDEX");
+        totalHistoryNum = get_type.getInt("HISTORYNUM");
+
 
         Toast.makeText(getApplicationContext(), type + "/" + UserID + "/" + habitIdx, Toast.LENGTH_SHORT).show();
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history");
+<<<<<<< HEAD
 
         databaseReference1 = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
+=======
+>>>>>>> 2f576bc50dc45572bd9e06d2572929b47d15ed9c
 
         rating_result1 = (TextView) findViewById(R.id.rating_result);
         ratingbar1 = (RatingBar) findViewById(R.id.ratingbar);
@@ -141,8 +147,10 @@ public class CheckActivity extends BaseActivity {
                  */
 
                 String inputRate = String.valueOf(rate);
-                databaseReference.child(checkedDate).child("COMMENT").setValue(comment);
-                databaseReference.child(checkedDate).child("RATING").setValue(inputRate);
+                String historyIdx = String.valueOf(totalHistoryNum + 1);
+                databaseReference.child(historyIdx).child("DATE").setValue(checkedDate);
+                databaseReference.child(historyIdx).child("COMMENT").setValue(comment);
+                databaseReference.child(historyIdx).child("RATING").setValue(inputRate);
 
                 //습관 실천 횟수 증가시켜주는 부분
                 databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
