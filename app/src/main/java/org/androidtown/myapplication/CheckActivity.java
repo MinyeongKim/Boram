@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -74,11 +75,7 @@ public class CheckActivity extends BaseActivity {
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history");
-<<<<<<< HEAD
-
         databaseReference1 = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
-=======
->>>>>>> 2f576bc50dc45572bd9e06d2572929b47d15ed9c
 
         rating_result1 = (TextView) findViewById(R.id.rating_result);
         ratingbar1 = (RatingBar) findViewById(R.id.ratingbar);
@@ -146,22 +143,19 @@ public class CheckActivity extends BaseActivity {
 
                  */
 
-                String inputRate = String.valueOf(rate);
-                String historyIdx = String.valueOf(totalHistoryNum + 1);
-                databaseReference.child(historyIdx).child("DATE").setValue(checkedDate);
-                databaseReference.child(historyIdx).child("COMMENT").setValue(comment);
-                databaseReference.child(historyIdx).child("RATING").setValue(inputRate);
-
-                //습관 실천 횟수 증가시켜주는 부분
-                databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
-
+                final String finalCheckedDate = checkedDate;
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String didString = (String)dataSnapshot.child("DID").getValue();
-                        int didNum = Integer.parseInt(didString);
-                        didNum++;
+                        int historyIndex = (int) dataSnapshot.getChildrenCount();
+                        String idx = String.valueOf(historyIndex + 1);
+                        //databaseReference.child(idx).child("START").setValue(startDate);
 
-                        databaseReference1.child("DID").setValue(String.valueOf(didNum));
+                        String inputRate = String.valueOf(rate);
+                        String historyIdx = String.valueOf(totalHistoryNum + 1);
+                        databaseReference.child(idx).child("DATE").setValue(finalCheckedDate);
+                        databaseReference.child(idx).child("COMMENT").setValue(comment);
+                        databaseReference.child(idx).child("RATING").setValue(inputRate);
                     }
 
                     @Override
@@ -170,9 +164,25 @@ public class CheckActivity extends BaseActivity {
                     }
                 });
 
-                //값 제대로 읽히는지 테스팅
-                Toast.makeText(getApplicationContext(), "comment: " + comment + " rating: " + inputRate, Toast.LENGTH_SHORT).show();
 
+                //습관 실천 횟수 증가시켜주는 부분
+                databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String didString = (String)dataSnapshot.child("DID").getValue();
+                        int didNum = Integer.parseInt(didString);
+                        Log.i("didNum1",""+didNum);
+                        didNum++;
+                        Log.i("didNumChange?",""+didNum);
+                        databaseReference1.child("DID").setValue(String.valueOf(didNum));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
                 switch (type) {
                     //혼자 하는 경우에는 값을 저장한 후 액티비티 종료

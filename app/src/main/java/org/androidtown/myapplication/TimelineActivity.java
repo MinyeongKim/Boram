@@ -138,6 +138,7 @@ public class TimelineActivity extends BaseActivity {
                     String habitIndex = String.valueOf(i);
                     String title = (String)dataSnapshot.child(habitIndex).child("TITLE").getValue();
                     String withWho = (String)dataSnapshot.child(habitIndex).child("CHECKMETHOD").getValue();
+
                     String didString = (String)dataSnapshot.child(habitIndex).child("DID").getValue();
                     int didNum = Integer.parseInt(didString);//몇번했나
 
@@ -146,7 +147,7 @@ public class TimelineActivity extends BaseActivity {
 
                     String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue(); //good/bad habit
 
-                    //item  item1 = new item(title, R.drawable.home);
+                    //item  item1 = new item(title, R.drawable.home);z
                     item  item1 = new item(title, R.drawable.home, withWho,didNum, willNum,type, UserID);
                     items.add(item1);
                 }
