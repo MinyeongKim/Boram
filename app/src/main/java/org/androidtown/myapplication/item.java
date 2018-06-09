@@ -1,5 +1,6 @@
 package org.androidtown.myapplication;
 
+import android.util.Log;
 import android.widget.ProgressBar;
 
 /**
@@ -62,7 +63,7 @@ public class item {
     }
 
     public int getDidNum() {
-        return photo;
+        return didNum;
     }
 
     public void setDidNum(int num) {

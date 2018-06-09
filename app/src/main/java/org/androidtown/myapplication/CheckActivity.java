@@ -37,7 +37,7 @@ import java.util.Calendar;
 public class CheckActivity extends BaseActivity {
 
     FirebaseDatabase database;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, databaseReference1;
 
     Button button;
     int year, month, day;
@@ -75,6 +75,11 @@ public class CheckActivity extends BaseActivity {
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history");
+<<<<<<< HEAD
+
+        databaseReference1 = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
+=======
+>>>>>>> 2f576bc50dc45572bd9e06d2572929b47d15ed9c
 
         rating_result1 = (TextView) findViewById(R.id.rating_result);
         ratingbar1 = (RatingBar) findViewById(R.id.ratingbar);
@@ -147,6 +152,24 @@ public class CheckActivity extends BaseActivity {
                 databaseReference.child(historyIdx).child("DATE").setValue(checkedDate);
                 databaseReference.child(historyIdx).child("COMMENT").setValue(comment);
                 databaseReference.child(historyIdx).child("RATING").setValue(inputRate);
+
+                //습관 실천 횟수 증가시켜주는 부분
+                databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String didString = (String)dataSnapshot.child("DID").getValue();
+                        int didNum = Integer.parseInt(didString);
+                        didNum++;
+
+                        databaseReference1.child("DID").setValue(String.valueOf(didNum));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
                 //값 제대로 읽히는지 테스팅
                 Toast.makeText(getApplicationContext(), "comment: " + comment + " rating: " + inputRate, Toast.LENGTH_SHORT).show();

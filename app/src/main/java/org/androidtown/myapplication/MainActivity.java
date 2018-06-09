@@ -67,7 +67,6 @@ public class MainActivity extends BaseActivity2 {
         loginPwd = auto.getString("inputPwd", null);
         loginName = auto.getString("inputName", null);
 
-        Toast.makeText(getApplicationContext(), "" + loginId + " " + loginPwd, Toast.LENGTH_SHORT).show();
         if (loginId != null && loginPwd != null) {
             //메인 화면 띄워주기
             Intent intent = new Intent(getApplicationContext(), MainPageActivity.class);
@@ -165,6 +164,5 @@ public class MainActivity extends BaseActivity2 {
                 //finish();
             }
         });
-
     }
 }

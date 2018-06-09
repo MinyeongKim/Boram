@@ -89,17 +89,14 @@ public class HistoryActivity extends BaseActivity {
         willNum = bundle.getInt("Will");
         type = bundle.getString("Type");
 
-        database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history");
-
+        Toast.makeText(getApplicationContext(), "didNum = "+didNum+"    willNum= "+willNum, Toast.LENGTH_SHORT).show();
         habit_title.setText(title);
         habit_check.setText(habitType);
-        habit_count.setText(didNum + "   " + willNum);
+        habit_count.setText("이때까지 실천한 횟수: "+didNum + "\n총 실천해야하는 횟수: " + willNum);
 
         int progress_value = didNum / willNum;
         progress.setProgress(progress_value);
         ratio.setText(progress_value + " %");
-
 
         if (type.equals("good")) {
             imageView.setImageResource(R.drawable.good_tree);
@@ -107,22 +104,33 @@ public class HistoryActivity extends BaseActivity {
             imageView.setImageResource(R.drawable.bad_tree);
         }
 
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history/");
 
         adapter = new HistoryAdapter();
-        //이 adapter는 TimelineAdapter기준으로 쓴거니까 나중에 history용으로 바꿔~
-
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 history_num = (int) dataSnapshot.getChildrenCount();
                 String idx = String.valueOf(history_num);
 
+                Toast.makeText(getApplicationContext(), ""+history_num, Toast.LENGTH_SHORT).show();
+
                 for (int i = 1; i <= history_num; i++) {
+<<<<<<< HEAD
+                    String number = String.valueOf(i);
+                    String date = (String) dataSnapshot.child(number).getKey();
+                    String comment = (String) dataSnapshot.child(date).child("COMMENT").getValue();
+                    String rate = (String) dataSnapshot.child(date).child("RATING").getValue();
+
+                    Toast.makeText(getApplicationContext(), ""+date+comment+rate, Toast.LENGTH_SHORT).show();
+=======
                     String histiryIndex = String.valueOf(i);
                     String date = (String) dataSnapshot.child(histiryIndex).child("DATE").getValue();
                     String comment = (String) dataSnapshot.child(histiryIndex).child("COMMENT").getValue();
                     String rate = (String) dataSnapshot.child(histiryIndex).child("RATING").getValue();
 
+>>>>>>> 2f576bc50dc45572bd9e06d2572929b47d15ed9c
                     //float rating_Value= Float.parseFloat(rate);
 
                     Log.i("date",date);
@@ -171,8 +179,6 @@ public class HistoryActivity extends BaseActivity {
 
             }
         });
-
-
     }
 
     class HistoryAdapter extends BaseAdapter {
@@ -205,7 +211,6 @@ public class HistoryActivity extends BaseActivity {
             TimelineItem item = items.get(position);
             view.setDate(item.getDate());
             view.setComment(item.getComment());
-            //view.setRate(item.getRate());
             view.setRate(item.getRate());
             return view;
         }
