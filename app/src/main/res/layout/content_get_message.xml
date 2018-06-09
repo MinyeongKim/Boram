@@ -26,10 +26,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="title"
-<<<<<<< HEAD
                 android:layout_marginTop="10dp"
-=======
->>>>>>> 9c763abce9f2b86f0af563bebdc3c7ddbc3d8dec
                 android:textSize="50dp" />
 
             <ImageView
