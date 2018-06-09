@@ -99,11 +99,27 @@
             android:layout_height="wrap_content"
             android:text="습관 체크 하기"/>
 
-        <ListView
-            android:layout_marginLeft="20dp"
-            android:id="@+id/list"
+        <LinearLayout
+            android:id="@+id/record"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </ListView>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="★내 기록 확인하기★"
+                android:textSize="20dp"/>
+
+            <ListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+            </ListView>
+        </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

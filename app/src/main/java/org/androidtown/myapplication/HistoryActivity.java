@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -59,6 +60,8 @@ public class HistoryActivity extends BaseActivity {
     HistoryAdapter adapter;
     int history_num;
 
+    LinearLayout recordView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +73,7 @@ public class HistoryActivity extends BaseActivity {
 
         list = (ListView) findViewById(R.id.list);
         check = (Button) findViewById(R.id.check);
+        recordView=(LinearLayout)findViewById(R.id.record);
 
         imageView = (ImageView) findViewById(R.id.imageView);
         habit_title = (TextView) findViewById(R.id.habit_title);
@@ -90,6 +94,7 @@ public class HistoryActivity extends BaseActivity {
         type = bundle.getString("Type");
 
         Toast.makeText(getApplicationContext(), "didNum = "+didNum+"    willNum= "+willNum, Toast.LENGTH_SHORT).show();
+
         habit_title.setText(title);
         habit_check.setText(habitType);
         habit_count.setText("이때까지 실천한 횟수: "+didNum + "\n총 실천해야하는 횟수: " + willNum);
@@ -114,12 +119,13 @@ public class HistoryActivity extends BaseActivity {
                 history_num = (int) dataSnapshot.getChildrenCount();
                 String idx = String.valueOf(history_num);
 
+                if(history_num!=0){
+                    recordView.setVisibility(View.VISIBLE);
+                }
+
                 Toast.makeText(getApplicationContext(), ""+history_num, Toast.LENGTH_SHORT).show();
 
                 for (int i = 1; i <= history_num; i++) {
-
-
-
                     String histiryIndex = String.valueOf(i);
                     String date = (String) dataSnapshot.child(histiryIndex).child("DATE").getValue();
                     String comment = (String) dataSnapshot.child(histiryIndex).child("COMMENT").getValue();
