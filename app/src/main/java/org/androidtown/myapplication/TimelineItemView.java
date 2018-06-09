@@ -23,7 +23,7 @@ public class TimelineItemView extends LinearLayout {
     TextView progress_ratio;
     ImageView imageView;
 
-    TextView date, comment;
+    TextView date, comment, writingDate;
     RatingBar rate;
 
     public TimelineItemView(Context context) {
@@ -45,6 +45,7 @@ public class TimelineItemView extends LinearLayout {
         date=(TextView)findViewById(R.id.date);
         comment=(TextView)findViewById(R.id.comment);
         rate=(RatingBar)findViewById(R.id.rate);
+        writingDate=(TextView)findViewById(R.id.writeDate);
 
         /*
         habit_title = (TextView) findViewById(R.id.habit_title);
@@ -61,12 +62,16 @@ public class TimelineItemView extends LinearLayout {
     }
 
     public void setComment(String comment_value) {
-        comment.setText(comment_value);
+        comment.setText(" < "+comment_value+" > ");
     }
 
     public void setRate(String rate_Value){
         //float rating = Float.parseFloat(rate_Value);
         rate.setRating(3);
+    }
+
+    public void setWritingTime(String writingDate_value) {
+        writingDate.setText("작성 날짜: "+writingDate_value);
     }
 
     /*

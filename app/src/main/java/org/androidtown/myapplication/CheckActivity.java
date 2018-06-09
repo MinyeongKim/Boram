@@ -33,7 +33,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedReader;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CheckActivity extends BaseActivity {
 
@@ -43,9 +45,8 @@ public class CheckActivity extends BaseActivity {
     Button button;
     int year, month, day;
     LinearLayout rating_layout;
-    String UserID;
-    int habitIdx;
-    int totalHistoryNum;
+    String UserID, startDate;
+    int habitIdx, totalHistoryNum;
 
     RatingBar ratingbar1;
     TextView rating_result1;
@@ -53,6 +54,12 @@ public class CheckActivity extends BaseActivity {
 
     String comment;
     private float rate;
+
+    //오늘 날짜 가져오기 -> 달력에 제한 걸어줌
+    long mNow;
+    Date mDate;
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat mFormat_forTime = new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +76,7 @@ public class CheckActivity extends BaseActivity {
         UserID = get_type.getString("ID");
         habitIdx = get_type.getInt("INDEX");
         totalHistoryNum = get_type.getInt("HISTORYNUM");
-
-
+        startDate = get_type.getString("STARTDATE");
 
         Toast.makeText(getApplicationContext(), type + "/" + UserID + "/" + habitIdx, Toast.LENGTH_SHORT).show();
 
@@ -91,6 +97,46 @@ public class CheckActivity extends BaseActivity {
         ratingbar1.setIsIndicator(false);           //true - 별점만 표시 사용자가 변경 불가 , false - 사용자가 변경가능
 
         CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
+
+        //습관 시작 날짜를 최소 날짜로 설정해주기
+        Calendar minDate = Calendar.getInstance();
+
+        //습관 시작 날짜 구하기
+        int index = startDate.indexOf("-");
+        int startYear = Integer.parseInt(startDate.substring(0, index));
+
+        String last_start = startDate.substring(index + 1);
+
+        index = last_start.indexOf("-");
+        int startMonth = Integer.parseInt(last_start.substring(0, index));
+
+        last_start = last_start.substring(index + 1);
+        int startDay = Integer.parseInt(last_start);
+
+        minDate.set(startYear,startMonth-1,startDay);
+        calendar.setMinDate(minDate.getTimeInMillis());
+
+        //기록할 수 있는 날짜를 최대 오늘로 설정해주기
+        //오늘 날짜 구하기
+        mNow=System.currentTimeMillis();
+        mDate = new Date(mNow);
+        String today =mFormat.format(mDate);
+
+        //오늘 날짜 받아옴
+        index = today.indexOf("-");
+        int todayYear = Integer.parseInt(today.substring(0, index));
+        String last_today = today.substring(index + 1);
+
+        index = last_today.indexOf("-");
+        int todayMonth = Integer.parseInt(last_today.substring(0, index));
+
+        last_today = last_today.substring(index + 1);
+        int todayDay = Integer.parseInt(last_today);
+
+        //오늘 날짜를 최대 선택할 수 있는 Max date로 설정
+        Calendar maxDate = Calendar.getInstance();
+        maxDate.set(todayYear,todayMonth-1,todayDay);
+        calendar.setMaxDate(maxDate.getTimeInMillis());
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -139,9 +185,10 @@ public class CheckActivity extends BaseActivity {
                 if (day < 10) checkedDate = checkedDate + "0" + day + "일 ";
                 else checkedDate = checkedDate + "" + day + "일 ";
 
-                //시간도 읽어서 넣어줘야함
-                /*
-                 */
+                //사용자가 작성한 날짜와 시간
+                long pushTime = System.currentTimeMillis();
+                Date date_forTime = new Date(pushTime);
+                final String writing_time = mFormat_forTime.format(date_forTime);
 
                 final String finalCheckedDate = checkedDate;
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -153,6 +200,8 @@ public class CheckActivity extends BaseActivity {
 
                         String inputRate = String.valueOf(rate);
                         String historyIdx = String.valueOf(totalHistoryNum + 1);
+
+                        databaseReference.child(idx).child("WRITETIME").setValue(writing_time);
                         databaseReference.child(idx).child("DATE").setValue(finalCheckedDate);
                         databaseReference.child(idx).child("COMMENT").setValue(comment);
                         databaseReference.child(idx).child("RATING").setValue(inputRate);

@@ -92,14 +92,8 @@ public class TimelineActivity extends BaseActivity {
 
         imageView=(ImageView)findViewById(R.id.imageView);
 
-        /*
-        DB에서 습관 갯수 읽어오는 부분 -> 읽은 갯수==habit_num;
-        읽으면서 제목, 빈도수 등 배열 값에다 입력하기
-        */
 
         /*
-
-
         List<item> items = new ArrayList<>();
         item[] item = new item[5];
         item[0] = new item(R.drawable.home, "#1");
@@ -161,8 +155,9 @@ public class TimelineActivity extends BaseActivity {
                 //Toast.makeText(getApplication(), "finish", Toast.LENGTH_LONG).show();
                 //listView.setAdapter(adapter);
 
-                recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
                 Utilities.setGlobalFont(recyclerView);
+                recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
+                //Utilities.setGlobalFont(recyclerView);
 
                 /*
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

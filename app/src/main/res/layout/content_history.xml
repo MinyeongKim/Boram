@@ -10,14 +10,14 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_height="match_parent"
+        android:background="#c1e5f5"
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -27,7 +27,7 @@
                 android:background="#fafafa"
                 android:layout_width="80dp"
                 android:layout_height="150dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:scaleType="fitXY"/>
 
             <LinearLayout
@@ -100,26 +100,35 @@
             android:text="습관 체크 하기"/>
 
         <LinearLayout
-            android:id="@+id/record"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="invisible">
+            android:background="#c1e5f5">
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/record"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="★내 기록 확인하기★"
-                android:textSize="20dp"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="#c1e5f5"
+                android:visibility="invisible">
 
-            <ListView
-                android:id="@+id/list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-            </ListView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="★내 기록 확인하기★"
+                    android:textSize="20dp"/>
+
+                <ListView
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+                </ListView>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
