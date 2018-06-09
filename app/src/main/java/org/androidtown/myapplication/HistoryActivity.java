@@ -79,7 +79,7 @@ public class HistoryActivity extends BaseActivity {
         progress = (ProgressBar) findViewById(R.id.progress);
 
         //card 뷰가 눌렸을 때, 전달 받은 습관 정보들 출력 ->TimelineView를 이용해서 보여주기
-        Intent getintent = getIntent();
+        final Intent getintent = getIntent();
         Bundle bundle = getintent.getExtras();
         habitIdx = bundle.getInt("INDEX");
         habitType = bundle.getString("Check_type");
@@ -118,10 +118,10 @@ public class HistoryActivity extends BaseActivity {
                 String idx = String.valueOf(history_num);
 
                 for (int i = 1; i <= history_num; i++) {
-                    String date = (String) dataSnapshot.getKey();
-                    String comment = (String) dataSnapshot.child(date).child("COMMENT").getValue();
-                    String rate = (String) dataSnapshot.child(date).child("RATING").getValue();
-
+                    String histiryIndex = String.valueOf(i);
+                    String date = (String) dataSnapshot.child(histiryIndex).child("DATE").getValue();
+                    String comment = (String) dataSnapshot.child(histiryIndex).child("COMMENT").getValue();
+                    String rate = (String) dataSnapshot.child(histiryIndex).child("RATING").getValue();
 
                     //float rating_Value= Float.parseFloat(rate);
 
@@ -145,15 +145,31 @@ public class HistoryActivity extends BaseActivity {
 
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplication(), CheckActivity.class);
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("Check_type", habitType);
-                bundle1.putString("ID", UserID);
-                bundle1.putInt("INDEX", habitIdx);
-                i.putExtras(bundle1);
-                startActivity(i);
-                finish();
-            }
+
+                /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int totalHistory = 0;
+                        totalHistory = (int) dataSnapshot.getChildrenCount();*/
+
+                        Intent i = new Intent(getApplication(), CheckActivity.class);
+                        Bundle bundle1 = new Bundle();
+                        //bundle1.putInt("HISTORYNUM", totalHistory);
+                        bundle1.putString("Check_type", habitType);
+                        bundle1.putString("ID", UserID);
+                        bundle1.putInt("INDEX", habitIdx);
+                        i.putExtras(bundle1);
+                        startActivity(i);
+                        finish();
+                    }
+
+                    /*@Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }*/
         });
 
 

@@ -34,7 +34,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             //각 다른 역할에 따라 다른 서비스 제공해야함.//requestCode???가 뭐지???
             //Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-            Intent intent = new Intent(getApplicationContext(), SendFeedbackActivity.class);
+            //Intent intent = new Intent(getApplicationContext(), SendFeedbackActivity.class);//GetMessageActivity로
+            Intent intent = new Intent(getApplicationContext(), GetMessageActivity.class);
             //intent.putExtra("NotificationMessage", "값 전달 받음!");
             intent.putExtra("NotificationMessage", ImgFileName);
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
