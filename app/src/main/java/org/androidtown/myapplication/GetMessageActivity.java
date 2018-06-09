@@ -16,19 +16,31 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.Date;
 
 //import org.gcsw.boram.R;
 
 public class GetMessageActivity extends AppCompatActivity {
+
+    FirebaseDatabase database;
+    DatabaseReference databaseReference;
 
     private FirebaseStorage storage;
     StorageReference storageRef;// = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/").child("images/" + filename);
     StorageReference spaceRef;
 
     String filename;
+    String habitTitle;
+    String SenderID;
+    String HabitIndex;
+    String historyIndex;
 
+    TextView titleArea;
     ImageView imageLoad;
     RatingBar ratingbar1;
     TextView rating_result1;
@@ -52,15 +64,17 @@ public class GetMessageActivity extends AppCompatActivity {
         //spaceRef = storageRef.child("images/" + filename);
         spaceRef = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/").child("images/" + filename);;
 
+        database = FirebaseDatabase.getInstance();
+
         imageLoad = (ImageView)findViewById(R.id.imageLoad);
         rating_result1 = (TextView) findViewById(R.id.rating_result);
         ratingbar1 = (RatingBar) findViewById(R.id.ratingbar);
         sendButton = (Button) findViewById(R.id.sendButton);
         comment_value = (EditText) findViewById(R.id.editTExt);
+        titleArea = (TextView)findViewById(R.id.habitTitle);
 
         Glide.with(this).using(new FirebaseImageLoader()).load(spaceRef).into(imageLoad);
-
-
+        titleArea.setText(habitTitle);
 
         //rating 검사
         ratingbar1.setStepSize((float) 0.5);        //별 색깔이 1칸씩줄어들고 늘어남 0.5로하면 반칸씩 들어감
@@ -87,6 +101,15 @@ public class GetMessageActivity extends AppCompatActivity {
                 //별점 값은 rating_value에 들어가 있음
 
                 //전송 해주는 부분 넣으면 됨
+                databaseReference = database.getReference("users/" + SenderID + "/habits/current/" + HabitIndex + "/history");
+
+                String time = new Date().toString();
+                databaseReference.child(historyIndex).child("FRIENDWRITETIME").setValue(time);
+                databaseReference.child(historyIndex).child("FRIENDCOMMENT").setValue(comment);
+                databaseReference.child(historyIndex).child("FRIENDRATING").setValue(rating_value);
+
+
+                finish();
             }
         });
     }
@@ -97,9 +120,18 @@ public class GetMessageActivity extends AppCompatActivity {
         if (extras != null) {
             if (extras.containsKey("NotificationMessage")) {
                 // extract the extra-data in the Notification
-                String msg = extras.getString("NotificationMessage");
+                String msg1 = extras.getString("NotificationMessage");
+                String msg2 = extras.getString("habitTitle");
+                String msg3 = extras.getString("userid");
+                String msg4 = extras.getString("habitidx");
+                String msg5 = extras.getString("historyIndex");
                 //textView.setText(msg);
-                filename = msg;
+                filename = msg1;
+                habitTitle = "<"+msg2+">";
+                SenderID = msg3;
+                HabitIndex = msg4;
+                historyIndex = msg5;
+
             }
         }
     }

@@ -191,19 +191,21 @@ public class CheckActivity extends BaseActivity {
                 final String writing_time = mFormat_forTime.format(date_forTime);
 
                 final String finalCheckedDate = checkedDate;
+
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        int historyIndex = (int) dataSnapshot.getChildrenCount();
-                        String idx = String.valueOf(historyIndex + 1);
-                        //databaseReference.child(idx).child("START").setValue(startDate);
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                int historyIndex = (int) dataSnapshot.getChildrenCount();
+                                String idx = String.valueOf(historyIndex + 1);
 
-                        String inputRate = String.valueOf(rate);
-                        String historyIdx = String.valueOf(totalHistoryNum + 1);
+                                //databaseReference.child(idx).child("START").setValue(startDate);
 
-                        databaseReference.child(idx).child("WRITETIME").setValue(writing_time);
-                        databaseReference.child(idx).child("DATE").setValue(finalCheckedDate);
-                        databaseReference.child(idx).child("COMMENT").setValue(comment);
+                                String inputRate = String.valueOf(rate);
+                                String historyIdx = String.valueOf(totalHistoryNum + 1);
+
+                                databaseReference.child(idx).child("WRITETIME").setValue(writing_time);
+                                databaseReference.child(idx).child("DATE").setValue(finalCheckedDate);
+                                databaseReference.child(idx).child("COMMENT").setValue(comment);
                         databaseReference.child(idx).child("RATING").setValue(inputRate);
                     }
 
