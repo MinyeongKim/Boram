@@ -38,7 +38,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Intent intent = new Intent(getApplicationContext(), GetMessageActivity.class);
             //intent.putExtra("NotificationMessage", "값 전달 받음!");
             intent.putExtra("NotificationMessage", ImgFileName);
-            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,intent, PendingIntent.FLAG_ONE_SHOT);
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
                     .setSmallIcon(R.mipmap.icon_v1) //알림 영역에 노출 될 아이콘
                     //.setContentTitle(getString(R.string.app_name)) //알림 영역에 노출 될 타이틀

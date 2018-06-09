@@ -70,6 +70,7 @@ public class CheckActivity extends BaseActivity {
         totalHistoryNum = get_type.getInt("HISTORYNUM");
 
 
+
         Toast.makeText(getApplicationContext(), type + "/" + UserID + "/" + habitIdx, Toast.LENGTH_SHORT).show();
 
         database = FirebaseDatabase.getInstance();

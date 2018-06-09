@@ -146,15 +146,15 @@ public class HistoryActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                /*databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         int totalHistory = 0;
-                        totalHistory = (int) dataSnapshot.getChildrenCount();*/
+                        totalHistory = (int) dataSnapshot.getChildrenCount();
 
                         Intent i = new Intent(getApplication(), CheckActivity.class);
                         Bundle bundle1 = new Bundle();
-                        //bundle1.putInt("HISTORYNUM", totalHistory);
+                        bundle1.putInt("HISTORYNUM", totalHistory);
                         bundle1.putString("Check_type", habitType);
                         bundle1.putString("ID", UserID);
                         bundle1.putInt("INDEX", habitIdx);
@@ -163,13 +163,13 @@ public class HistoryActivity extends BaseActivity {
                         finish();
                     }
 
-                    /*@Override
+                    @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
                 });
 
-            }*/
+            }
         });
 
 

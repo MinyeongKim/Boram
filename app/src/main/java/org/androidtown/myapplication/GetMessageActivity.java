@@ -1,9 +1,8 @@
 package org.androidtown.myapplication;
 
 import android.content.Intent;
-import android.net.Uri;
+import android.media.Image;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,18 +13,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-//import com.bumptech.glide.Glide;
-//import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 //import org.gcsw.boram.R;
 
 public class GetMessageActivity extends AppCompatActivity {
+
+    private FirebaseStorage storage;
+    StorageReference storageRef;// = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/").child("images/" + filename);
+    StorageReference spaceRef;
+
+    String filename;
 
     ImageView imageLoad;
     RatingBar ratingbar1;
@@ -36,8 +38,6 @@ public class GetMessageActivity extends AppCompatActivity {
     String comment;
     float rating_value;
 
-    String filename;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,32 +45,21 @@ public class GetMessageActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        imageLoad = (ImageView) findViewById(R.id.imageLoad);
+        storage = FirebaseStorage.getInstance();
+        onNewIntent(getIntent());
+        //storageRef = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/");
+        //.child("images/" + filename);
+        //spaceRef = storageRef.child("images/" + filename);
+        spaceRef = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/").child("images/" + filename);;
+
+        imageLoad = (ImageView)findViewById(R.id.imageLoad);
         rating_result1 = (TextView) findViewById(R.id.rating_result);
         ratingbar1 = (RatingBar) findViewById(R.id.ratingbar);
         sendButton = (Button) findViewById(R.id.sendButton);
         comment_value = (EditText) findViewById(R.id.editTExt);
-    }
 
-        /*onNewIntent(getIntent());
+        Glide.with(this).using(new FirebaseImageLoader()).load(spaceRef).into(imageLoad);
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        final StorageReference pathReference = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/").child("images/" + filename);
-        //Glide.with(this).asBitmap().load(pathReference).into(imageLoad);
-        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Toast.makeText(getApplicationContext(), "다운로드 성공 : "+ uri, Toast.LENGTH_SHORT).show();
-                //inputName.setText(uri.toString());
-                //Glide.with(getApplicationContext()).using(new FirebaseImageLoader()).load(pathReference).into(imageLoad);
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "다운로드 실패", Toast.LENGTH_SHORT).show();
-            }
-        });
 
 
         //rating 검사
@@ -83,17 +72,17 @@ public class GetMessageActivity extends AppCompatActivity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating,
                                         boolean fromUser) {
-                rating_value=rating;
+                rating_value = rating;
                 rating_result1.setText("" + rating);
             }
         });
 
-        sendButton.setOnClickListener(new View.OnClickListener(){
+        sendButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
-                comment=comment_value.getText().toString(); //사용자가 입력한 comment
+                comment = comment_value.getText().toString(); //사용자가 입력한 comment
 
                 //별점 값은 rating_value에 들어가 있음
 
@@ -113,6 +102,6 @@ public class GetMessageActivity extends AppCompatActivity {
                 filename = msg;
             }
         }
-    }*/
+    }
 
 }
