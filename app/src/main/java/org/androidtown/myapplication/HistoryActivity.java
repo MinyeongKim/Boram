@@ -117,20 +117,14 @@ public class HistoryActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), ""+history_num, Toast.LENGTH_SHORT).show();
 
                 for (int i = 1; i <= history_num; i++) {
-<<<<<<< HEAD
-                    String number = String.valueOf(i);
-                    String date = (String) dataSnapshot.child(number).getKey();
-                    String comment = (String) dataSnapshot.child(date).child("COMMENT").getValue();
-                    String rate = (String) dataSnapshot.child(date).child("RATING").getValue();
 
-                    Toast.makeText(getApplicationContext(), ""+date+comment+rate, Toast.LENGTH_SHORT).show();
-=======
+
+
                     String histiryIndex = String.valueOf(i);
                     String date = (String) dataSnapshot.child(histiryIndex).child("DATE").getValue();
                     String comment = (String) dataSnapshot.child(histiryIndex).child("COMMENT").getValue();
                     String rate = (String) dataSnapshot.child(histiryIndex).child("RATING").getValue();
 
->>>>>>> 2f576bc50dc45572bd9e06d2572929b47d15ed9c
                     //float rating_Value= Float.parseFloat(rate);
 
                     Log.i("date",date);

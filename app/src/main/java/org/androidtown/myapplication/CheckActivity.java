@@ -75,11 +75,10 @@ public class CheckActivity extends BaseActivity {
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history");
-<<<<<<< HEAD
+
 
         databaseReference1 = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
-=======
->>>>>>> 2f576bc50dc45572bd9e06d2572929b47d15ed9c
+
 
         rating_result1 = (TextView) findViewById(R.id.rating_result);
         ratingbar1 = (RatingBar) findViewById(R.id.ratingbar);
