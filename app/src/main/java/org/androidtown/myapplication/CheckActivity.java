@@ -244,6 +244,7 @@ public class CheckActivity extends BaseActivity {
                     //친구랑 하는 경우에는 값을 저장한 후 이미지 로드하는 페이지로 연결
                     case "friend":
                         Intent intent = new Intent(getApplicationContext(), LoadImageActivity.class);
+                        bundle.putString("Check_type", "friend");
                         intent.putExtras(bundle);
                         startActivity(intent);
                         break;
@@ -251,6 +252,7 @@ public class CheckActivity extends BaseActivity {
                     //제 3자랑 하는 경우에는 값을 저장한 후 이미지 로드하는 페이지로 연결
                     case "otherPerson":
                         Intent intent2 = new Intent(getApplicationContext(), LoadImageActivity.class);
+                        bundle.putString("Check_type", "otherPerson");
                         intent2.putExtras(bundle);
                         startActivity(intent2);
                         break;
