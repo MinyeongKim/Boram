@@ -25,8 +25,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedReader;
 import java.util.Calendar;
@@ -34,7 +37,7 @@ import java.util.Calendar;
 public class CheckActivity extends BaseActivity {
 
     FirebaseDatabase database;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, databaseReference1;
 
     Button button;
     int year, month, day;
@@ -67,12 +70,14 @@ public class CheckActivity extends BaseActivity {
         Toast.makeText(getApplicationContext(), type + "/" + UserID + "/" + habitIdx, Toast.LENGTH_SHORT).show();
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("users/"+UserID+"/habits/current/"+habitIdx+"/history");
+        databaseReference = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history");
+
+        databaseReference1 = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
 
         rating_result1 = (TextView) findViewById(R.id.rating_result);
         ratingbar1 = (RatingBar) findViewById(R.id.ratingbar);
         button = (Button) findViewById(R.id.button);
-        comment_value=(EditText)findViewById(R.id.editTExt);
+        comment_value = (EditText) findViewById(R.id.editTExt);
 
         rating_layout = (LinearLayout) findViewById(R.id.rating);
 
@@ -101,7 +106,7 @@ public class CheckActivity extends BaseActivity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating,
                                         boolean fromUser) {
-                rate=rating;
+                rate = rating;
                 rating_result1.setText("" + rating);
             }
         });
@@ -115,7 +120,7 @@ public class CheckActivity extends BaseActivity {
                 bundle.putInt("INDEX", habitIdx);
 
                 //디비 history 라인에 값 저장하기 ->별점이랑 코멘트 저장
-                comment=comment_value.getText().toString(); //사용자가 입력한 comment
+                comment = comment_value.getText().toString(); //사용자가 입력한 comment
 
                 //rate라는 변수가 사용자가 입력한 별점
 
@@ -123,12 +128,12 @@ public class CheckActivity extends BaseActivity {
 
                 //이제 디비에 넣어주면 됨
                 //등록한 날짜 정보
-                String checkedDate = year+"년 ";
-                if(month<10) checkedDate = checkedDate+"0"+month+"월 ";
-                else checkedDate = checkedDate+ "" + month+"월 ";
+                String checkedDate = year + "년 ";
+                if (month < 10) checkedDate = checkedDate + "0" + month + "월 ";
+                else checkedDate = checkedDate + "" + month + "월 ";
 
-                if(day<10) checkedDate = checkedDate+"0"+day+"일 ";
-                else checkedDate = checkedDate + "" + day+"일 ";
+                if (day < 10) checkedDate = checkedDate + "0" + day + "일 ";
+                else checkedDate = checkedDate + "" + day + "일 ";
 
                 //시간도 읽어서 넣어줘야함
                 /*
@@ -139,8 +144,26 @@ public class CheckActivity extends BaseActivity {
                 databaseReference.child(checkedDate).child("COMMENT").setValue(comment);
                 databaseReference.child(checkedDate).child("RATING").setValue(inputRate);
 
+                //습관 실천 횟수 증가시켜주는 부분
+                databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String didString = (String)dataSnapshot.child("DID").getValue();
+                        int didNum = Integer.parseInt(didString);
+                        didNum++;
+
+                        databaseReference1.child("DID").setValue(String.valueOf(didNum));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
                 //값 제대로 읽히는지 테스팅
-                Toast.makeText(getApplicationContext(),"comment: "+comment+" rating: "+inputRate, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "comment: " + comment + " rating: " + inputRate, Toast.LENGTH_SHORT).show();
 
 
                 switch (type) {

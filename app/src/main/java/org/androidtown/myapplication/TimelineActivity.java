@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -139,8 +140,10 @@ public class TimelineActivity extends BaseActivity {
                     String withWho = (String)dataSnapshot.child(habitIndex).child("CHECKMETHOD").getValue();
                     String didString = (String)dataSnapshot.child(habitIndex).child("DID").getValue();
                     int didNum = Integer.parseInt(didString);//몇번했나
+
                     String willString = (String)dataSnapshot.child(habitIndex).child("WILL").getValue();
                     int willNum = Integer.parseInt(willString);//몇번해야하나
+
                     String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue(); //good/bad habit
 
                     //item  item1 = new item(title, R.drawable.home);
@@ -159,6 +162,7 @@ public class TimelineActivity extends BaseActivity {
 
                 recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
                 Utilities.setGlobalFont(recyclerView);
+
                 /*
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
