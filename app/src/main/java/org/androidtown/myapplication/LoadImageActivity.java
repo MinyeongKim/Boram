@@ -1,14 +1,20 @@
 package org.androidtown.myapplication;
 
+import android.*;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -17,6 +23,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -52,8 +61,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 public class LoadImageActivity extends BaseActivity implements View.OnClickListener {
@@ -87,9 +98,17 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     Button loadButton, sendButton;
     ImageView loadImgae;
 
-    final int PICK_FROM_ALBUM = 0;
-    final int PICK_FROM_CAMERA = 1;
-    final int CROP_FROM_IMAGE = 2;
+    private static final int PICK_FROM_CAMERA = 1;
+    private static final int PICK_FROM_ALBUM = 2;
+    private static final int CROP_FROM_CAMERA = 3;
+
+    private Uri photoUri;
+    private String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            android.Manifest.permission.CAMERA};
+    private static final int MULTIPLE_PERMISSIONS = 101;
+
+    private String mCurrentPhotoPath;
 
     private int id_view;
 
@@ -98,9 +117,10 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     String UserID;
     int habitIdx;
 
-    Uri mlmageCaptureUri, photoURI, albumURI;
+    String mlmageCaptureUri;
+    Uri photoURI;
+    Uri albumURI;
     String absoultePath;
-    String mCurrentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +130,8 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
 
         setupActionBar();
+
+        checkPermissions();
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -153,6 +175,27 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         databaseReference.child("fcmToken").setValue(refreshedToken);
     }
 
+    private boolean checkPermissions() {
+        int result;
+        List<String> permissionList = new ArrayList<>();
+        for (String pm : permissions) {
+            result = ContextCompat.checkSelfPermission(this, pm);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(pm);
+            }
+        }
+        if (!permissionList.isEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionList.toArray(new String[permissionList.size()]), MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
+    }
+
+    private void showNoPermissionToastAndFinish() {
+        Toast.makeText(this, "권한 요청에 동의 해주셔야 이용 가능합니다. 설정에서 권한 허용 하시기 바랍니다.", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
     public void onClick(View view) {
         id_view = view.getId();
 
@@ -162,14 +205,14 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
 
                 @Override
                 public void onClick(DialogInterface dialog, int i) {
-                    doTakePhotoAction();
+                    takePhoto();
                 }
             };
 
             DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int i) {
-                    doTakeAlbumAction();
+                    goToAlbum();
                 }
             };
 
@@ -244,243 +287,163 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
 
         }
 
-
     }
 
-    private void doTakeAlbumAction() {
+    private void goToAlbum() {
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         startActivityForResult(intent, PICK_FROM_ALBUM);
     }
 
-    //사진 찍기
-    private void doTakePhotoAction() {
-        /*
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        if(takePictureIntent.resolveActivity(getPackageManager())!=null){
-            startActivityForResult(takePictureIntent, PICK_FROM_CAMERA);
+    private void takePhoto() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException e) {
+            Toast.makeText(LoadImageActivity.this, "이미지 처리 오류! 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+            finish();
+            e.printStackTrace();
         }
-        */
-
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, PICK_FROM_CAMERA);
+        if (photoFile != null) {
+            photoUri = FileProvider.getUriForFile(LoadImageActivity.this,
+                    "org.androidtown.myapplication.provider", photoFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            startActivityForResult(intent, PICK_FROM_CAMERA);
         }
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //selectedImage = data.getData();
-        super.onActivityResult(requestCode, resultCode, data);
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("HHmmss").format(new Date());
+        String imageFileName = "BORAM_" + timeStamp + "_";
+        File storageDir = new File(Environment.getExternalStorageDirectory() + "/BORAM/");
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        mlmageCaptureUri= "file:" + image.getAbsolutePath();
+        return image;
+    }
 
-        if (resultCode != RESULT_OK)
-            return;
-
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case PICK_FROM_ALBUM: {
-                mlmageCaptureUri = data.getData();
-                Log.d("BORAM", mlmageCaptureUri.getPath().toString());
-            }
+            case MULTIPLE_PERMISSIONS: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < permissions.length; i++) {
+                        if (permissions[i].equals(this.permissions[0])) {
+                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                                showNoPermissionToastAndFinish();
+                            }
+                        } else if (permissions[i].equals(this.permissions[1])) {
+                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                                showNoPermissionToastAndFinish();
 
-            case PICK_FROM_CAMERA: {
-                Intent intent = new Intent("com.android.camera.action.CROP");
-                intent.setDataAndType(mlmageCaptureUri, "image/");
+                            }
+                        } else if (permissions[i].equals(this.permissions[2])) {
+                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                                showNoPermissionToastAndFinish();
 
-                intent.putExtra("outputX", 200);
-                intent.putExtra("outputY", 200);
-                intent.putExtra("aspectX", 1);
-                intent.putExtra("aspectY", 1);
-                intent.putExtra("return-data", true);
-
-                startActivityForResult(intent, CROP_FROM_IMAGE);
-                break;
-            }
-
-            case CROP_FROM_IMAGE: {
-                if (resultCode != RESULT_OK)
-                    return;
-
-                final Bundle extras = data.getExtras();
-
-                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                        "/BORAM/" + System.currentTimeMillis() + ".jpg";
-
-
-                if (extras != null) {
-                    Bitmap photo = extras.getParcelable("data");
-                    loadImgae.setImageBitmap(photo);
-
-                    storeCropImage(photo, filePath);
-
-                    absoultePath = filePath + ".jpg";
-                    break;
+                            }
+                        }
+                    }
+                } else {
+                    showNoPermissionToastAndFinish();
                 }
-
-                File f = new File(mlmageCaptureUri.getPath());
-                if (f.exists()) {
-                    f.delete();
-                }
+                return;
             }
         }
+    }
 
-
-
-        /*
-        if(resultCode == RESULT_OK){
-            loadImgae.setImageURI(data.getData());
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
+            return;
         }
-
-        if(requestCode==PICK_FROM_CAMERA &&requestCode==RESULT_OK){
-
-
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            loadImgae.setImageBitmap(imageBitmap);
+        if (requestCode == PICK_FROM_ALBUM) {
+            if (data == null) {
+                return;
+            }
+            photoUri = data.getData();
+            cropImage();
+        } else if (requestCode == PICK_FROM_CAMERA) {
+            cropImage();
+            // 갤러리에 나타나게
+            MediaScannerConnection.scanFile(LoadImageActivity.this,
+                    new String[]{photoUri.getPath()}, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        public void onScanCompleted(String path, Uri uri) {
+                        }
+                    });
+        } else if (requestCode == CROP_FROM_CAMERA) {
+            loadImgae.setImageURI(null);
+            loadImgae.setImageURI(photoUri);
         }
+    }
 
-        /*
-        else if  (requestCode == PICK_FROM_ALBUM && resultCode == RESULT_OK) {
+    private void cropImage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            this.grantUriPermission("com.android.camera", photoUri,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(photoUri, "image/*");
+
+        List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            grantUriPermission(list.get(0).activityInfo.packageName, photoUri,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        int size = list.size();
+        if (size == 0) {
+            Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            Toast.makeText(this, "용량이 큰 사진의 경우 시간이 오래 걸릴 수 있습니다.", Toast.LENGTH_SHORT).show();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            }
+            intent.putExtra("crop", "true");
+            intent.putExtra("aspectX", 1);
+            intent.putExtra("aspectY", 1);
+            intent.putExtra("scale", true);
+            File croppedFileName = null;
             try {
-                //Uri에서 이미지 이름을 얻어온다.
-                //String name_Str = getImageNameToUri(data.getData());
-
-                //이미지 데이터를 비트맵으로 받아온다.
-                Bitmap image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                //Bitmap image_bitmap=
-
-                //배치해놓은 ImageView에 set
-                loadImgae.setImageBitmap(image_bitmap);
-                Toast.makeText(getApplication(),"Image",Toast.LENGTH_SHORT).show();
-
+                croppedFileName = createImageFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        */
-        /*
-        if (requestCode == PICK_FROM_ALBUM) {
-            if (resultCode == Activity.RESULT_OK) {
-                try {
-                    //Uri에서 이미지 이름을 얻어온다.
-                    //String name_Str = getImageNameToUri(data.getData());
 
-                    //이미지 데이터를 비트맵으로 받아온다.
-                    Bitmap image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+            File folder = new File(Environment.getExternalStorageDirectory() + "/BORAM/");
+            File tempFile = new File(folder.toString(), croppedFileName.getName());
 
-                    //배치해놓은 ImageView에 set
-                    loadImgae.setImageBitmap(image_bitmap);
+            photoUri = FileProvider.getUriForFile(LoadImageActivity.this,
+                    "org.androidtown.myapplication.provider", tempFile);
 
-                    final Bundle extras = data.getExtras();
-
-                    String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+
-                            "/BORAM/"+System.currentTimeMillis()+".jpg";
-
-                    if(extras!=null)
-                    {
-                        Bitmap photo = extras.getParcelable("data");
-                        loadImgae.setImageBitmap(photo);
-
-                        storeCropImage(photo,filePath);
-
-                        absoultePath = filePath;
-                    }
-
-                    File f = new File(mlmageCaptureUri.getPath());
-                    if(f.exists()){
-                        f.delete();
-                    }
-                } catch (FileNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        */
-        /*
-        if(resultCode!=RESULT_OK)
-            return;
-
-        switch (requestCode){
-            case PICK_FROM_ALBUM:
-            {
-                mlmageCaptureUri=data.getData();
-                Log.d("BORAM",mlmageCaptureUri.getPath().toString());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             }
 
-            case PICK_FROM_CAMERA:
-            {
-                Intent intent = new Intent("com.android.camera.action.CROP");
-                intent.setDataAndType(mlmageCaptureUri,"image/");
+            intent.putExtra("return-data", false);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
 
-                intent.putExtra("outputX", 200);
-                intent.putExtra("outputY", 200);
-                intent.putExtra("aspectX", 1);
-                intent.putExtra("aspectY", 1);
-                intent.putExtra("return-data", true);
+            Intent i = new Intent(intent);
+            ResolveInfo res = list.get(0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                i.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
-                startActivityForResult(intent, CROP_FROM_IMAGE);
-                break;
+                grantUriPermission(res.activityInfo.packageName, photoUri,
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
-
-            case CROP_FROM_IMAGE:
-            {
-                if(resultCode!=RESULT_OK)
-                    return;
-
-                final Bundle extras = data.getExtras();
-
-                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+
-                        "/BORAM/"+System.currentTimeMillis()+".jpg";
-
-                if(extras!=null)
-                {
-                    Bitmap photo = extras.getParcelable("data");
-                    loadImgae.setImageBitmap(photo);
-
-                    storeCropImage(photo,filePath);
-
-                    absoultePath = filePath;
-                    break;
-                }
-
-                File f = new File(mlmageCaptureUri.getPath());
-                if(f.exists()){
-                    f.delete();
-                }
-            }
-        }
-        */
-    }
-
-
-    private void storeCropImage(Bitmap bitmap, String filePath) {
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/BORAM/";
-        File directory_BORAM = new File(dirPath);
-
-        if (!directory_BORAM.exists())
-            directory_BORAM.mkdir();
-
-        File copyFile = new File(filePath);
-        BufferedOutputStream out = null;
-
-        try {
-            copyFile.createNewFile();
-            out = new BufferedOutputStream(new FileOutputStream(copyFile));
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(copyFile)));
-
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            i.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+            startActivityForResult(i, CROP_FROM_CAMERA);
         }
     }
 
@@ -693,7 +656,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
 
     private void uploadFile() {
         //업로드할 파일이 있으면 수행
-        if (mlmageCaptureUri != null) {
+        if (mCurrentPhotoPath != null) {
             //업로드 진행 Dialog 보이기
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("업로드중...");
@@ -709,7 +672,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
             //storage 주소와 폴더 파일명을 지정해 준다.
             StorageReference storageRef = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/").child("images/" + filename);
             //올라가거라...
-            storageRef.putFile(mlmageCaptureUri)
+            storageRef.putFile(Uri.parse(mCurrentPhotoPath))
                     //성공시
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
