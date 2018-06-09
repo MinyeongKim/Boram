@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -28,7 +29,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String body = remoteMessage.getNotification().getBody();
             String title = remoteMessage.getNotification().getTitle();
             //String ImgFileName = remoteMessage.getNotification().
-            String ImgFileName = remoteMessage.getNotification().getTag();
+            //String ImgFileName = remoteMessage.getNotification().getTag();
+            String tagValue = remoteMessage.getNotification().getTag();
+            int commaIdx = tagValue.indexOf(",");
+            String ImgFileName = tagValue.substring(0, commaIdx);
+
+            tagValue = tagValue.substring(commaIdx+1);
+            commaIdx = tagValue.indexOf(",");
+            String habitTitle = tagValue.substring(0, commaIdx);
+
+            tagValue = tagValue.substring(commaIdx+1);
+            commaIdx = tagValue.indexOf(",");
+            String userid = tagValue.substring(0, commaIdx);
+
+            tagValue = tagValue.substring(commaIdx+1);
+            commaIdx = tagValue.indexOf(",");
+            String habitidx = tagValue.substring(0, commaIdx);
+
+            tagValue = tagValue.substring(commaIdx+1);
+            String historyIndex = tagValue;
 
             Log.d(TAG, "Notification Body: " + body);
 
@@ -38,6 +57,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Intent intent = new Intent(getApplicationContext(), GetMessageActivity.class);
             //intent.putExtra("NotificationMessage", "값 전달 받음!");
             intent.putExtra("NotificationMessage", ImgFileName);
+            intent.putExtra("habitTitle", habitTitle);
+            intent.putExtra("userid", userid);
+            intent.putExtra("habitidx", habitidx);
+            intent.putExtra("historyIndex", historyIndex);
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,intent, PendingIntent.FLAG_ONE_SHOT);
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
                     .setSmallIcon(R.mipmap.icon_v1) //알림 영역에 노출 될 아이콘

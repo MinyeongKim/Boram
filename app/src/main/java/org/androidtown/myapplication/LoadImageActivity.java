@@ -80,6 +80,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceHistoryIndex;
     private DatabaseReference databaseReferenceForPartner;
     private DatabaseReference databaseReferenceForPushMsgTest;
     private DatabaseReference databaseReferenceForServerKey;
@@ -91,6 +92,8 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     String filename;
     Uri selectedImage;
     private Uri filePath;
+    String HISTORYidx;
+    String habitTitle;
 
     Button loadButton, sendButton;
     ImageView loadImgae;
@@ -165,6 +168,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
 
         //databaseReference = database.getReference("users/" + id);
         databaseReference = database.getReference("users/" + UserID);
+        databaseReferenceHistoryIndex = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history");
 
         //로그인되면 스마트폰 주소 받아오기
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
@@ -483,60 +487,74 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserName = (String) dataSnapshot.child("NAME").getValue();
-
-                databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
-                Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
-                databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReferenceHistoryIndex.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        friendID = (String) dataSnapshot.child("FRIENDID").getValue();
-                        Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
+                        int historyIndex = (int) dataSnapshot.getChildrenCount();
+                        HISTORYidx = String.valueOf(historyIndex);
 
-                        databaseReferenceForPushMsgTest = database.getReference("users/" + friendID);
-                        databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                        databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
+                        Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
+                        databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                //받는 사람 주소
-                                final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            //FMC 메세지 만들기
-                                            JSONObject root = new JSONObject();
-                                            JSONObject notification = new JSONObject();
-                                            //notification.put("body", message);
-                                            notification.put("body", "확인해주세요!");
-                                            notification.put("title", UserName + " 님이 인증을 요청했어요~");
-                                            //notification.put("ImgName", filename);
-                                            notification.put("tag", filename);
-                                            root.put("notification", notification);
-                                            root.put("to", fcmToken);
+                                friendID = (String) dataSnapshot.child("FRIENDID").getValue();
+                                habitTitle = (String) dataSnapshot.child("TITLE").getValue();
+                                Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
 
-                                            URL Url = new URL(FCM_MESSAGE_URL);
-                                            HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
-                                            conn.setRequestMethod("POST");
-                                            conn.setDoOutput(true);
-                                            conn.setDoInput(true);
-                                            conn.addRequestProperty("Authorization", "key=" + ServerKey);
-                                            conn.setRequestProperty("Accept", "application/json");
-                                            conn.setRequestProperty("Content-type", "application/json");
-                                            OutputStream os = conn.getOutputStream();
-                                            os.write(root.toString().getBytes("utf-8"));
-                                            os.flush();
-                                            conn.getResponseCode();
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
+                                databaseReferenceForPushMsgTest = database.getReference("users/" + friendID);
+                                databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        //받는 사람 주소
+                                        final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
+                                        handler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try {
+                                                    //FMC 메세지 만들기
+                                                    JSONObject root = new JSONObject();
+                                                    JSONObject notification = new JSONObject();
+                                                    //notification.put("body", message);
+                                                    notification.put("body", "확인해주세요!");//습관제목?
+                                                    notification.put("title", UserName + " 님이 인증을 요청했어요~");
+                                                    //notification.put("ImgName", filename);
+                                                    notification.put("tag", filename + "," + habitTitle + "," + UserID + "," + habitIdx+","+HISTORYidx);//filename+habit title+userid+habitIdx+HISTORYidx
+                                                    root.put("notification", notification);
+                                                    root.put("to", fcmToken);
+
+                                                    URL Url = new URL(FCM_MESSAGE_URL);
+                                                    HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                                                    conn.setRequestMethod("POST");
+                                                    conn.setDoOutput(true);
+                                                    conn.setDoInput(true);
+                                                    conn.addRequestProperty("Authorization", "key=" + ServerKey);
+                                                    conn.setRequestProperty("Accept", "application/json");
+                                                    conn.setRequestProperty("Content-type", "application/json");
+                                                    OutputStream os = conn.getOutputStream();
+                                                    os.write(root.toString().getBytes("utf-8"));
+                                                    os.flush();
+                                                    conn.getResponseCode();
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
                                     }
                                 });
-
                             }
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
+
                         });
                     }
 
@@ -544,7 +562,6 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
-
                 });
             }
 
@@ -678,7 +695,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             @SuppressWarnings("VisibleForTests") //이걸 넣어 줘야 아랫줄에 에러가 사라진다. 넌 누구냐?
-                                    double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
+                                    double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                             //dialog에 진행률을 퍼센트로 출력해 준다
                             progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
                         }
