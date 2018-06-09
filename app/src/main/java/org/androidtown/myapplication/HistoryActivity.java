@@ -93,8 +93,6 @@ public class HistoryActivity extends BaseActivity {
         willNum = bundle.getInt("Will");
         type = bundle.getString("Type");
 
-        Toast.makeText(getApplicationContext(), "didNum = "+didNum+"    willNum= "+willNum, Toast.LENGTH_SHORT).show();
-
         habit_title.setText(title);
         habit_check.setText(habitType);
         habit_count.setText("이때까지 실천한 횟수: "+didNum + "\n총 실천해야하는 횟수: " + willNum);
