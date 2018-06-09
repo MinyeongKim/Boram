@@ -636,7 +636,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                                                                         JSONObject notification = new JSONObject();
                                                                         //notification.put("body", message);
                                                                         notification.put("body", "확인해주세요!");//습관제목?
-                                                                        notification.put("title", UserID + " 님이 인증을 요청했어요~");
+                                                                        notification.put("title", "누군가 인증을 요청했어요~");
                                                                         //notification.put("ImgName", filename);
                                                                         notification.put("tag", filename + "," + habitTitle + "," + UserID + "," + habitIdx + "," + HISTORYidx);//filename+habit title+userid+habitIdx+HISTORYidx
                                                                         root.put("notification", notification);
@@ -731,7 +731,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                                                                     JSONObject notification = new JSONObject();
                                                                     //notification.put("body", message);
                                                                     notification.put("body", "확인해주세요!");//습관제목?
-                                                                    notification.put("title", UserID + " 님이 인증을 요청했어요~");
+                                                                    notification.put("title", "누군가 인증을 요청했어요~");
                                                                     //notification.put("ImgName", filename);
                                                                     notification.put("tag", filename + "," + habitTitle + "," + UserID + "," + habitIdx + "," + HISTORYidx);//filename+habit title+userid+habitIdx+HISTORYidx
                                                                     root.put("notification", notification);
