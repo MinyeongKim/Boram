@@ -214,6 +214,10 @@ public class CheckActivity extends BaseActivity {
                                 databaseReference.child(idx).child("DATE").setValue(finalCheckedDate);
                                 databaseReference.child(idx).child("COMMENT").setValue(comment);
                                 databaseReference.child(idx).child("RATING").setValue(inputRate);
+
+                                databaseReference.child(idx).child("FRIENDWRITETIME").setValue(" ");
+                                databaseReference.child(idx).child("FRIENDCOMMENT").setValue(" ");
+                                databaseReference.child(idx).child("FRIENDRATING").setValue("0");
                     }
 
                     @Override

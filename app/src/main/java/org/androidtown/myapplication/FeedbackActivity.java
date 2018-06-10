@@ -28,17 +28,20 @@ import org.w3c.dom.Text;
 
 //import org.gcsw.boram.R;
 
-public class FeedbackActivity extends BaseActivity{
-    StorageReference spaceRef;
-    TextView habitTitle, date, writeDate,comment,feedback_date,feedback_comment;
+public class FeedbackActivity extends BaseActivity {
+
+    TextView habitTitle, date, writeDate, comment, feedback_date, feedback_comment;
     RatingBar rate, feedback_rate;
     ImageView user_imageLoad;
 
-    String date_value, writeDate_value,comment_value,feedback_date_value,feedback_comment_value, rate_value, feedback_rate_value;
+    String date_value, writeDate_value, comment_value;
+    String feedback_date_value = "";
+    String feedback_comment_value, rate_value, feedback_rate_value;
 
     FirebaseDatabase database;
     DatabaseReference databaseReference;
     private FirebaseStorage storage;
+    StorageReference spaceRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,20 +53,21 @@ public class FeedbackActivity extends BaseActivity{
 
         setupActionBar();
 
-        habitTitle = (TextView)findViewById(R.id.user_habitTitle);
-        date = (TextView)findViewById(R.id.user_date);
-        writeDate = (TextView)findViewById(R.id.user_writeDate);
-        comment = (TextView)findViewById(R.id.user_comment);
-        feedback_date = (TextView)findViewById(R.id.feedback_date);
-        feedback_comment = (TextView)findViewById(R.id.feedback_comment);
+        storage = FirebaseStorage.getInstance();
+        habitTitle = (TextView) findViewById(R.id.user_habitTitle);
+        date = (TextView) findViewById(R.id.user_date);
+        writeDate = (TextView) findViewById(R.id.user_writeDate);
+        comment = (TextView) findViewById(R.id.user_comment);
+        feedback_date = (TextView) findViewById(R.id.feedback_date);
+        feedback_comment = (TextView) findViewById(R.id.feedback_comment);
 
-        rate = (RatingBar)findViewById(R.id.user_rate);
-        feedback_rate = (RatingBar)findViewById(R.id.feedback_rate);
+        rate = (RatingBar) findViewById(R.id.user_rate);
+        feedback_rate = (RatingBar) findViewById(R.id.feedback_rate);
 
-        user_imageLoad = (ImageView)findViewById(R.id.user_imageLoad);
+        user_imageLoad = (ImageView) findViewById(R.id.user_imageLoad);
 
         Intent info = getIntent();
-        Bundle get_info = info.getExtras();
+        final Bundle get_info = info.getExtras();
 
         String filename = get_info.getString("filename");
         Toast.makeText(getApplicationContext(), filename, Toast.LENGTH_SHORT).show();
@@ -76,12 +80,12 @@ public class FeedbackActivity extends BaseActivity{
         habitTitle.setText(habit_title);
 
 
-        String location ="users/" + user + "/habits/current/" + habitIndex + "/history/"+index;
-        Toast.makeText(getApplicationContext(),""+location,Toast.LENGTH_SHORT).show();
+        String location = "users/" + user + "/habits/current/" + habitIndex + "/history/" + index;
+        Toast.makeText(getApplicationContext(), "" + location, Toast.LENGTH_SHORT).show();
 
         String withWho = get_info.getString("CheckMode");
 
-        if(withWho.equals("friend")){
+        if (withWho.equals("friend")) {
             String friendID = get_info.getString("FriendID");
         }
 
@@ -89,21 +93,22 @@ public class FeedbackActivity extends BaseActivity{
         Glide.with(this).using(new FirebaseImageLoader()).load(spaceRef).into(user_imageLoad);
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("users/" + user + "/habits/current/" + habitIndex + "/history/"+index);
+        databaseReference = database.getReference("users/" + user + "/habits/current/" + habitIndex + "/history/" + index);
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                date_value= (String) dataSnapshot.child("DATE").getValue();
-                writeDate_value=(String) dataSnapshot.child("WRITETIME").getValue();
-                comment_value=(String) dataSnapshot.child("COMMENT").getValue();
+                date_value = (String) dataSnapshot.child("DATE").getValue();
+                writeDate_value = (String) dataSnapshot.child("WRITETIME").getValue();
+                comment_value = (String) dataSnapshot.child("COMMENT").getValue();
 
 
-                feedback_date_value=(String) dataSnapshot.child("FRIENDWRITETIME").getValue();
-                feedback_comment_value=(String) dataSnapshot.child("FRIENDCOMMENT").getValue();
+                feedback_date_value = (String) dataSnapshot.child("FRIENDWRITETIME").getValue();
 
-                rate_value=(String) dataSnapshot.child("RATING").getValue();
-                feedback_rate_value=(String) dataSnapshot.child("FRIENDRATING").getValue();
+                feedback_comment_value = (String) dataSnapshot.child("FRIENDCOMMENT").getValue();
+
+                rate_value = (String) dataSnapshot.child("RATING").getValue();
+                feedback_rate_value = (String) dataSnapshot.child("FRIENDRATING").getValue();
 
                 date.setText(date_value);
                 writeDate.setText(writeDate_value);
