@@ -83,7 +83,7 @@ public class TimelineActivity extends BaseActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         UserID = bundle.getString("ID");
-        Toast.makeText(getApplicationContext(), UserID, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), UserID, Toast.LENGTH_SHORT).show();
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/"+UserID+"/habits/current");

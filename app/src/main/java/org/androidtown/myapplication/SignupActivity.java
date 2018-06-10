@@ -18,7 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Date;
 import java.util.Iterator;
 
-public class SignupActivity extends BaseActivity {
+public class SignupActivity extends BaseActivity2 {
     EditText id;
     EditText pw;
     EditText name;
@@ -97,14 +97,14 @@ public class SignupActivity extends BaseActivity {
 
 
                                 String joinday = year+"-"+month+"-"+day;
-                                Toast.makeText(getApplicationContext(), joinday, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), joinday, Toast.LENGTH_SHORT).show();
 
                                 databaseReference.child(id.getText().toString()).child("JOINDAY").setValue(joinday);
 
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
 
-                                Toast.makeText(getApplicationContext(), "signup success, please login", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다!", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
 

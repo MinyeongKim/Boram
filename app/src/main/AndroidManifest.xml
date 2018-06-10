@@ -109,6 +109,14 @@
         <activity
             android:name=".FeedbackActivity"
             android:label="@string/title_activity_feedback"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DeleteuserActivity"
+            android:label="@string/title_activity_deleteuser"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CheckPW2Activity"
+            android:label="@string/title_activity_check_pw2"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

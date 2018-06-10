@@ -19,6 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.w3c.dom.Text;
 
@@ -31,9 +33,13 @@ public class FeedbackActivity extends BaseActivity{
     ImageView imageLoad;
 
     String date_value, writeDate_value,comment_value,feedback_date_value,feedback_comment_value, rate_value, feedback_rate_value;
+    String path;
 
     FirebaseDatabase database;
     DatabaseReference databaseReference;
+
+    private FirebaseStorage storage;
+    StorageReference spaceRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +76,7 @@ public class FeedbackActivity extends BaseActivity{
 
 
         String location ="users/" + user + "/habits/current/" + habitIndex + "/history/"+index;
-        Toast.makeText(getApplicationContext(),""+location,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),""+location,Toast.LENGTH_SHORT).show();
 
         String withWho = get_info.getString("CheckMode");
 
@@ -81,6 +87,9 @@ public class FeedbackActivity extends BaseActivity{
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/" + user + "/habits/current/" + habitIndex + "/history/"+index);
 
+        /*
+
+         */
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -94,6 +103,10 @@ public class FeedbackActivity extends BaseActivity{
 
                 rate_value=(String) dataSnapshot.child("RATING").getValue();
                 feedback_rate_value=(String) dataSnapshot.child("FRIENDRATING").getValue();
+
+                path = (String) dataSnapshot.child("ImageID").getValue();
+
+               // Glide.with(this).using(new FirebaseImageLoader()).load(spaceRef).into(imageLoad);
 
                 date.setText(date_value);
                 writeDate.setText(writeDate_value);

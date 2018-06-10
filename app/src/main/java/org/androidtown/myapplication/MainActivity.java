@@ -90,9 +90,9 @@ public class MainActivity extends BaseActivity2 {
                     auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
 
                     if (inputId.equals("")) {
-                        Toast.makeText(getApplicationContext(), "please enter your ID", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "아이디를 입력해주세요", Toast.LENGTH_SHORT).show();
                     } else if (inputPw.equals("")) {
-                        Toast.makeText(getApplicationContext(), "please enter your password", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
                     } else {
                         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -106,7 +106,7 @@ public class MainActivity extends BaseActivity2 {
 
                                         if (storedPw.equals(inputPw)) {
                                             userName = (String) data.child("NAME").getValue();
-                                            Toast.makeText(getApplicationContext(), userName + "님 안녕하세요", Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(getApplicationContext(), userName + "님 안녕하세요", Toast.LENGTH_SHORT).show();
 
                                             //자동로그인을 위한
                                             if (checked.isChecked()) {
@@ -137,12 +137,12 @@ public class MainActivity extends BaseActivity2 {
 
                                             return;
                                         } else {
-                                            Toast.makeText(getApplicationContext(), "wrong password", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), "비밀번호를 잘 못 입력하셨습니다.", Toast.LENGTH_SHORT).show();
                                             return;
                                         }
                                     }
                                 }
-                                Toast.makeText(getApplicationContext(), "존재하지 않는 아이디", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "존재하지 않는 아이디입니다.", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

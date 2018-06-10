@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 //import org.gcsw.boram.R;
@@ -68,6 +69,8 @@ public class GetMessageActivity extends AppCompatActivity {
 
     String comment;
     float rating_value;
+
+    SimpleDateFormat mFormat_forTime = new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,8 +142,12 @@ public class GetMessageActivity extends AppCompatActivity {
 
                 String inputRate = String.valueOf(rating_value);
 
-                String time = new Date().toString();
-                databaseReference.child(historyIndex).child("FRIENDWRITETIME").setValue(time);
+                long pushTime = System.currentTimeMillis();
+                Date date_forTime = new Date(pushTime);
+                final String writing_time = mFormat_forTime.format(date_forTime);
+
+                //String time = new Date().toString();
+                databaseReference.child(historyIndex).child("FRIENDWRITETIME").setValue(writing_time);
                 databaseReference.child(historyIndex).child("FRIENDCOMMENT").setValue(comment);
                 databaseReference.child(historyIndex).child("FRIENDRATING").setValue(inputRate);
 

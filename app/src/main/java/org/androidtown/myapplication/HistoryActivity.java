@@ -185,7 +185,7 @@ public class HistoryActivity extends BaseActivity {
                     recordView.setVisibility(View.VISIBLE);
                 }
 
-                Toast.makeText(getApplicationContext(), "" + history_num, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "" + history_num, Toast.LENGTH_SHORT).show();
 
                 for (int i = 1; i <= history_num; i++) {
                     String histiryIndex = String.valueOf(i);
@@ -193,6 +193,7 @@ public class HistoryActivity extends BaseActivity {
                     String date = (String) dataSnapshot.child(histiryIndex).child("DATE").getValue();
                     String comment = (String) dataSnapshot.child(histiryIndex).child("COMMENT").getValue();
                     String rate = (String) dataSnapshot.child(histiryIndex).child("RATING").getValue();
+
                     float rate_value = Float.parseFloat(rate);
 
                     Log.i("date", date);

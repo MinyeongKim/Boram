@@ -85,7 +85,7 @@ public class CheckActivity extends BaseActivity {
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getUid()).child("diary").child("draw");
          */
-        Toast.makeText(getApplicationContext(), type + "/" + UserID + "/" + habitIdx, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), type + "/" + UserID + "/" + habitIdx, Toast.LENGTH_SHORT).show();
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history");

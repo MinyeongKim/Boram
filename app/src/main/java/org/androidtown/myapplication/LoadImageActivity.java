@@ -497,13 +497,13 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                             databaseReferenceHistoryIndex.child(HISTORYidx).child("ImageID").setValue(filename);
 
                             databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
-                            Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
                             databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     friendID = (String) dataSnapshot.child("FRIENDID").getValue();
                                     habitTitle = (String) dataSnapshot.child("TITLE").getValue();
-                                    Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
 
                                     databaseReferenceForPushMsgTest = database.getReference("users/" + friendID);
                                     databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -609,13 +609,13 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                                             databaseReferenceHistoryIndex.child(HISTORYidx).child("ImageID").setValue(filename);
 
                                             databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
-                                            Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
                                             databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                                     friendID = (String) dataSnapshot.child("FRIENDID").getValue();
                                                     habitTitle = (String) dataSnapshot.child("TITLE").getValue();
-                                                    Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
+                                                    //Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
 
                                                     databaseReferenceForPushMsgTest = database.getReference("users/" + nextPersonName);
                                                     databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -704,13 +704,13 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                                         databaseReferenceHistoryIndex.child(HISTORYidx).child("ImageID").setValue(filename);
 
                                         databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
-                                        Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
                                         databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 friendID = (String) dataSnapshot.child("FRIENDID").getValue();
                                                 habitTitle = (String) dataSnapshot.child("TITLE").getValue();
-                                                Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
+                                                //Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
 
                                                 databaseReferenceForPushMsgTest = database.getReference("users/" + nextPersonName);
                                                 databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {

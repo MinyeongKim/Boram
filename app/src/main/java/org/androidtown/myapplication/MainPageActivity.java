@@ -148,7 +148,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
         //메뉴에 사용자 정보 띄워줄라 했는데 안됨
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        String name = bundle.getString("name");//값은 잘 넘어옴.
+        name = bundle.getString("name");//값은 잘 넘어옴.
         userName.setText(name);
         id = bundle.getString("ID");
 
@@ -173,7 +173,6 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
                 cal.set(year, month-1, day);
                 long birthTime = cal.getTimeInMillis()/(1000*60*60*24);
                 interval = ((int)(birthTime-currentTime))+1;
-                Toast.makeText(getApplicationContext(),interval+"일째 / ", Toast.LENGTH_SHORT).show();
 
                 databaseReference2 = database.getReference("users/"+id+"/habits/current");
                 databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -183,13 +182,13 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
 
                         //txt.setText("나무를 키운지 " + interval + "일째");
                         //txt1.setText("총 " + habit_num + " 그루의 나무와 함께하고 있어요.");
-                        Toast.makeText(getApplicationContext(),interval+"일째 / " + habit_num + "개의 습관", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),""+name+" 님 안녕하세요\n"+"나무를 키운지 "+interval+"일째,\n" + "총 "+habit_num + " 그루의 나무와 함께하고 있어요!", Toast.LENGTH_SHORT).show();
 
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError){
                         habit_num = 0;
-                        Toast.makeText(getApplicationContext(), habit_num + "개의 습관", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), habit_num + "개의 습관", Toast.LENGTH_SHORT).show();
                     }
 
                 });
@@ -322,7 +321,7 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
 
         //앱 탈퇴하기
         else if (id == R.id.getout) {
-            Intent intent = new Intent(getApplicationContext(), CheckPWActivity.class);
+            Intent intent = new Intent(getApplicationContext(), CheckPW2Activity.class);
             startActivity(intent);
         }
 

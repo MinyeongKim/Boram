@@ -33,6 +33,10 @@ public class ModifyInfoActivity extends BaseActivity {
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
 
+    SharedPreferences auto;
+
+    String loginPwd1,loginName1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +79,22 @@ public class ModifyInfoActivity extends BaseActivity {
                             String getPW=loginPW.getText().toString();
                             String getName=userName.getText().toString();
 
-                            databaseReference.child("PW").setValue(loginPW.getText().toString());
-                            databaseReference.child("NAME").setValue(userName.getText().toString());
+                            databaseReference.child("PW").setValue(getPW);
+                            databaseReference.child("NAME").setValue(getName);
+
+                            SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+                            SharedPreferences.Editor autoLogin = auto.edit();
+
+                            autoLogin.putString("inputPwd", getPW);
+                            autoLogin.putString("inputName", getName);
+
+                            SharedPreferences info = getSharedPreferences("info", Activity.MODE_PRIVATE);
+                            SharedPreferences.Editor Info = info.edit();
+
+                            Info.putString("inputPwd", getPW);
+                            Info.putString("inputName", getName);
+
+                            Info.commit();
 
                             Toast.makeText(getApplication(),"회원 정보를 변경하였습니다",Toast.LENGTH_SHORT).show();
                             finish();
