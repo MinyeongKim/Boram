@@ -34,19 +34,14 @@ public class FeedbackActivity extends BaseActivity {
     RatingBar rate, feedback_rate;
     ImageView user_imageLoad;
 
-<<<<<<< HEAD
-    String date_value, writeDate_value,comment_value,feedback_date_value,feedback_comment_value, rate_value, feedback_rate_value;
     String path;
-=======
+
     String date_value, writeDate_value, comment_value;
     String feedback_date_value = "";
     String feedback_comment_value, rate_value, feedback_rate_value;
->>>>>>> fadd3321e1f4e0b8712d654498b203711f1a1b76
 
     FirebaseDatabase database;
     DatabaseReference databaseReference;
-    private FirebaseStorage storage;
-    StorageReference spaceRef;
 
     private FirebaseStorage storage;
     StorageReference spaceRef;
@@ -88,13 +83,10 @@ public class FeedbackActivity extends BaseActivity {
         habitTitle.setText(habit_title);
 
 
-<<<<<<< HEAD
+
         String location ="users/" + user + "/habits/current/" + habitIndex + "/history/"+index;
         //Toast.makeText(getApplicationContext(),""+location,Toast.LENGTH_SHORT).show();
-=======
-        String location = "users/" + user + "/habits/current/" + habitIndex + "/history/" + index;
-        Toast.makeText(getApplicationContext(), "" + location, Toast.LENGTH_SHORT).show();
->>>>>>> fadd3321e1f4e0b8712d654498b203711f1a1b76
+
 
         String withWho = get_info.getString("CheckMode");
 

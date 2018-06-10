@@ -194,11 +194,9 @@ public class HistoryActivity extends BaseActivity {
                     String date = (String) dataSnapshot.child(histiryIndex).child("DATE").getValue();
                     String comment = (String) dataSnapshot.child(histiryIndex).child("COMMENT").getValue();
                     String rate = (String) dataSnapshot.child(histiryIndex).child("RATING").getValue();
-<<<<<<< HEAD
 
-=======
                     filename = (String) dataSnapshot.child(histiryIndex).child("ImageID").getValue();
->>>>>>> fadd3321e1f4e0b8712d654498b203711f1a1b76
+
                     float rate_value = Float.parseFloat(rate);
 
                     Log.i("date", date);
