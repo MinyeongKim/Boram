@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.LinkAddress;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
@@ -30,20 +29,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
-import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -58,9 +49,6 @@ public class TimelineActivity extends BaseActivity {
     //타임라인 activity
     //여기서는 각각의 메모장처럼(버튼으로 구현할 예정) 각각 습관의 이름, 빈도수, 진도율 등등을 보여줌 -> 됨 => 디비랑 이제 연동해서 값 넣어주면 됨
     //그리고 나서 선택하면 해당 습관을 얼마나 했는지 보여주는 달력을 띄워줄 예정 => 이건 추가적인 부분//
-
-    private FirebaseStorage storage;
-    StorageReference spaceRef;
 
     private final int DYNAMIC_VIEW_ID = 0x8000;
     private LinearLayout dynamicLayout;
@@ -82,10 +70,6 @@ public class TimelineActivity extends BaseActivity {
     EditText editText;
 
     List<item> items;
-
-    String title, withWho, didString, willString, type;
-    int didNum, willNum;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +93,6 @@ public class TimelineActivity extends BaseActivity {
 
         imageView=(ImageView)findViewById(R.id.imageView);
 
-<<<<<<< HEAD
-=======
 
         /*
         List<item> items = new ArrayList<>();
@@ -127,7 +109,6 @@ public class TimelineActivity extends BaseActivity {
         Utilities.setGlobalFont(recyclerView);
          */
 
->>>>>>> ea7a7730dc0361ee457c1bc91ab04ae5f17e9194
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         Utilities.setGlobalFont(recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -139,39 +120,37 @@ public class TimelineActivity extends BaseActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                habit_num = (int) dataSnapshot.getChildrenCount();
+                habit_num = (int)dataSnapshot.getChildrenCount();
                 String idx = String.valueOf(habit_num);
                 //Toast.makeText(getApplication(), idx, Toast.LENGTH_LONG).show();
 
-<<<<<<< HEAD
-                int type_value;
-=======
 
-                int type1=R.drawable.good_tree;
-                int type2 = R.drawable.bad_tree;
->>>>>>> ea7a7730dc0361ee457c1bc91ab04ae5f17e9194
+                int picture_type;
 
-                for (int i = 1; i <= habit_num; i++) {
+                for(int i=1; i <= habit_num;i++){
                     String habitIndex = String.valueOf(i);
-                    title = (String) dataSnapshot.child(habitIndex).child("TITLE").getValue();
-                    withWho = (String) dataSnapshot.child(habitIndex).child("CHECKMETHOD").getValue();
+                    String title = (String)dataSnapshot.child(habitIndex).child("TITLE").getValue();
+                    String withWho = (String)dataSnapshot.child(habitIndex).child("CHECKMETHOD").getValue();
 
-                    didString = (String) dataSnapshot.child(habitIndex).child("DID").getValue();
-                    didNum = Integer.parseInt(didString);//몇번했나
+                    String didString = (String)dataSnapshot.child(habitIndex).child("DID").getValue();
+                    int didNum = Integer.parseInt(didString);//몇번했나
 
-                    willString = (String) dataSnapshot.child(habitIndex).child("WILL").getValue();
-                    willNum = Integer.parseInt(willString);//몇번해야하나
+                    String willString = (String)dataSnapshot.child(habitIndex).child("WILL").getValue();
+                    int willNum = Integer.parseInt(willString);//몇번해야하나
 
-                    type = (String) dataSnapshot.child(habitIndex).child("TYPE").getValue(); //good/bad habit
+                    String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue(); //good/bad habit
 
                     if(type.equals("good")){
-                        type_value=R.drawable.good_habit;
+                        picture_type=R.drawable.good_habit;
                     }
-
-<<<<<<< HEAD
                     else{
-                        type_value=R.drawable.bad_habit;
-=======
+                        picture_type=R.drawable.bad_habit;
+                    }
+                    //item  item1 = new item(title, R.drawable.home);z
+                    item  item1 = new item(title, picture_type, withWho,didNum, willNum,type, UserID);
+                    items.add(item1);
+                }
+
                 /*for(int i=1; i <= habit_num;i++){
                     String habitIndex = String.valueOf(i);
                     String title = (String)dataSnapshot.child(habitIndex).child("TITLE").getValue();
@@ -216,25 +195,19 @@ public class TimelineActivity extends BaseActivity {
                         checkType.putInt("INDEX", position+1);
                         intent.putExtras(checkType);
                         startActivity(intent);
->>>>>>> ea7a7730dc0361ee457c1bc91ab04ae5f17e9194
                     }
+                });
+                */
 
-                    item item1 = new item(title, type_value, withWho, didNum, willNum, type, UserID);
-                    items.add(item1);
-
-                    recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
-                }
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError){
 
             }
+
         });
     }
 
-<<<<<<< HEAD
-=======
     /*
     class TimelineAdapter extends BaseAdapter {
         ArrayList<TimelineItem> items = new ArrayList<TimelineItem>();
@@ -267,7 +240,6 @@ public class TimelineActivity extends BaseActivity {
         }
     }
 */
->>>>>>> ea7a7730dc0361ee457c1bc91ab04ae5f17e9194
 
     //뒤로가는 버튼 생성
     private void setupActionBar() {
