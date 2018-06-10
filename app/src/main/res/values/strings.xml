@@ -96,4 +96,5 @@
     <string name="title_activity_history">HistoryActivity</string>
     <string name="title_activity_check_pw">CheckPWActivity</string>
     <string name="title_activity_get_message">GetMessageActivity</string>
+    <string name="title_activity_feedback">FeedbackActivity</string>
 </resources>

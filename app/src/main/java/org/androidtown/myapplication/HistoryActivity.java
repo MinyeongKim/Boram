@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,6 +42,7 @@ public class HistoryActivity extends BaseActivity {
     int didNum;
     int willNum;
     String type;
+    String friend_ID;
 
     int habitIdx;
     String habitType;
@@ -55,7 +57,7 @@ public class HistoryActivity extends BaseActivity {
 
     //DB
     FirebaseDatabase database;
-    DatabaseReference databaseReference1,databaseReference2;
+    DatabaseReference databaseReference1, databaseReference2;
 
     //history
     HistoryAdapter adapter;
@@ -75,6 +77,8 @@ public class HistoryActivity extends BaseActivity {
         setupActionBar();
 
         list = (ListView) findViewById(R.id.list);
+        Utilities.setGlobalFont(list);
+
         check = (Button) findViewById(R.id.check);
         recordView = (LinearLayout) findViewById(R.id.record);
 
@@ -120,13 +124,29 @@ public class HistoryActivity extends BaseActivity {
                 startDate = (String) dataSnapshot.child("START").getValue();
 
                 habit_title.setText(title);
-                habit_check.setText(habitType);
                 habit_count.setText("이때까지 실천한 횟수: " + didNum + "\n총 실천해야하는 횟수: " + willNum);
 
-                double calculate = ((double)didNum / (double)willNum) * 100;
-                int progress_value = (int)calculate;
+                switch (withWho) {
+                    case "alone":
+                        habit_check.setText("혼자서 하기");
+                        break;
+
+                    case "friend":
+                        friend_ID = (String) dataSnapshot.child("FRIENDID").getValue();
+                        habit_check.setText("친구랑 하기 - " + friend_ID);
+                        break;
+
+                    case "otherPerson":
+                        habit_check.setText("제 3자와 하기");
+                        break;
+
+                    default:
+                        break;
+                }
+
+                double calculate = ((double) didNum / (double) willNum) * 100;
+                int progress_value = (int) calculate;
                 progress.setProgress(progress_value);
-                Toast.makeText(getApplicationContext(),"프로세스 값은 바로~ "+calculate+"  "+progress_value,Toast.LENGTH_SHORT).show();
                 ratio.setText(progress_value + " %");
 
                 if (type.equals("good")) {
@@ -179,13 +199,14 @@ public class HistoryActivity extends BaseActivity {
                     String date = (String) dataSnapshot.child(histiryIndex).child("DATE").getValue();
                     String comment = (String) dataSnapshot.child(histiryIndex).child("COMMENT").getValue();
                     String rate = (String) dataSnapshot.child(histiryIndex).child("RATING").getValue();
+                    float rate_value = Float.parseFloat(rate);
 
                     //float rating_Value= Float.parseFloat(rate);
 
                     Log.i("date", date);
 
                     //일단 변수명만 TimelineItem으로 썼어! HistoryItem만들어지면 HistoryItem으로 바꾸면 돼!
-                    adapter.addItem(new TimelineItem(date, comment, rate, writingDate));
+                    adapter.addItem(new TimelineItem(date, comment, rate_value, writingDate));
                 }
 
                 list.setAdapter(adapter);
@@ -196,6 +217,34 @@ public class HistoryActivity extends BaseActivity {
 
             }
         });
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                TimelineItem item = (TimelineItem) adapter.getItem(position);
+
+                Intent intent = new Intent(getApplicationContext(), FeedbackActivity.class);
+
+                Bundle feedback = new Bundle();
+
+                int index=position+1;
+
+                //String location ="users/" + UserID + "/habits/current/" + habitIdx + "/history/"+value;
+                feedback.putString("UserID",UserID );
+                feedback.putInt("INDEX", index);
+                feedback.putInt("HABITINDEX",habitIdx);
+                feedback.putString("Title", title);
+                feedback.putString("CheckMode", withWho);
+
+                if(withWho.equals("friend")){
+                    feedback.putString("FriendID", friend_ID);
+                }
+
+                intent.putExtras(feedback);
+                startActivity(intent);
+            }
+        });
+
 
         //별점 매기는 부분  + checkActivity
         check.setOnClickListener(new View.OnClickListener() {

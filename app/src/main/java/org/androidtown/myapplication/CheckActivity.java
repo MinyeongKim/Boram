@@ -67,6 +67,7 @@ public class CheckActivity extends BaseActivity {
         setContentView(R.layout.activity_check);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         setupActionBar();
 
         Intent check_type = getIntent();
