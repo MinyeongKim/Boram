@@ -70,6 +70,37 @@ public class SignupActivity extends BaseActivity {
                                 databaseReference.child(id.getText().toString()).child("PW").setValue(pw.getText().toString());
                                 databaseReference.child(id.getText().toString()).child("NAME").setValue(name.getText().toString());
 
+                                String time = new Date().toString();
+                                int timeindex = time.indexOf(" ");
+                                time = time.substring(timeindex+1);
+                                timeindex = time.indexOf(" ");
+                                String month = time.substring(0, timeindex);
+                                time = time.substring(timeindex+1);
+                                timeindex = time.indexOf(" ");
+                                String day = time.substring(0, timeindex);
+                                String year = time.substring(time.lastIndexOf(" ")+1);
+
+                                switch(month){
+                                    case "Jan": month = "01"; break;
+                                    case "Feb": month = "02"; break;
+                                    case "Mar": month = "03"; break;
+                                    case "Apr": month = "04"; break;
+                                    case "May": month = "05"; break;
+                                    case "Jun": month = "06"; break;
+                                    case "Jul": month = "07"; break;
+                                    case "Aug": month = "08"; break;
+                                    case "Sep": month = "09"; break;
+                                    case "Oct": month = "10"; break;
+                                    case "Nov": month = "11"; break;
+                                    case "Dec": month = "12"; break;
+                                }
+
+
+                                String joinday = year+"-"+month+"-"+day;
+                                Toast.makeText(getApplicationContext(), joinday, Toast.LENGTH_SHORT).show();
+
+                                databaseReference.child(id.getText().toString()).child("JOINDAY").setValue(joinday);
+
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
 

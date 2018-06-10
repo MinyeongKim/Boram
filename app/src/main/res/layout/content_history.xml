@@ -24,7 +24,7 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:background="#fafafa"
+                android:background="#00ffffff"
                 android:layout_width="80dp"
                 android:layout_height="150dp"
                 android:layout_marginLeft="10dp"

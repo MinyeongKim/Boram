@@ -153,9 +153,15 @@ public class HistoryActivity extends BaseActivity {
                 ratio.setText(progress_value + " %");
 
                 if (type.equals("good")) {
-                    imageView.setImageResource(R.drawable.good_tree);
+                    if(progress_value <= 25) imageView.setImageResource(R.drawable.goodtree1);
+                    else if(progress_value <= 50) imageView.setImageResource(R.drawable.goodtree2);
+                    else if(progress_value <= 75) imageView.setImageResource(R.drawable.goodtree3);
+                    else if(progress_value >= 76) imageView.setImageResource(R.drawable.goodtree4);
                 } else {
-                    imageView.setImageResource(R.drawable.bad_tree);
+                    if(progress_value <= 25) imageView.setImageResource(R.drawable.badtree4);
+                    else if(progress_value <= 50) imageView.setImageResource(R.drawable.badtree3);
+                    else if(progress_value <= 75) imageView.setImageResource(R.drawable.badtree2);
+                    else if(progress_value >= 76) imageView.setImageResource(R.drawable.badtree1);
                 }
             }
 

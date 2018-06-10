@@ -59,6 +59,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Time;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -75,22 +76,26 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
     private static final String TestMsg = "push message test";
 
     SharedPreferences auto;
+    int habit_num;
 
     TextView userName;
     TextView userID;
 
-    String name, id;
+    String name;
+    int interval;
 
     ImageButton menuButton;
 
     ProgressBar progress;
 
     RequestQueue queue;
-
+    String id;
     Toolbar toolbar;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference1;
+    private DatabaseReference databaseReference2;
     private DatabaseReference databaseReferenceForPushMsgTest;
     private DatabaseReference databaseReferenceForServerKey;
 
@@ -137,7 +142,6 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
             }
         });
 
-
         userName = (TextView) findViewById(R.id.UserName);
         userID = (TextView) findViewById(R.id.UserID);
 
@@ -146,13 +150,65 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
         Bundle bundle = intent.getExtras();
         String name = bundle.getString("name");//값은 잘 넘어옴.
         userName.setText(name);
-        String id = bundle.getString("ID");
+        id = bundle.getString("ID");
 
         userName.setText(name);
         userID.setText(id);
 
+        databaseReference1 = database.getReference("users/" + id + "/JOINDAY");
+        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String dday = (String) dataSnapshot.getValue();
+
+                dday = dday.trim();
+                int first = dday.indexOf("-");
+                int last = dday.lastIndexOf("-");
+                int year = Integer.parseInt(dday.substring(0, first));
+                int month = Integer.parseInt(dday.substring(first+1, last));
+                int day = Integer.parseInt(dday.substring(last+1));
+
+                GregorianCalendar cal = new GregorianCalendar();
+                long currentTime = cal.getTimeInMillis() / (1000*60*60*24);
+                cal.set(year, month-1, day);
+                long birthTime = cal.getTimeInMillis()/(1000*60*60*24);
+                interval = ((int)(birthTime-currentTime))+1;
+                Toast.makeText(getApplicationContext(),interval+"일째 / ", Toast.LENGTH_SHORT).show();
+
+                databaseReference2 = database.getReference("users/"+id+"/habits/current");
+                databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        habit_num = (int)dataSnapshot.getChildrenCount();
+
+                        //txt.setText("나무를 키운지 " + interval + "일째");
+                        //txt1.setText("총 " + habit_num + " 그루의 나무와 함께하고 있어요.");
+                        Toast.makeText(getApplicationContext(),interval+"일째 / " + habit_num + "개의 습관", Toast.LENGTH_SHORT).show();
+
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError){
+                        habit_num = 0;
+                        Toast.makeText(getApplicationContext(), habit_num + "개의 습관", Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
         //database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users/" + id);
+
 
         //로그인되면 스마트폰 주소 받아오기
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
