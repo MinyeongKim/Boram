@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class HistoryActivity extends BaseActivity {
     //DB
     FirebaseDatabase database;
     DatabaseReference databaseReference1,databaseReference2;
+    DatabaseReference databaseReferenceForDelete;
 
     //history
     HistoryAdapter adapter;
@@ -160,7 +162,8 @@ public class HistoryActivity extends BaseActivity {
         //database = FirebaseDatabase.getInstance();
         databaseReference2 = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history/");
 
-        /*adapter = new HistoryAdapter();
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        adapter = new HistoryAdapter();
         databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -195,7 +198,7 @@ public class HistoryActivity extends BaseActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });*/
+        });
 
         //별점 매기는 부분  + checkActivity
         check.setOnClickListener(new View.OnClickListener() {
@@ -288,7 +291,17 @@ public class HistoryActivity extends BaseActivity {
             default:
                 break;
         }
+        /*if (option.equals("습관 삭제")){
+            databaseReference1.child("delete").setValue("true");
+        }*/
+
         return super.onOptionsItemSelected(item);
     }
+
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.deletehabitmenu, menu);
+        return true;
+    }// onCreateOptionsMenu*/
 
 }

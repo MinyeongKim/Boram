@@ -2,6 +2,7 @@ package org.androidtown.myapplication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.LinkAddress;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -101,11 +102,9 @@ public class TimelineActivity extends BaseActivity {
         item[2] = new item(R.drawable.home, "#3");
         item[3] = new item(R.drawable.home, "#4");
         item[4] = new item(R.drawable.home, "#5");
-
         for (int i = 0; i < 5; i++) {
             items.add(item[i]);
         }
-
         recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
         Utilities.setGlobalFont(recyclerView);
          */
@@ -124,6 +123,7 @@ public class TimelineActivity extends BaseActivity {
                 habit_num = (int)dataSnapshot.getChildrenCount();
                 String idx = String.valueOf(habit_num);
                 //Toast.makeText(getApplication(), idx, Toast.LENGTH_LONG).show();
+
 
                 int type1=R.drawable.good_tree;
                 int type2 = R.drawable.bad_tree;
@@ -146,6 +146,24 @@ public class TimelineActivity extends BaseActivity {
                     items.add(item1);
                 }
 
+                /*for(int i=1; i <= habit_num;i++){
+                    String habitIndex = String.valueOf(i);
+                    String title = (String)dataSnapshot.child(habitIndex).child("TITLE").getValue();
+                    String withWho = (String)dataSnapshot.child(habitIndex).child("CHECKMETHOD").getValue();
+
+                    String didString = (String)dataSnapshot.child(habitIndex).child("DID").getValue();
+                    int didNum = Integer.parseInt(didString);//몇번했나
+
+                    String willString = (String)dataSnapshot.child(habitIndex).child("WILL").getValue();
+                    int willNum = Integer.parseInt(willString);//몇번해야하나
+
+                    String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue(); //good/bad habit
+
+                    //item  item1 = new item(title, R.drawable.home);z
+                    item  item1 = new item(title, R.drawable.home, withWho,didNum, willNum,type, UserID);
+                    items.add(item1);
+                }*/
+
                 /*Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("ID", UserID);
@@ -165,9 +183,7 @@ public class TimelineActivity extends BaseActivity {
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         TimelineItem item = (TimelineItem) adapter.getItem(position);
                         Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-
                         Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
-
                         Bundle checkType = new Bundle();
                         checkType.putString("Check_type", item.getHabit_check());
                         checkType.putString("ID", UserID);
@@ -190,31 +206,24 @@ public class TimelineActivity extends BaseActivity {
     /*
     class TimelineAdapter extends BaseAdapter {
         ArrayList<TimelineItem> items = new ArrayList<TimelineItem>();
-
         @Override
         public int getCount() {
             return items.size();
         }
-
         public void addItem(TimelineItem item) {
             items.add(item);
         }
-
         @Override
         public Object getItem(int position) {
             return items.get(position);
         }
-
         @Override
         public long getItemId(int position) {
             return position;
         }
-
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup) {
-
             TimelineItemView view = new TimelineItemView(getApplicationContext());
-
             TimelineItem item = items.get(position);
             view.setTitle(item.getTitle());
             view.setHabit_check(item.getHabit_check());
@@ -222,7 +231,6 @@ public class TimelineActivity extends BaseActivity {
             view.setProgressBar(item.getProgressBar());
             view.setRatio(item.getRatio());
             view.setImage(item.getResId());
-
             return view;
         }
     }

@@ -34,14 +34,11 @@ public class cardTimeActivity extends BaseActivity {
         item[2] = new item(R.drawable.bad_tree, title, withWho, didString, R.drawable.home, "#3", willNum, "alone", "");
         item[3] = new item(R.drawable.bad_tree, title, withWho, didString, R.drawable.home, "#4", willNum, "alone", "");
         item[4] = new item(R.drawable.bad_tree, title, withWho, didString, R.drawable.home, "#5", willNum, "alone", "");
-
         for (int i = 0; i < 5; i++) {
             items.add(item[i]);
         }
-
         recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
         Utilities.setGlobalFont(recyclerView);
-
         */
     }
 
