@@ -10,13 +10,16 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/back">
 
 
         <TableLayout
             android:id="@+id/InfoTable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#9fa3d9f1"
+            android:padding="10dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="150dp">
 
@@ -25,13 +28,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
                     android:text="ID" />
 
                 <TextView
                     android:id="@+id/loginId"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
+                    android:layout_marginLeft="10dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
             </TableRow>
 
             <TableRow>
@@ -39,12 +46,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
                     android:text="PW" />
 
                 <EditText
                     android:id="@+id/loginPw"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
                     android:inputType="textPassword" />
             </TableRow>
 
@@ -53,21 +65,30 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
                     android:text="Name" />
 
                 <EditText
                     android:id="@+id/userName"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
             </TableRow>
         </TableLayout>
 
         <Button
             android:id="@+id/modify"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/InfoTable"
+            android:background="@drawable/button"
+            android:textColor="#969595"
+            android:textSize="23dp"
+            android:textStyle="bold"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:gravity="center"

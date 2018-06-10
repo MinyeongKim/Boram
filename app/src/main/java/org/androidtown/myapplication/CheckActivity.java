@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -79,6 +81,10 @@ public class CheckActivity extends BaseActivity {
         totalHistoryNum = get_type.getInt("HISTORYNUM");
         startDate = get_type.getString("STARTDATE");
 
+        /*
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getUid()).child("diary").child("draw");
+         */
         Toast.makeText(getApplicationContext(), type + "/" + UserID + "/" + habitIdx, Toast.LENGTH_SHORT).show();
 
         database = FirebaseDatabase.getInstance();
@@ -207,7 +213,7 @@ public class CheckActivity extends BaseActivity {
                                 databaseReference.child(idx).child("WRITETIME").setValue(writing_time);
                                 databaseReference.child(idx).child("DATE").setValue(finalCheckedDate);
                                 databaseReference.child(idx).child("COMMENT").setValue(comment);
-                        databaseReference.child(idx).child("RATING").setValue(inputRate);
+                                databaseReference.child(idx).child("RATING").setValue(inputRate);
                     }
 
                     @Override

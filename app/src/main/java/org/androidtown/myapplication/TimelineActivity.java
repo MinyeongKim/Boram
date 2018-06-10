@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.LinkAddress;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
@@ -28,12 +29,20 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +57,9 @@ public class TimelineActivity extends BaseActivity {
     //타임라인 activity
     //여기서는 각각의 메모장처럼(버튼으로 구현할 예정) 각각 습관의 이름, 빈도수, 진도율 등등을 보여줌 -> 됨 => 디비랑 이제 연동해서 값 넣어주면 됨
     //그리고 나서 선택하면 해당 습관을 얼마나 했는지 보여주는 달력을 띄워줄 예정 => 이건 추가적인 부분//
+
+    private FirebaseStorage storage;
+    StorageReference spaceRef;
 
     private final int DYNAMIC_VIEW_ID = 0x8000;
     private LinearLayout dynamicLayout;
@@ -69,6 +81,10 @@ public class TimelineActivity extends BaseActivity {
     EditText editText;
 
     List<item> items;
+
+    String title, withWho, didString, willString, type;
+    int didNum, willNum;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,24 +108,6 @@ public class TimelineActivity extends BaseActivity {
 
         imageView=(ImageView)findViewById(R.id.imageView);
 
-
-        /*
-        List<item> items = new ArrayList<>();
-        item[] item = new item[5];
-        item[0] = new item(R.drawable.home, "#1");
-        item[1] = new item(R.drawable.home, "#2");
-        item[2] = new item(R.drawable.home, "#3");
-        item[3] = new item(R.drawable.home, "#4");
-        item[4] = new item(R.drawable.home, "#5");
-
-        for (int i = 0; i < 5; i++) {
-            items.add(item[i]);
-        }
-
-        recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
-        Utilities.setGlobalFont(recyclerView);
-         */
-
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         Utilities.setGlobalFont(recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -121,112 +119,47 @@ public class TimelineActivity extends BaseActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                habit_num = (int)dataSnapshot.getChildrenCount();
+                habit_num = (int) dataSnapshot.getChildrenCount();
                 String idx = String.valueOf(habit_num);
                 //Toast.makeText(getApplication(), idx, Toast.LENGTH_LONG).show();
 
-                int type1=R.drawable.good_tree;
-                int type2 = R.drawable.bad_tree;
+                int type_value;
 
-                for(int i=1; i <= habit_num;i++){
+                for (int i = 1; i <= habit_num; i++) {
                     String habitIndex = String.valueOf(i);
-                    String title = (String)dataSnapshot.child(habitIndex).child("TITLE").getValue();
-                    String withWho = (String)dataSnapshot.child(habitIndex).child("CHECKMETHOD").getValue();
+                    title = (String) dataSnapshot.child(habitIndex).child("TITLE").getValue();
+                    withWho = (String) dataSnapshot.child(habitIndex).child("CHECKMETHOD").getValue();
 
-                    String didString = (String)dataSnapshot.child(habitIndex).child("DID").getValue();
-                    int didNum = Integer.parseInt(didString);//몇번했나
+                    didString = (String) dataSnapshot.child(habitIndex).child("DID").getValue();
+                    didNum = Integer.parseInt(didString);//몇번했나
 
-                    String willString = (String)dataSnapshot.child(habitIndex).child("WILL").getValue();
-                    int willNum = Integer.parseInt(willString);//몇번해야하나
+                    willString = (String) dataSnapshot.child(habitIndex).child("WILL").getValue();
+                    willNum = Integer.parseInt(willString);//몇번해야하나
 
-                    String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue(); //good/bad habit
+                    type = (String) dataSnapshot.child(habitIndex).child("TYPE").getValue(); //good/bad habit
 
-                    //item  item1 = new item(title, R.drawable.home);z
-                    item  item1 = new item(title, R.drawable.home, withWho,didNum, willNum,type, UserID);
-                    items.add(item1);
-                }
-
-                /*Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("ID", UserID);
-                intent.putExtras(bundle);
-                startActivity(intent);*/
-
-                //Toast.makeText(getApplication(), "finish", Toast.LENGTH_LONG).show();
-                //listView.setAdapter(adapter);
-
-                Utilities.setGlobalFont(recyclerView);
-                recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
-                //Utilities.setGlobalFont(recyclerView);
-
-                /*
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                        TimelineItem item = (TimelineItem) adapter.getItem(position);
-                        Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
-
-                        Bundle checkType = new Bundle();
-                        checkType.putString("Check_type", item.getHabit_check());
-                        checkType.putString("ID", UserID);
-                        checkType.putInt("INDEX", position+1);
-                        intent.putExtras(checkType);
-                        startActivity(intent);
+                    if(type.equals("good")){
+                        type_value=R.drawable.good_habit;
                     }
-                });
-                */
 
+                    else{
+                        type_value=R.drawable.bad_habit;
+                    }
+
+                    item item1 = new item(title, type_value, withWho, didNum, willNum, type, UserID);
+                    items.add(item1);
+
+                    recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
+                }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError){
+            public void onCancelled(DatabaseError databaseError) {
 
             }
-
         });
     }
 
-    /*
-    class TimelineAdapter extends BaseAdapter {
-        ArrayList<TimelineItem> items = new ArrayList<TimelineItem>();
-
-        @Override
-        public int getCount() {
-            return items.size();
-        }
-
-        public void addItem(TimelineItem item) {
-            items.add(item);
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return items.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup viewGroup) {
-
-            TimelineItemView view = new TimelineItemView(getApplicationContext());
-
-            TimelineItem item = items.get(position);
-            view.setTitle(item.getTitle());
-            view.setHabit_check(item.getHabit_check());
-            view.setHabit_count(item.getHabit_count());
-            view.setProgressBar(item.getProgressBar());
-            view.setRatio(item.getRatio());
-            view.setImage(item.getResId());
-
-            return view;
-        }
-    }
-*/
 
     //뒤로가는 버튼 생성
     private void setupActionBar() {

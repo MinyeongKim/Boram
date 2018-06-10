@@ -11,15 +11,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#c1e5f5">
+        android:background="@drawable/back">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
+            android:background="#9fa3d9f1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
+            android:scrollbars="vertical" />
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

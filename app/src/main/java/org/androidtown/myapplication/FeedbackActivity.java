@@ -108,7 +108,7 @@ public class FeedbackActivity extends BaseActivity{
                 feedback_comment_value=(String) dataSnapshot.child("FRIENDCOMMENT").getValue();
 
                 rate_value=(String) dataSnapshot.child("RATING").getValue();
-                //feedback_rate_value=(String) dataSnapshot.child("FRIENDRATING").getValue();
+                feedback_rate_value=(String) dataSnapshot.child("FRIENDRATING").getValue();
 
                 date.setText(date_value);
                 writeDate.setText(writeDate_value);
@@ -118,7 +118,7 @@ public class FeedbackActivity extends BaseActivity{
                 feedback_comment.setText(feedback_comment_value);
 
                 rate.setRating(Float.parseFloat(rate_value));
-                //feedback_rate.setRating(Float.parseFloat(feedback_rate_value));
+                feedback_rate.setRating(Float.parseFloat(feedback_rate_value));
                 // Toast.makeText(getApplicationContext(),""+rating_value+" "+feedback_rating_value,Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(),""+feedback_rate_value+date_value+""+writeDate_value+""+comment_value,Toast.LENGTH_SHORT).show();
             }

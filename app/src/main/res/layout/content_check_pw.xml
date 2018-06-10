@@ -11,16 +11,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/back">
 
     <TableLayout
         android:id="@+id/loginTable"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:padding="10dp"
         android:layout_marginTop="150dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
+        android:background="#9fa3d9f1"
         android:stretchColumns="*"
         android:layout_centerHorizontal="true">
 
@@ -28,18 +32,22 @@
             <TextView
                 android:text="본인 확인을 위해 비밀번호를 입력해주세요"
                 android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="15dp"
                 android:layout_span="2"
                 android:layout_gravity="center"/>
         </TableRow>
 
         <TableRow>
             <TextView android:text="PW"
+                android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"/>
 
             <EditText
                 android:layout_width="100dp"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:id="@+id/loginPw"
                 android:inputType="textPassword"/>
@@ -53,6 +61,10 @@
                 android:layout_marginTop="10dp"
                 android:layout_span="2"
                 android:layout_gravity="center"
+                android:textStyle="bold"
+                android:background="@drawable/button"
+                android:textColor="#969595"
+                android:textSize="20dp"
                 android:text="확인" />
         </TableRow>
 

@@ -13,12 +13,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_marginBottom="50dp"
-        android:background="#c1e5f5"
+        android:background="@drawable/back"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#9fa3d9f1"
+            android:padding="10dp"
             android:layout_gravity="center"
             android:orientation="vertical">
 
@@ -29,6 +31,7 @@
                 android:layout_marginTop="100dp"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:text="title"
                 android:textSize="40dp" />
 
@@ -44,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
-                android:background="#c1e5f5"
+                android:background="#00ffffff"
                 android:stretchColumns="*">
 
                 <TableRow>
@@ -52,6 +55,7 @@
                         android:id="@+id/user_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:gravity="center"
                         android:textSize="25dp" />
                 </TableRow>
@@ -61,6 +65,7 @@
                         android:id="@+id/user_writeDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:gravity="center"
                         android:textSize="15dp" />
                 </TableRow>
@@ -70,6 +75,7 @@
                         android:id="@+id/user_rate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:isIndicator="true"
                         android:layout_gravity="center" />
                 </TableRow>
@@ -79,8 +85,10 @@
                         android:id="@+id/user_comment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="#000000"
+                        android:layout_marginBottom="10dp"
                         android:textSize="20dp" />
                 </TableRow>
 
@@ -90,6 +98,7 @@
                         android:text="피드백"
                         android:textSize="20dp"
                         android:layout_marginTop="50dp"
+                        android:textStyle="bold"
                         android:gravity="center"/>
                 </TableRow>
 
@@ -98,6 +107,7 @@
                         android:id="@+id/feedback_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:gravity="center"
                         android:textSize="25dp" />
                 </TableRow>
@@ -107,6 +117,7 @@
                         android:id="@+id/feedback_rate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:isIndicator="true"
                         android:layout_gravity="center" />
                 </TableRow>
@@ -116,6 +127,7 @@
                         android:id="@+id/feedback_comment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="#000000"
                         android:textSize="20dp" />

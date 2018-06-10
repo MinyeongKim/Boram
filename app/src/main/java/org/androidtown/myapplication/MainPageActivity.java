@@ -258,15 +258,14 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
             startActivity(intent);
         }
 
-        //기간이 지난 타임라인 보기
-        else if (id == R.id.lasttimeline) {
-            Intent intent = new Intent(getApplicationContext(), cardTimeActivity.class);
-            intent.putExtras(bundle);
+        //회원 정보 수정하기
+        else if (id == R.id.user_info_change) {
+            Intent intent = new Intent(getApplicationContext(), CheckPWActivity.class);
             startActivity(intent);
         }
 
-        //회원 정보 수정하기
-        else if (id == R.id.user_info_change) {
+        //앱 탈퇴하기
+        else if (id == R.id.getout) {
             Intent intent = new Intent(getApplicationContext(), CheckPWActivity.class);
             startActivity(intent);
         }

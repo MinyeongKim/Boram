@@ -162,25 +162,10 @@ public class HistoryActivity extends BaseActivity {
             }
         });
 
-        /*
-        habit_title.setText(title);
-        habit_check.setText(habitType);
-        habit_count.setText("이때까지 실천한 횟수: " + didNum + "\n총 실천해야하는 횟수: " + willNum);
-
-        int progress_value = didNum / willNum * 100;
-        progress.setProgress(progress_value);
-        ratio.setText(progress_value + " %");
-
-        if (type.equals("good")) {
-            imageView.setImageResource(R.drawable.good_tree);
-        } else {
-            imageView.setImageResource(R.drawable.bad_tree);
-        }
-*/
         //database = FirebaseDatabase.getInstance();
         databaseReference2 = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history/");
 
-        /*adapter = new HistoryAdapter();
+        adapter = new HistoryAdapter();
         databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -216,7 +201,7 @@ public class HistoryActivity extends BaseActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });*/
+        });
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -2,41 +2,48 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:background="@drawable/signup">
 
     <TableLayout
         android:id="@+id/signupTable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:layout_centerHorizontal="true">
+        android:layout_centerInParent="true">
 
         <TableRow>
             <TextView android:text="ID"
+                android:textStyle="bold"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"/>
             <EditText
                 android:layout_width="200dp"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:id="@+id/signupId" />
         </TableRow>
 
         <TableRow>
             <TextView android:text="PW"
+                android:textStyle="bold"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"/>
             <EditText
                 android:layout_width="200dp"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:id="@+id/signupPw" />
         </TableRow>
 
         <TableRow>
             <TextView android:text="Name"
+                android:textStyle="bold"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"/>
             <EditText
                 android:layout_width="200dp"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:id="@+id/signupName" />
         </TableRow>
@@ -46,10 +53,15 @@
 
     //DB랑 연동하기!
     <Button
-        android:id="@+id/registerBtn"
-        android:layout_width="wrap_content"
+        android:background="@drawable/button"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:layout_marginTop="5dp"
+        android:id="@+id/registerBtn"
+        android:text="가입하기"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textColor="#636363"
         android:layout_below="@+id/signupTable"
         android:layout_centerHorizontal="true"/>
 

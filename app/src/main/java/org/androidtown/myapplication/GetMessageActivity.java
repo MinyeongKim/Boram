@@ -137,10 +137,12 @@ public class GetMessageActivity extends AppCompatActivity {
                 //전송 해주는 부분 넣으면 됨
                 databaseReference = database.getReference("users/" + SenderID + "/habits/current/" + HabitIndex + "/history");
 
+                String inputRate = String.valueOf(rating_value);
+
                 String time = new Date().toString();
                 databaseReference.child(historyIndex).child("FRIENDWRITETIME").setValue(time);
                 databaseReference.child(historyIndex).child("FRIENDCOMMENT").setValue(comment);
-                databaseReference.child(historyIndex).child("FRIENDRATING").setValue(rating_value);
+                databaseReference.child(historyIndex).child("FRIENDRATING").setValue(inputRate);
 
                 sendPostToFCM();
 

@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CheckPWActivity extends AppCompatActivity {
+public class CheckPWActivity extends BaseActivity {
 
     EditText loginPw;
     Button CheckPW;

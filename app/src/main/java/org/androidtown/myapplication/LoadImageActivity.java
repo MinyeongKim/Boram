@@ -232,11 +232,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                     .setPositiveButton("취소", cancelListener).show();
         }
 
-        //전송 버튼 눌리면 전송해줘야함
-        //푸쉬메세지와 함께 사용자가 입력한 값과 사진을
-        //if()
-
-
+        //전송버튼을 누를 경우 -> 사진과 정보들을 상대방에게 전송해줌
         if (view.getId() == R.id.sendButton) {
             //sendPostToFCM("확인해주세요!");
             //uploadPhoto(selectedImage);
