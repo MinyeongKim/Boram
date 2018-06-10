@@ -180,7 +180,7 @@ public class HistoryActivity extends BaseActivity {
         //database = FirebaseDatabase.getInstance();
         databaseReference2 = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history/");
 
-        adapter = new HistoryAdapter();
+        /*adapter = new HistoryAdapter();
         databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -216,7 +216,7 @@ public class HistoryActivity extends BaseActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -85,6 +85,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     private DatabaseReference databaseReferenceForPushMsgTest;
     private DatabaseReference databaseReferenceForServerKey;
     private DatabaseReference databaseReferenceForUserName;
+    private DatabaseReference databaseReference1;
 
     private FirebaseStorage storage;
     private StorageReference mStorageRef;
@@ -94,6 +95,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     private Uri filePath;
     String HISTORYidx;
     String habitTitle;
+    String nextPersonName = "";
 
     Button loadButton, sendButton;
     ImageView loadImgae;
@@ -116,6 +118,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
     String friendID;
     String UserID;
     int habitIdx;
+    String checkType;
 
     String mlmageCaptureUri;
     Uri photoURI;
@@ -322,7 +325,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         }
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        mlmageCaptureUri= "file:" + image.getAbsolutePath();
+        mlmageCaptureUri = "file:" + image.getAbsolutePath();
         return image;
     }
 
@@ -480,67 +483,293 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
         Bundle bundle = intent.getExtras();
         UserID = bundle.getString("ID");
         habitIdx = bundle.getInt("INDEX");
+        checkType = bundle.getString("Check_type");
         //String habitIdxString = String.valueOf(habitIdx);
-        databaseReferenceForUserName = database.getReference("users/" + UserID);
-        //Toast.makeText(getApplicationContext(), "test: " + UserID, Toast.LENGTH_SHORT).show();
-        databaseReferenceForUserName.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                UserName = (String) dataSnapshot.child("NAME").getValue();
-                databaseReferenceHistoryIndex.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        int historyIndex = (int) dataSnapshot.getChildrenCount();
-                        HISTORYidx = String.valueOf(historyIndex);
 
-                        databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
-                        Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
-                        databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
+        if (checkType.equals("friend")) {
+            databaseReferenceForUserName = database.getReference("users/" + UserID);
+            //Toast.makeText(getApplicationContext(), "test: " + UserID, Toast.LENGTH_SHORT).show();
+            databaseReferenceForUserName.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserName = (String) dataSnapshot.child("NAME").getValue();
+                    databaseReferenceHistoryIndex.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            int historyIndex = (int) dataSnapshot.getChildrenCount();
+                            HISTORYidx = String.valueOf(historyIndex);
+                            databaseReferenceHistoryIndex.child(HISTORYidx).child("ImageID").setValue(filename);
+
+                            databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
+                            Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
+                            databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    friendID = (String) dataSnapshot.child("FRIENDID").getValue();
+                                    habitTitle = (String) dataSnapshot.child("TITLE").getValue();
+                                    Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
+
+                                    databaseReferenceForPushMsgTest = database.getReference("users/" + friendID);
+                                    databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            //받는 사람 주소
+                                            final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
+                                            handler.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try {
+                                                        //FMC 메세지 만들기
+                                                        JSONObject root = new JSONObject();
+                                                        JSONObject notification = new JSONObject();
+                                                        //notification.put("body", message);
+                                                        notification.put("body", "확인해주세요!");//습관제목?
+                                                        notification.put("title", UserName + " 님이 인증을 요청했어요~");
+                                                        //notification.put("ImgName", filename);
+                                                        notification.put("tag", filename + "," + habitTitle + "," + UserID + "," + habitIdx + "," + HISTORYidx);//filename+habit title+userid+habitIdx+HISTORYidx
+                                                        root.put("notification", notification);
+                                                        root.put("to", fcmToken);
+
+                                                        URL Url = new URL(FCM_MESSAGE_URL);
+                                                        HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                                                        conn.setRequestMethod("POST");
+                                                        conn.setDoOutput(true);
+                                                        conn.setDoInput(true);
+                                                        conn.addRequestProperty("Authorization", "key=" + ServerKey);
+                                                        conn.setRequestProperty("Accept", "application/json");
+                                                        conn.setRequestProperty("Content-type", "application/json");
+                                                        OutputStream os = conn.getOutputStream();
+                                                        os.write(root.toString().getBytes("utf-8"));
+                                                        os.flush();
+                                                        conn.getResponseCode();
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else if (checkType.equals("otherPerson")) {
+
+            databaseReferenceForUserName = database.getReference("withOthersList");
+            databaseReferenceForUserName.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    boolean nextTemp = false;
+                    Iterator<DataSnapshot> userList = dataSnapshot.getChildren().iterator();
+                    int i = 0;
+                    String firstPersonName = "";
+                    while (userList.hasNext()) {
+                        DataSnapshot data = userList.next();
+                        if (data.getKey().equals(UserID) && !nextTemp) {
+                            if (i == 0) {
+                                firstPersonName = data.getKey();
+                                i = 1;
+                            }
+                            nextTemp = true;
+                            //return;
+                        } else {
+                            nextPersonName = data.getKey();
+
+                            databaseReferenceForUserName = database.getReference("users/" + nextPersonName);
+                            //Toast.makeText(getApplicationContext(), "test: " + UserID, Toast.LENGTH_SHORT).show();
+                            databaseReferenceForUserName.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    UserName = (String) dataSnapshot.child("NAME").getValue();
+                                    databaseReferenceHistoryIndex.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            int historyIndex = (int) dataSnapshot.getChildrenCount();
+                                            HISTORYidx = String.valueOf(historyIndex);
+                                            databaseReferenceHistoryIndex.child(HISTORYidx).child("ImageID").setValue(filename);
+
+                                            databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
+                                            Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
+                                            databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    friendID = (String) dataSnapshot.child("FRIENDID").getValue();
+                                                    habitTitle = (String) dataSnapshot.child("TITLE").getValue();
+                                                    Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
+
+                                                    databaseReferenceForPushMsgTest = database.getReference("users/" + nextPersonName);
+                                                    databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            //받는 사람 주소
+                                                            final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
+                                                            handler.post(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    try {
+                                                                        //FMC 메세지 만들기
+                                                                        JSONObject root = new JSONObject();
+                                                                        JSONObject notification = new JSONObject();
+                                                                        //notification.put("body", message);
+                                                                        notification.put("body", "확인해주세요!");//습관제목?
+                                                                        notification.put("title", "누군가 인증을 요청했어요~");
+                                                                        //notification.put("ImgName", filename);
+                                                                        notification.put("tag", filename + "," + habitTitle + "," + UserID + "," + habitIdx + "," + HISTORYidx);//filename+habit title+userid+habitIdx+HISTORYidx
+                                                                        root.put("notification", notification);
+                                                                        root.put("to", fcmToken);
+
+                                                                        URL Url = new URL(FCM_MESSAGE_URL);
+                                                                        HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                                                                        conn.setRequestMethod("POST");
+                                                                        conn.setDoOutput(true);
+                                                                        conn.setDoInput(true);
+                                                                        conn.addRequestProperty("Authorization", "key=" + ServerKey);
+                                                                        conn.setRequestProperty("Accept", "application/json");
+                                                                        conn.setRequestProperty("Content-type", "application/json");
+                                                                        OutputStream os = conn.getOutputStream();
+                                                                        os.write(root.toString().getBytes("utf-8"));
+                                                                        os.flush();
+                                                                        conn.getResponseCode();
+                                                                    } catch (Exception e) {
+                                                                        e.printStackTrace();
+                                                                    }
+                                                                }
+                                                            });
+
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                            //Toast.makeText(getApplication(), nextPersonName, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                    if (!nextTemp) {
+                        databaseReferenceForUserName = database.getReference("users/" + firstPersonName);
+                        //Toast.makeText(getApplicationContext(), "test: " + UserID, Toast.LENGTH_SHORT).show();
+                        databaseReferenceForUserName.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                friendID = (String) dataSnapshot.child("FRIENDID").getValue();
-                                habitTitle = (String) dataSnapshot.child("TITLE").getValue();
-                                Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
-
-                                databaseReferenceForPushMsgTest = database.getReference("users/" + friendID);
-                                databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                                UserName = (String) dataSnapshot.child("NAME").getValue();
+                                databaseReferenceHistoryIndex.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                        //받는 사람 주소
-                                        final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
-                                        handler.post(new Runnable() {
+                                        int historyIndex = (int) dataSnapshot.getChildrenCount();
+                                        HISTORYidx = String.valueOf(historyIndex);
+                                        databaseReferenceHistoryIndex.child(HISTORYidx).child("ImageID").setValue(filename);
+
+                                        databaseReferenceForPartner = database.getReference("users/" + UserID + "/habits/current/" + habitIdx);
+                                        Toast.makeText(getApplicationContext(), "users/" + UserID + "/habits/" + habitIdx, Toast.LENGTH_SHORT).show();
+                                        databaseReferenceForPartner.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
-                                            public void run() {
-                                                try {
-                                                    //FMC 메세지 만들기
-                                                    JSONObject root = new JSONObject();
-                                                    JSONObject notification = new JSONObject();
-                                                    //notification.put("body", message);
-                                                    notification.put("body", "확인해주세요!");//습관제목?
-                                                    notification.put("title", UserName + " 님이 인증을 요청했어요~");
-                                                    //notification.put("ImgName", filename);
-                                                    notification.put("tag", filename + "," + habitTitle + "," + UserID + "," + habitIdx+","+HISTORYidx);//filename+habit title+userid+habitIdx+HISTORYidx
-                                                    root.put("notification", notification);
-                                                    root.put("to", fcmToken);
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                friendID = (String) dataSnapshot.child("FRIENDID").getValue();
+                                                habitTitle = (String) dataSnapshot.child("TITLE").getValue();
+                                                Toast.makeText(getApplicationContext(), "friend / " + friendID, Toast.LENGTH_SHORT).show();
 
-                                                    URL Url = new URL(FCM_MESSAGE_URL);
-                                                    HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
-                                                    conn.setRequestMethod("POST");
-                                                    conn.setDoOutput(true);
-                                                    conn.setDoInput(true);
-                                                    conn.addRequestProperty("Authorization", "key=" + ServerKey);
-                                                    conn.setRequestProperty("Accept", "application/json");
-                                                    conn.setRequestProperty("Content-type", "application/json");
-                                                    OutputStream os = conn.getOutputStream();
-                                                    os.write(root.toString().getBytes("utf-8"));
-                                                    os.flush();
-                                                    conn.getResponseCode();
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
+                                                databaseReferenceForPushMsgTest = database.getReference("users/" + nextPersonName);
+                                                databaseReferenceForPushMsgTest.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        //받는 사람 주소
+                                                        final String fcmToken = (String) dataSnapshot.child("fcmToken").getValue();
+                                                        handler.post(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                try {
+                                                                    //FMC 메세지 만들기
+                                                                    JSONObject root = new JSONObject();
+                                                                    JSONObject notification = new JSONObject();
+                                                                    //notification.put("body", message);
+                                                                    notification.put("body", "확인해주세요!");//습관제목?
+                                                                    notification.put("title", "누군가 인증을 요청했어요~");
+                                                                    //notification.put("ImgName", filename);
+                                                                    notification.put("tag", filename + "," + habitTitle + "," + UserID + "," + habitIdx + "," + HISTORYidx);//filename+habit title+userid+habitIdx+HISTORYidx
+                                                                    root.put("notification", notification);
+                                                                    root.put("to", fcmToken);
+
+                                                                    URL Url = new URL(FCM_MESSAGE_URL);
+                                                                    HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                                                                    conn.setRequestMethod("POST");
+                                                                    conn.setDoOutput(true);
+                                                                    conn.setDoInput(true);
+                                                                    conn.addRequestProperty("Authorization", "key=" + ServerKey);
+                                                                    conn.setRequestProperty("Accept", "application/json");
+                                                                    conn.setRequestProperty("Content-type", "application/json");
+                                                                    OutputStream os = conn.getOutputStream();
+                                                                    os.write(root.toString().getBytes("utf-8"));
+                                                                    os.flush();
+                                                                    conn.getResponseCode();
+                                                                } catch (Exception e) {
+                                                                    e.printStackTrace();
+                                                                }
+                                                            }
+                                                        });
+
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
                                             }
-                                        });
 
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+
+                                        });
                                     }
 
                                     @Override
@@ -554,22 +783,20 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
-
                         });
                     }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
-            }
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+
+            });
+        }
+
     }
     /*private void uploadPhoto(Uri uri) {
         // Reset UI
@@ -680,6 +907,7 @@ public class LoadImageActivity extends BaseActivity implements View.OnClickListe
                             progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                             sendPostToFCM("확인해주세요!");
+                            finish();
                         }
                     })
                     //실패시
