@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Boram.iml" filepath="$PROJECT_DIR$/Boram.iml" />
       <module fileurl="file://C:\Boram\.idea\Boram.iml" filepath="C:\Boram\.idea\Boram.iml" />
+      <module fileurl="file://C:\Users\SurimYuk\Documents\GitHub\Boram\Boram.iml" filepath="C:\Users\SurimYuk\Documents\GitHub\Boram\Boram.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

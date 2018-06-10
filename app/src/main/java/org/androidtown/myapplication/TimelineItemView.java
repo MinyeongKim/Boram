@@ -65,9 +65,8 @@ public class TimelineItemView extends LinearLayout {
         comment.setText(" < "+comment_value+" > ");
     }
 
-    public void setRate(String rate_Value){
-        //float rating = Float.parseFloat(rate_Value);
-        rate.setRating(3);
+    public void setRate(float rate_Value){
+        rate.setRating(rate_Value);
     }
 
     public void setWritingTime(String writingDate_value) {
