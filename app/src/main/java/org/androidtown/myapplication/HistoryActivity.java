@@ -44,6 +44,7 @@ public class HistoryActivity extends BaseActivity {
     int willNum;
     String type;
     String friend_ID;
+    String filename;
 
     int habitIdx;
     String habitType;
@@ -55,7 +56,7 @@ public class HistoryActivity extends BaseActivity {
     ImageView imageView;
     TextView habit_title, habit_check, habit_count, ratio;
     ProgressBar progress;
-
+    Bundle feedback = new Bundle();
     //DB
     FirebaseDatabase database;
 
@@ -193,16 +194,50 @@ public class HistoryActivity extends BaseActivity {
                     String date = (String) dataSnapshot.child(histiryIndex).child("DATE").getValue();
                     String comment = (String) dataSnapshot.child(histiryIndex).child("COMMENT").getValue();
                     String rate = (String) dataSnapshot.child(histiryIndex).child("RATING").getValue();
+<<<<<<< HEAD
 
+=======
+                    filename = (String) dataSnapshot.child(histiryIndex).child("ImageID").getValue();
+>>>>>>> fadd3321e1f4e0b8712d654498b203711f1a1b76
                     float rate_value = Float.parseFloat(rate);
 
                     Log.i("date", date);
 
                     //일단 변수명만 TimelineItem으로 썼어! HistoryItem만들어지면 HistoryItem으로 바꾸면 돼!
                     adapter.addItem(new TimelineItem(date, comment, rate_value, writingDate));
+
+                    list.setAdapter(adapter);
+
+                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                            TimelineItem item = (TimelineItem) adapter.getItem(position);
+
+                            Intent intent = new Intent(getApplicationContext(), FeedbackActivity.class);
+
+                            //Bundle feedback = new Bundle();
+
+                            int index=position+1;
+
+                            feedback.putString("UserID",UserID );
+                            feedback.putInt("INDEX", index);
+                            feedback.putInt("HABITINDEX",habitIdx);
+                            feedback.putString("Title", title);
+                            feedback.putString("CheckMode", withWho);
+                            feedback.putString("filename",filename );
+                            Toast.makeText(getApplicationContext(), filename, Toast.LENGTH_SHORT).show();
+
+                            if(withWho.equals("friend")){
+                                feedback.putString("FriendID", friend_ID);
+                            }
+
+                            intent.putExtras(feedback);
+                            startActivity(intent);
+                        }
+                    });
                 }
 
-                list.setAdapter(adapter);
+
             }
 
             @Override
@@ -211,31 +246,7 @@ public class HistoryActivity extends BaseActivity {
             }
         });
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                TimelineItem item = (TimelineItem) adapter.getItem(position);
 
-                Intent intent = new Intent(getApplicationContext(), FeedbackActivity.class);
-
-                Bundle feedback = new Bundle();
-
-                int index=position+1;
-
-                feedback.putString("UserID",UserID );
-                feedback.putInt("INDEX", index);
-                feedback.putInt("HABITINDEX",habitIdx);
-                feedback.putString("Title", title);
-                feedback.putString("CheckMode", withWho);
-
-                if(withWho.equals("friend")){
-                    feedback.putString("FriendID", friend_ID);
-                }
-
-                intent.putExtras(feedback);
-                startActivity(intent);
-            }
-        });
 
 
         //별점 매기는 부분  + checkActivity

@@ -109,13 +109,10 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
         /*
         auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = auto.edit();
-
         name=auto.getString("userName","");
         id=auto.getString("inputId","");
-
         userName = (TextView) findViewById(R.id.UserName);
         userID = (TextView) findViewById(R.id.UserID);
-
         userName.setText(name);
         userID.setText(id);
 */
@@ -225,7 +222,6 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
             Drawable drawable= getResources().getDrawable(R.drawable.sun_icon);
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
             Drawable newdrawable = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 250, 250, true));
-
             newdrawable.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(newdrawable);
@@ -239,7 +235,6 @@ public class MainPageActivity extends BaseActivity implements NavigationView.OnN
         /*
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         */

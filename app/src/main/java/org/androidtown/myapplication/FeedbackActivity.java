@@ -14,6 +14,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,17 +28,25 @@ import org.w3c.dom.Text;
 
 //import org.gcsw.boram.R;
 
-public class FeedbackActivity extends BaseActivity{
+public class FeedbackActivity extends BaseActivity {
 
-    TextView habitTitle, date, writeDate,comment,feedback_date,feedback_comment;
+    TextView habitTitle, date, writeDate, comment, feedback_date, feedback_comment;
     RatingBar rate, feedback_rate;
-    ImageView imageLoad;
+    ImageView user_imageLoad;
 
+<<<<<<< HEAD
     String date_value, writeDate_value,comment_value,feedback_date_value,feedback_comment_value, rate_value, feedback_rate_value;
     String path;
+=======
+    String date_value, writeDate_value, comment_value;
+    String feedback_date_value = "";
+    String feedback_comment_value, rate_value, feedback_rate_value;
+>>>>>>> fadd3321e1f4e0b8712d654498b203711f1a1b76
 
     FirebaseDatabase database;
     DatabaseReference databaseReference;
+    private FirebaseStorage storage;
+    StorageReference spaceRef;
 
     private FirebaseStorage storage;
     StorageReference spaceRef;
@@ -51,22 +61,25 @@ public class FeedbackActivity extends BaseActivity{
 
         setupActionBar();
 
-        habitTitle = (TextView)findViewById(R.id.user_habitTitle);
-        date = (TextView)findViewById(R.id.user_date);
-        writeDate = (TextView)findViewById(R.id.user_writeDate);
-        comment = (TextView)findViewById(R.id.user_comment);
-        feedback_date = (TextView)findViewById(R.id.feedback_date);
-        feedback_comment = (TextView)findViewById(R.id.feedback_comment);
+        storage = FirebaseStorage.getInstance();
+        habitTitle = (TextView) findViewById(R.id.user_habitTitle);
+        date = (TextView) findViewById(R.id.user_date);
+        writeDate = (TextView) findViewById(R.id.user_writeDate);
+        comment = (TextView) findViewById(R.id.user_comment);
+        feedback_date = (TextView) findViewById(R.id.feedback_date);
+        feedback_comment = (TextView) findViewById(R.id.feedback_comment);
 
-        rate = (RatingBar)findViewById(R.id.user_rate);
-        feedback_rate = (RatingBar)findViewById(R.id.feedback_rate);
+        rate = (RatingBar) findViewById(R.id.user_rate);
+        feedback_rate = (RatingBar) findViewById(R.id.feedback_rate);
 
-        imageLoad = (ImageView)findViewById(R.id.imageLoad);
+        user_imageLoad = (ImageView) findViewById(R.id.user_imageLoad);
 
         Intent info = getIntent();
-        Bundle get_info = info.getExtras();
+        final Bundle get_info = info.getExtras();
 
-        String user =get_info.getString("UserID");
+        String filename = get_info.getString("filename");
+        Toast.makeText(getApplicationContext(), filename, Toast.LENGTH_SHORT).show();
+        String user = get_info.getString("UserID");
 
         final int habitIndex = get_info.getInt("HABITINDEX");
         final int index = get_info.getInt("INDEX");
@@ -75,17 +88,25 @@ public class FeedbackActivity extends BaseActivity{
         habitTitle.setText(habit_title);
 
 
+<<<<<<< HEAD
         String location ="users/" + user + "/habits/current/" + habitIndex + "/history/"+index;
         //Toast.makeText(getApplicationContext(),""+location,Toast.LENGTH_SHORT).show();
+=======
+        String location = "users/" + user + "/habits/current/" + habitIndex + "/history/" + index;
+        Toast.makeText(getApplicationContext(), "" + location, Toast.LENGTH_SHORT).show();
+>>>>>>> fadd3321e1f4e0b8712d654498b203711f1a1b76
 
         String withWho = get_info.getString("CheckMode");
 
-        if(withWho.equals("friend")){
+        if (withWho.equals("friend")) {
             String friendID = get_info.getString("FriendID");
         }
 
+        spaceRef = storage.getReferenceFromUrl("gs://mobileproject-57744.appspot.com/").child("images/" + filename);
+        Glide.with(this).using(new FirebaseImageLoader()).load(spaceRef).into(user_imageLoad);
+
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("users/" + user + "/habits/current/" + habitIndex + "/history/"+index);
+        databaseReference = database.getReference("users/" + user + "/habits/current/" + habitIndex + "/history/" + index);
 
         /*
 
@@ -93,16 +114,17 @@ public class FeedbackActivity extends BaseActivity{
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                date_value= (String) dataSnapshot.child("DATE").getValue();
-                writeDate_value=(String) dataSnapshot.child("WRITETIME").getValue();
-                comment_value=(String) dataSnapshot.child("COMMENT").getValue();
+                date_value = (String) dataSnapshot.child("DATE").getValue();
+                writeDate_value = (String) dataSnapshot.child("WRITETIME").getValue();
+                comment_value = (String) dataSnapshot.child("COMMENT").getValue();
 
 
-                feedback_date_value=(String) dataSnapshot.child("FRIENDWRITETIME").getValue();
-                feedback_comment_value=(String) dataSnapshot.child("FRIENDCOMMENT").getValue();
+                feedback_date_value = (String) dataSnapshot.child("FRIENDWRITETIME").getValue();
 
-                rate_value=(String) dataSnapshot.child("RATING").getValue();
-                feedback_rate_value=(String) dataSnapshot.child("FRIENDRATING").getValue();
+                feedback_comment_value = (String) dataSnapshot.child("FRIENDCOMMENT").getValue();
+
+                rate_value = (String) dataSnapshot.child("RATING").getValue();
+                feedback_rate_value = (String) dataSnapshot.child("FRIENDRATING").getValue();
 
                 path = (String) dataSnapshot.child("ImageID").getValue();
 
@@ -117,6 +139,8 @@ public class FeedbackActivity extends BaseActivity{
 
                 rate.setRating(Float.parseFloat(rate_value));
                 feedback_rate.setRating(Float.parseFloat(feedback_rate_value));
+
+
             }
 
             @Override
