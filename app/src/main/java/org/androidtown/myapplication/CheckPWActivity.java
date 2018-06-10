@@ -16,6 +16,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class CheckPWActivity extends BaseActivity {
 
     EditText loginPw;
@@ -56,6 +59,7 @@ public class CheckPWActivity extends BaseActivity {
                 }
             }
         });
+
     }
 
     //뒤로가는 버튼 생성
