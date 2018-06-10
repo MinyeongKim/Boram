@@ -99,6 +99,7 @@ public class HistoryActivity extends BaseActivity {
         habitIdx = bundle.getInt("INDEX");
         habitType = bundle.getString("Check_type");
         UserID = bundle.getString("ID");
+
         /*
         title = bundle.getString("Title");
         didNum = bundle.getInt("Did");
@@ -171,25 +172,8 @@ public class HistoryActivity extends BaseActivity {
             }
         });
 
-        /*
-        habit_title.setText(title);
-        habit_check.setText(habitType);
-        habit_count.setText("이때까지 실천한 횟수: " + didNum + "\n총 실천해야하는 횟수: " + willNum);
-
-        int progress_value = didNum / willNum * 100;
-        progress.setProgress(progress_value);
-        ratio.setText(progress_value + " %");
-
-        if (type.equals("good")) {
-            imageView.setImageResource(R.drawable.good_tree);
-        } else {
-            imageView.setImageResource(R.drawable.bad_tree);
-        }
-*/
-        //database = FirebaseDatabase.getInstance();
         databaseReference2 = database.getReference("users/" + UserID + "/habits/current/" + habitIdx + "/history/");
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         adapter = new HistoryAdapter();
         databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -210,8 +194,6 @@ public class HistoryActivity extends BaseActivity {
                     String comment = (String) dataSnapshot.child(histiryIndex).child("COMMENT").getValue();
                     String rate = (String) dataSnapshot.child(histiryIndex).child("RATING").getValue();
                     float rate_value = Float.parseFloat(rate);
-
-                    //float rating_Value= Float.parseFloat(rate);
 
                     Log.i("date", date);
 
@@ -239,7 +221,6 @@ public class HistoryActivity extends BaseActivity {
 
                 int index=position+1;
 
-                //String location ="users/" + UserID + "/habits/current/" + habitIdx + "/history/"+value;
                 feedback.putString("UserID",UserID );
                 feedback.putInt("INDEX", index);
                 feedback.putInt("HABITINDEX",habitIdx);

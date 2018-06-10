@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    app:ignore="NamespaceTypo">
 
-    <android.support.v7.widget.CardView
+    <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/cardview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="7dp"
-        android:background="#c1e5f5"
-        card_view:cardCornerRadius="10dp">
+        android:layout_height="150dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:cardUseCompatPadding="true"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -19,22 +23,21 @@
 
             <ImageView
                 android:id="@+id/image"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:contentDescription="@string/action_settings"
                 android:layout_centerInParent="true"
+                android:contentDescription="@string/action_settings"
                 android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:gravity="center"
-                android:textSize="36sp"
                 android:textColor="#ffffffff"
-                android:textStyle="bold"
-                android:layout_centerInParent="true"/>
+                android:textSize="36sp"
+                android:textStyle="bold" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

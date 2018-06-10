@@ -60,21 +60,6 @@ public class FeedbackActivity extends BaseActivity{
         Intent info = getIntent();
         Bundle get_info = info.getExtras();
 
-        /*
-        feedback.putInt("Position", index);
-
-                feedback.putString("UserID",UserID );
-                feedback.putInt("INDEX", habitIdx);
-                feedback.putString("Title", title);
-                feedback.putString("CheckMode", withWho);
-
-                if(withWho.equals("friend")){
-                    feedback.putString("FriendID", friend_ID);
-                }
-
-         */
-        //String location ="users/" + UserID + "/habits/current/" + habitIdx + "/history/"+value;
-
         String user =get_info.getString("UserID");
 
         final int habitIndex = get_info.getInt("HABITINDEX");
@@ -108,7 +93,7 @@ public class FeedbackActivity extends BaseActivity{
                 feedback_comment_value=(String) dataSnapshot.child("FRIENDCOMMENT").getValue();
 
                 rate_value=(String) dataSnapshot.child("RATING").getValue();
-                //feedback_rate_value=(String) dataSnapshot.child("FRIENDRATING").getValue();
+                feedback_rate_value=(String) dataSnapshot.child("FRIENDRATING").getValue();
 
                 date.setText(date_value);
                 writeDate.setText(writeDate_value);
@@ -118,9 +103,7 @@ public class FeedbackActivity extends BaseActivity{
                 feedback_comment.setText(feedback_comment_value);
 
                 rate.setRating(Float.parseFloat(rate_value));
-                //feedback_rate.setRating(Float.parseFloat(feedback_rate_value));
-                // Toast.makeText(getApplicationContext(),""+rating_value+" "+feedback_rating_value,Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(),""+feedback_rate_value+date_value+""+writeDate_value+""+comment_value,Toast.LENGTH_SHORT).show();
+                feedback_rate.setRating(Float.parseFloat(feedback_rate_value));
             }
 
             @Override
@@ -128,19 +111,6 @@ public class FeedbackActivity extends BaseActivity{
 
             }
         });
-
-        /*
-        Toast.makeText(getApplicationContext(),location+"",Toast.LENGTH_SHORT).show();
-
-        date.setText("date_value");
-        writeDate.setText(writeDate_value);
-        comment.setText(comment_value);
-        feedback_date.setText(feedback_date_value);
-        feedback_comment.setText(feedback_comment_value);
-
-        rate.setRating(Float.parseFloat(rate_value));
-        feedback_rate.setRating(Float.parseFloat(feedback_rate_value));
-        */
     }
 
     //뒤로가는 버튼 생성

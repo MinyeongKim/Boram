@@ -18,11 +18,6 @@
             android:id="@+id/timeline"
             android:icon="@drawable/timeline"
             android:title="나의 습관 확인하기" />
-
-        <item
-            android:id="@+id/lasttimeline"
-            android:icon="@drawable/timeline1"
-            android:title="지난 습관 확인하기" />
     </group>
 
     <item android:title="설정">
@@ -31,6 +26,11 @@
                 android:id="@+id/user_info_change"
                 android:icon="@drawable/personalinformation"
                 android:title="회원 정보 수정" />
+
+            <item
+                android:id="@+id/getout"
+                android:icon="@drawable/delete"
+                android:title="탈퇴하기" />
 
             <item
                 android:id="@+id/app_setting"
@@ -44,6 +44,7 @@
                 android:title="로그아웃" />
 
         </menu>
+
     </item>
 
 </menu>

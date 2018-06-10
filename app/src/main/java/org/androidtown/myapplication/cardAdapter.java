@@ -6,7 +6,10 @@ package org.androidtown.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -22,9 +25,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
 import java.util.List;
 
 public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
+
+    private FirebaseStorage storage;
+    StorageReference spaceRef;
 
     Context context;
     List<item> items;
@@ -48,6 +60,7 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
 
         final item item = items.get(position);
         final int POSITION = position;
+
         Drawable drawable = ContextCompat.getDrawable(context, item.getPhoto());
         holder.image.setBackground(drawable);
         holder.title.setText(item.getTitle());
@@ -74,6 +87,7 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.ViewHolder> {
                 bundle.putInt("INDEX", POSITION + 1);
                 bundle.putString("Check_type", withwho);
                 bundle.putString("ID", UserId);
+
                 /*
                 bundle.putString("Title", title);
                 bundle.putInt("Did",didNum);

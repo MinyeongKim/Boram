@@ -125,8 +125,7 @@ public class TimelineActivity extends BaseActivity {
                 //Toast.makeText(getApplication(), idx, Toast.LENGTH_LONG).show();
 
 
-                int type1=R.drawable.good_tree;
-                int type2 = R.drawable.bad_tree;
+                int picture_type;
 
                 for(int i=1; i <= habit_num;i++){
                     String habitIndex = String.valueOf(i);
@@ -141,8 +140,14 @@ public class TimelineActivity extends BaseActivity {
 
                     String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue(); //good/bad habit
 
+                    if(type.equals("good")){
+                        picture_type=R.drawable.good_habit;
+                    }
+                    else{
+                        picture_type=R.drawable.bad_habit;
+                    }
                     //item  item1 = new item(title, R.drawable.home);z
-                    item  item1 = new item(title, R.drawable.home, withWho,didNum, willNum,type, UserID);
+                    item  item1 = new item(title, picture_type, withWho,didNum, willNum,type, UserID);
                     items.add(item1);
                 }
 

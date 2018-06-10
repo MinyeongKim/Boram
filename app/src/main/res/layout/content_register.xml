@@ -9,22 +9,25 @@
     tools:showIn="@layout/activity_register">
 
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/back">
 
 
         <TableLayout
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="50dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#9fa3d9f1"
             android:stretchColumns="1,2,3">
 
             <TableRow>
                 <TextView
                     android:id="@+id/habit_title"
+                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -35,6 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_span="2"
+                    android:textStyle="bold"
                     android:hint="습관 제목을 입력하세요" />
             </TableRow>
 
@@ -42,6 +46,7 @@
             <TableRow>
                 <TextView
                     android:id="@+id/habit_period"
+                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -52,7 +57,9 @@
                     android:id="@+id/fromDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:layout_marginTop="15dp"
+                    android:layout_marginLeft="20dp"
                     android:textSize="20dp"
                     android:text="시작" />
 
@@ -60,6 +67,10 @@
                     android:id="@+id/fromDateButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:background="@drawable/button"
+                    android:textColor="#efefef"
+                    android:textSize="20dp"
                     app:srcCompat="@android:drawable/ic_menu_my_calendar" />
             </TableRow>
 
@@ -69,8 +80,10 @@
                     android:id="@+id/toDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:layout_column="1"
                     android:layout_marginTop="15dp"
+                    android:layout_marginLeft="20dp"
                     android:textSize="20dp"
                     android:text="끝" />
 
@@ -78,6 +91,10 @@
                     android:id="@+id/toDateButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/button"
+                    android:textColor="#efefef"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
                     android:layout_column="2"
                     app:srcCompat="@android:drawable/ic_menu_my_calendar" />
 
@@ -88,6 +105,7 @@
                     android:id="@+id/habit_frequency"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:layout_marginLeft="10dp"
                     android:text="빈도수: " />
 
@@ -95,6 +113,7 @@
                     android:id="@+id/num_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:layout_marginTop="6dp">
                 </Spinner>
 
@@ -103,6 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="number"
+                    android:textStyle="bold"
                     android:hint="  번" />
             </TableRow>
 
@@ -114,6 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:layout_marginLeft="10dp"
+                    android:textStyle="bold"
                     android:text="습관 종류: " />
 
                 <RadioGroup
@@ -121,7 +142,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:textStyle="bold">
 
                     <RadioButton
                         android:id="@+id/good_habit"
@@ -146,6 +168,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:layout_marginLeft="10dp"
+                    android:textStyle="bold"
                     android:text="체크 방법: " />
 
                 <RadioGroup
@@ -153,6 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:textStyle="bold"
                     android:layout_alignTop="@+id/habit_check">
 
                     <RadioButton
@@ -181,6 +205,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
+                    android:textStyle="bold"
                     android:hint="친구의 아이디를 입력하세요"
                     android:layout_column="1"
                     android:layout_span="1"
@@ -190,11 +215,16 @@
                     android:id="@+id/button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/button"
+                    android:textColor="#969595"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
                     android:visibility="invisible"
                     android:layout_column="2"
                     android:text="확인"/>
             </TableRow>
 
+            <!--
             <TableRow>
                 <TextView
                     android:layout_width="wrap_content"
@@ -222,13 +252,18 @@
                     android:onClick="onClick"
                     android:text="사진 선택하기" />
             </TableRow>
-
+ -->
             <TableRow>
                 <Button
                     android:id="@+id/register_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/button"
+                    android:textColor="#969595"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="50dp"
                     android:layout_column="1"
                     android:text="등록하기" />
             </TableRow>

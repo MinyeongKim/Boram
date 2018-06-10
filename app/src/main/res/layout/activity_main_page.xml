@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    
+
     <include
         layout="@layout/app_bar_main_page"
         android:layout_width="match_parent"
@@ -21,6 +21,32 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main_page"
-        app:menu="@menu/activity_main_page_drawer" />
+        app:menu="@menu/activity_main_page_drawer" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:clickable="true"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/footer_item_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textStyle="italic"
+                android:textSize="12dp"
+                android:text="Developer Info.\n@Surim Yuk, re4851900@gmail.com\n@Sujeong Lee, sj971020@gmail.com" />
+
+            <TextView
+                android:id="@+id/footer_item_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textStyle="italic"
+                android:textSize="17dp"
+                android:text="We hope you enjoy \nyour time with BORAM:)" />
+        </LinearLayout>
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
