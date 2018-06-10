@@ -2,6 +2,7 @@ package org.androidtown.myapplication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.LinkAddress;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -108,6 +109,25 @@ public class TimelineActivity extends BaseActivity {
 
         imageView=(ImageView)findViewById(R.id.imageView);
 
+<<<<<<< HEAD
+=======
+
+        /*
+        List<item> items = new ArrayList<>();
+        item[] item = new item[5];
+        item[0] = new item(R.drawable.home, "#1");
+        item[1] = new item(R.drawable.home, "#2");
+        item[2] = new item(R.drawable.home, "#3");
+        item[3] = new item(R.drawable.home, "#4");
+        item[4] = new item(R.drawable.home, "#5");
+        for (int i = 0; i < 5; i++) {
+            items.add(item[i]);
+        }
+        recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
+        Utilities.setGlobalFont(recyclerView);
+         */
+
+>>>>>>> ea7a7730dc0361ee457c1bc91ab04ae5f17e9194
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         Utilities.setGlobalFont(recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -123,7 +143,13 @@ public class TimelineActivity extends BaseActivity {
                 String idx = String.valueOf(habit_num);
                 //Toast.makeText(getApplication(), idx, Toast.LENGTH_LONG).show();
 
+<<<<<<< HEAD
                 int type_value;
+=======
+
+                int type1=R.drawable.good_tree;
+                int type2 = R.drawable.bad_tree;
+>>>>>>> ea7a7730dc0361ee457c1bc91ab04ae5f17e9194
 
                 for (int i = 1; i <= habit_num; i++) {
                     String habitIndex = String.valueOf(i);
@@ -142,8 +168,55 @@ public class TimelineActivity extends BaseActivity {
                         type_value=R.drawable.good_habit;
                     }
 
+<<<<<<< HEAD
                     else{
                         type_value=R.drawable.bad_habit;
+=======
+                /*for(int i=1; i <= habit_num;i++){
+                    String habitIndex = String.valueOf(i);
+                    String title = (String)dataSnapshot.child(habitIndex).child("TITLE").getValue();
+                    String withWho = (String)dataSnapshot.child(habitIndex).child("CHECKMETHOD").getValue();
+
+                    String didString = (String)dataSnapshot.child(habitIndex).child("DID").getValue();
+                    int didNum = Integer.parseInt(didString);//몇번했나
+
+                    String willString = (String)dataSnapshot.child(habitIndex).child("WILL").getValue();
+                    int willNum = Integer.parseInt(willString);//몇번해야하나
+
+                    String type = (String)dataSnapshot.child(habitIndex).child("TYPE").getValue(); //good/bad habit
+
+                    //item  item1 = new item(title, R.drawable.home);z
+                    item  item1 = new item(title, R.drawable.home, withWho,didNum, willNum,type, UserID);
+                    items.add(item1);
+                }*/
+
+                /*Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ID", UserID);
+                intent.putExtras(bundle);
+                startActivity(intent);*/
+
+                //Toast.makeText(getApplication(), "finish", Toast.LENGTH_LONG).show();
+                //listView.setAdapter(adapter);
+
+                Utilities.setGlobalFont(recyclerView);
+                recyclerView.setAdapter(new cardAdapter(getApplicationContext(), items, R.layout.content_card_time));
+                //Utilities.setGlobalFont(recyclerView);
+
+                /*
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        TimelineItem item = (TimelineItem) adapter.getItem(position);
+                        Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), CheckActivity.class);
+                        Bundle checkType = new Bundle();
+                        checkType.putString("Check_type", item.getHabit_check());
+                        checkType.putString("ID", UserID);
+                        checkType.putInt("INDEX", position+1);
+                        intent.putExtras(checkType);
+                        startActivity(intent);
+>>>>>>> ea7a7730dc0361ee457c1bc91ab04ae5f17e9194
                     }
 
                     item item1 = new item(title, type_value, withWho, didNum, willNum, type, UserID);
@@ -160,6 +233,41 @@ public class TimelineActivity extends BaseActivity {
         });
     }
 
+<<<<<<< HEAD
+=======
+    /*
+    class TimelineAdapter extends BaseAdapter {
+        ArrayList<TimelineItem> items = new ArrayList<TimelineItem>();
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+        public void addItem(TimelineItem item) {
+            items.add(item);
+        }
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup viewGroup) {
+            TimelineItemView view = new TimelineItemView(getApplicationContext());
+            TimelineItem item = items.get(position);
+            view.setTitle(item.getTitle());
+            view.setHabit_check(item.getHabit_check());
+            view.setHabit_count(item.getHabit_count());
+            view.setProgressBar(item.getProgressBar());
+            view.setRatio(item.getRatio());
+            view.setImage(item.getResId());
+            return view;
+        }
+    }
+*/
+>>>>>>> ea7a7730dc0361ee457c1bc91ab04ae5f17e9194
 
     //뒤로가는 버튼 생성
     private void setupActionBar() {
