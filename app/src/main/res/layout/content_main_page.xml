@@ -23,23 +23,12 @@
         android:background="@drawable/main">
 
         <TextView
-            android:id="@+id/dday"
             android:layout_width="180dp"
             android:textSize="15dp"
             android:textColor="#ffffff"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="처음에는 우리가 습관을 만들지만 그 다음에는 습관이 우리를 만든다\n\n-존 드라이든-"/>
-
-        <TextView
-            android:id="@+id/habitnum"
-            android:layout_width="180dp"
-            android:textSize="30dp"
-            android:textColor="#ffffff"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="hihi"
-            android:layout_below="@+id/dday"/>
 
     </RelativeLayout>
 

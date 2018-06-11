@@ -131,7 +131,9 @@ public class ModifyInfoActivity extends BaseActivity {
                                 databaseReference1.child(loginId).removeValue();
                             }
                         }
+                        finish();
                     }
+
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
