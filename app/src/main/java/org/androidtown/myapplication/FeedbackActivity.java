@@ -120,8 +120,6 @@ public class FeedbackActivity extends BaseActivity {
 
                 path = (String) dataSnapshot.child("ImageID").getValue();
 
-               // Glide.with(this).using(new FirebaseImageLoader()).load(spaceRef).into(imageLoad);
-
                 date.setText(date_value);
                 writeDate.setText(writeDate_value);
                 comment.setText(comment_value);
